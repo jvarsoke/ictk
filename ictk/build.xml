@@ -61,20 +61,19 @@
 
    <!-- check to make sure the environment variable could be read -->
    <target name="check_env">
-      <echo message="JUNIT_HOME = ${env.JUNIT_HOME}"/>
       <condition property="env_is_good">
          <and>
-               <equals arg1="${env.JUNIT_HOME}" arg2="$${env.JUNIT_HOME}"/>
+            <isset property="env.JUNIT_HOME"/>
          </and>
       </condition>
    </target>
 
-   <target name="error_env" depends="env_check" unless="env_is_good">
+   <target name="error_env" depends="check_env" unless="env_is_good">
       <echo message="Error: Ant couldn't read your environment variables."/>
       <echo message="If you're in a UNIX make sure your variables are"/>
       <echo message="correctly exported.  If you're on a platform that Ant"/>
-      <echo message="doesn't yet know how to glean environment variables"
-      <echo message="from you'll need to set them manually.  Check in "
+      <echo message="doesn't yet know how to glean environment variables"/>
+      <echo message="from you'll need to set them manually.  Check in "/>
       <echo message="the ENV configuration section of the build file."/>
    </target>
 
