@@ -196,7 +196,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
       int i = 0;
       //eventFactories = new ICSEventParser[16];
-      eventFactories = new ICSEventParser[14];
+      eventFactories = new ICSEventParser[15];
       eventFactories[i++] = FICSBoardUpdateStyle12Parser.getInstance();
       eventFactories[i++] = FICSMoveListParser.getInstance();
       eventFactories[i++] = FICSTellParser.getInstance();
@@ -210,6 +210,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       eventFactories[i++] = FICSGameNotificationParser.getInstance();
       eventFactories[i++] = FICSSeekClearParser.getInstance();
       eventFactories[i++] = FICSSeekAdParser.getInstance();
+      eventFactories[i++] = FICSSeekRemoveParser.getInstance();
       eventFactories[i++] = FICSSeekAdReadableParser.getInstance();
 
       router = new ICSEventRouter();

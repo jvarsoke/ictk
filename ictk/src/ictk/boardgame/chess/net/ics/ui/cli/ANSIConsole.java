@@ -98,9 +98,7 @@ public class ANSIConsole implements ICSEventListener {
 	     prefix = ESC + MAGENTA;
 	     break;
 
-/*
 	  case ICSEvent.SEEK_REMOVE_EVENT:
-	  */
 	  case ICSEvent.SEEK_CLEAR_EVENT:
 	  case ICSEvent.SEEK_AD_EVENT:
 

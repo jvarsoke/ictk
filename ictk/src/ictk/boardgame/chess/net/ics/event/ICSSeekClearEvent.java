@@ -26,7 +26,7 @@ package ictk.boardgame.chess.net.ics.event;
 /*--------------------------------------------------------------------------*
  * This file was auto-generated 
  * by $Id$
- * on Sun Aug 24 12:53:05 EST 2003
+ * on Sun Aug 24 18:48:29 EST 2003
  *--------------------------------------------------------------------------*/
 
 import ictk.boardgame.chess.net.ics.*;

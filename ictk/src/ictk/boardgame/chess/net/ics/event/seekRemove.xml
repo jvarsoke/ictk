@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE icsevtml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- channel............................................................-->
+   <event id="seekRemove" 
+          class="SeekRemove"
+	  enum="SEEK_REMOVE"
+	  >
+
+      <description>
+         This message from the server indicates that a number of
+	 seek ads should be cleared from the client's records.  The server
+	 does not keep track of which seeks you know about though.
+      </description>
+
+      <member id="seekRemove:ads"	typeref="int[]"
+              varname="ads"
+	      functname="Ads"
+	      />
+
+      <!--pin parser-->
+      <parser id="seekRemove:parser"
+              name="SeekRemove"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="no">
+
+         <!-- regex -->
+	 <regex>
+	    &lt;sr>
+	    ((?:\s\d+)+) <!-- multiple numbers to remove -->
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+      StringTokenizer st = new StringTokenizer(m.group(2));
+
+      int[] ads = new int[st.countTokens()];
+      int i = 0;
+      try {
+         while (st.hasMoreTokens()) {
+	    ads[i] = Integer.parseInt(st.nextToken());
+	    i++;
+	 }
+      }
+      catch (NumberFormatException e) {
+         Log.error(Log.PROG_WARNING,
+            "Can't parse ads[" + i + "] "
+            + "of " + m.group(0));
+         evt.setEventType(ICSEvent.UNKNOWN_EVENT);
+         evt.setMessage(m.group(0));
+         if (Log.debug)
+            Log.debug(ICSEventParser.DEBUG, "regex", m);
+         return;
+      }
+      evt.setAds(ads);
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="5">
+	    <code format="java">
+      int[] ads = evt.getAds();
+      sb.append("&lt;sr>");
+      for (int i=0; i &lt; ads.length; i++)
+         sb.append(" ")
+	   .append(ads[i]);
+	    </code>
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>

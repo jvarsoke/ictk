@@ -37,6 +37,13 @@
 	       functname="Number">
    </membertype>
 
+   <!-- int[] -->
+   <membertype id="int[]"
+               type="int[]"
+	       varname="numbers"
+	       functname="Numbers">
+   </membertype>
+
    <!-- boolean -->
    <membertype id="boolean"
                type="boolean"

@@ -104,6 +104,7 @@ import ictk.boardgame.chess.net.ics.event.*;
 import ictk.boardgame.chess.net.ics.*;
 import ictk.util.Log;
 
+import java.util.*;
 import java.util.regex.*;
 import java.io.IOException;
 

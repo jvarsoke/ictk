@@ -1,10 +1,8 @@
 /*
  *  ICTK - Internet Chess ToolKit
  *  More information is available at http://ictk.sourceforge.net
- *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  Copyright (C) 2003 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
- *
- *  $Id$
  *
  *  This file is part of ICTK.
  *
@@ -24,51 +22,55 @@
  */
 
 package ictk.boardgame.chess.net.ics.event;
+
+/*--------------------------------------------------------------------------*
+ * This file was auto-generated 
+ * by $Id$
+ * on Sun Aug 24 20:18:58 EST 2003
+ *--------------------------------------------------------------------------*/
+
 import ictk.boardgame.chess.net.ics.*;
+import ictk.boardgame.chess.net.ics.fics.event.*;
+import ictk.util.Log;
 
 import java.util.regex.*;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
-public class ICSSeekRemoveEvent 
-                      extends ICSEvent 
-		      implements ICSSeekEvent {
-   public static final int SEEK_REMOVE_EVENT = ICSEvent.SEEK_REMOVE_EVENT;
+/**
+ * This message from the server indicates that a number of seek ads   
+ * should be cleared from the client's records. The server does not   
+ * keep track of which seeks you know about though.                   
+ */
+public class ICSSeekRemoveEvent extends ICSEvent {
 
-   //instance/////////////////////////////////////////////////////////////
+
+   //static initializer/////////////////////////////////////////////////////
+   protected static final int SEEK_REMOVE_EVENT =  ICSEvent.SEEK_REMOVE_EVENT;
+
+   
+
+   //instance vars//////////////////////////////////////////////////////////
    protected int[] ads;
 
+
+   //constructors///////////////////////////////////////////////////////////
    public ICSSeekRemoveEvent () {
       super(SEEK_REMOVE_EVENT);
    }
 
-   //getters and setters//////////////////////////////////////////////////////
-   public int getAd (int index) {
-      return ads[index];
-   }
-
-   public void setAd (int index, int num) {
-      ads[index] = num;
-   }
-
-   public int length () {
-      return ads.length;
-   }
-
-   public void setAds (int[] ads) {
-      this.ads = ads;
-   }
-
+   //assessors/////////////////////////////////////////////////////////////
    public int[] getAds () {
       return ads;
    }
 
-   public String getReadable () {
-      StringBuffer sb = new StringBuffer(20);
-      sb.append("<SeekRemove> ");
-      for (int i=0; i < ads.length; i++)
-         sb.append(ads[i]);
+   //mutators//////////////////////////////////////////////////////////////
+   public void setAds (int[] ads) {
+      this.ads = ads;
+   }
 
-      return sb.toString();
+
+   //readable//////////////////////////////////////////////////////////////
+   public String getReadable () {
+      return FICSSeekRemoveParser.getInstance().toNative(this);
    }
 }
