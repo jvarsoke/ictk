@@ -21,7 +21,12 @@ Legend:
    [chess]  fixed 828725 - move counter incremented on Black move rather 
             than White
    [dev]    fixed 821399 - timesealing.jar wasn't added to "bin" distro
-
+   [dev]    fixed 815393 - "ant generate" fails with new Xalan 2.5.1 and 2.5.2
+            While it worked with versions 2.5.0 and before, the new Xalan
+	    caused a "toUpper" error.  The reason was a scoping problem
+	    in string.xsl, where the function "toUpper" was called instead
+	    of "str:toUpper"
+	    [thanks: Jerome Zago for his persistence in proving the bug existed]
 
 0.2.0 - 2003-10-03 FICS Support (limited)
    [net]    added FICS support to main branch of library

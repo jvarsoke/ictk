@@ -52,7 +52,7 @@
 -->
 <xsl:template name="str:capitalize">
    <xsl:param name="input"/>
-   <xsl:call-template name="toUpper">
+   <xsl:call-template name="str:toUpper">
       <xsl:with-param name="input" select="substring($input, 1, 1)"/>
    </xsl:call-template>
    <xsl:value-of select="substring($input, 2, string-length($input))"/>
