@@ -214,7 +214,26 @@ public class SANTest extends TestCase {
       assertTrue (move != null);
    }
 
+   //////////////////////////////////////////////////////////////////////
+   /** testing bug: 775816 - full dis-ambiguation
+    */
+   public void testFullDisAmbiguation () 
+          throws IllegalMoveException,
+                 AmbiguousChessMoveException {
+      //Log.addMask(SAN.DEBUG);
+      char[][] position={{' ',' ',' ',' ',' ',' ',' ',' '},
+                         {'q',' ',' ',' ',' ',' ',' ',' '},
+                         {'q',' ',' ','p','n',' ',' ',' '},
+                         {' ',' ',' ','P','p',' ',' ','k'},
+                         {' ',' ',' ',' ','P','p','q','b'},
+                         {'N',' ',' ',' ',' ','Q',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {'K',' ',' ',' ',' ','Q',' ','Q'}};
 
+      board = new ChessBoard(position);
+      move = (ChessMove) san.stringToMove(board, "Qh6f8");
+      assertTrue (move != null);
+   }
 
    //////////////////////////////////////////////////////////////////////
    public void testNAG () 

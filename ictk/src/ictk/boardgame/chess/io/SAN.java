@@ -193,6 +193,10 @@ public class SAN extends ChessMoveNotation {
 	          throw e;
 	       }
 	    }
+	    else {
+	       orig = board.getSquare(orig_f, orig_r);
+	    }
+	    
 
 	    if (result.group(8) != null) //no promotion
 	       promo = pieceToNum(result.group(8).charAt(1)); //0 is '='

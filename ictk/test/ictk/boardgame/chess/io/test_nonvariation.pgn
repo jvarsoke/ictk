@@ -58,3 +58,19 @@ Nc3 e6 9. Qa4+ Qd7 10. Qxd7+ Kxd7 11. Bxc4 exd5 12. exd5 Bxf3 13. gxf3 a6
 Rb4+ 32. Kc2 Rf4 33. Bxh5 Rxf2+ 34. Kb3 Nc8 35. Be8+ Kxe8 36. d7+ Kd8 37.
 dxc8=Q+ Kxc8 38. Rd5 a4+ 39. Ka3 Rf4 40. Rb5 f5 1/2-1/2
 
+##This PGN contains a fully dis-ambiguated Q move (37.Qh6f8)
+##bug: 775816
+[White "A"]
+[Black "B"]
+[Result "0-1"]
+
+1. e4 d6 2. d4 Nf6 3. Nc3 c6 4. f4 Qa5 5. Bd2 Qb6
+6. Nf3 d5 7. e5 Ne4 8. Bd3 Nxd2 9. Qxd2 e6 10. Ne2
+c5 11. c3 Nc6 12. O-O Bd7 13. Kh1 g6 14. Rad1 c4
+15. Bb1 Be7 16. Qc2 a5 17. Ng5 Qc7 18. g4 b5 19.
+h4 b4 20. Ng3 a4 21. h5 a3 22. Qh2 Bxg5 23. fxg5
+axb2 24. hxg6 fxg6 25. Bxg6+ Kd8 26. Bb1 bxc3 27.
+g6 Be8 28. Qh6 Rxa2 29. gxh7 Qe7 30. g5 Ra1 31.
+g6 Rxb1 32. g7 Rxd1 33. gxh8=Q Rxf1+ 34. Nxf1
+b1=Q 35. Q8f6 c2 36. h8=Q c1=Q 37. Qh6f8 Qe4+
+0-1

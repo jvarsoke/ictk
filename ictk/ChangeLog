@@ -36,6 +36,8 @@ Legend:
    [docs]   default distribution docs will not be for "public" members only.
             To create docs with different access use the build tool against
 	    the source with -Ddocs.access=<access_type> on the command line.
+   [chess]  fixed 775816 - SAN reader wasn't respecting full dis-ambiguation.
+            {thanks: Jerome Zago for the bug report}
 
 0.1.1 - 2003-07-20 bug fixes
    [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.
