@@ -2,6 +2,10 @@
 ##
 ##with milliseconds
 <12> r-bq-rk- pp-nppbp -----np- --pp---- ---P---- --PBPN-- PP-N-PPP R-BQR-K- B -1 0 0 0 0 2 2 bbbb Simpan -2 3 0 39 39 177810 171259 8 R/f1-e1 (0:00.023) Re1 0 0 0
+##negative clock time
+<12> -------- -------- -------- ----n--p ---kp--- -----p-- -----K-- -------- W -1 0 0 0 0 2 32 mrbishop Hindoo 0 5 0 0 6 -917 13512 62 N/c6-e5 (0:02.211) Ne5 0 1 0
+##large move time
+<12> -------- -------- -------- ----n--p ---kp--- -----p-- -----K-- -------- W -1 0 0 0 0 2 32 mrbishop Hindoo 0 5 0 0 6 -917 13512 62 N/c6-e5 (1:23.211) Ne5 0 1 0
 ##old style from docs
 ##without milliseconds
 #<12> r-bq-rk- pp-nppbp -----np- --pp---- ---P---- --PBPN-- PP-N-PPP R-BQR-K- B -1 0 0 0 0 2 2 bbbb Simpan -2 3 0 39 39 177810 171259 8 R/f1-e1 (0:06) Re1 0 0 0

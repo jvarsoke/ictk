@@ -98,9 +98,9 @@ public class FICSBoardUpdateStyle12Parser extends ICSEventParser {
 	 + "\\s"
 	 + "(\\d+)"                //black's material
 	 + "\\s"
-	 + "(\\d+)"                //white's time
+	 + "(-?\\d+)"              //white's time
 	 + "\\s"
-	 + "(\\d+)"                //black's time
+	 + "(-?\\d+)"              //black's time
 	 + "\\s"
 	 + "(\\d+)"                //move number
 	 + "\\s"
@@ -200,8 +200,8 @@ public class FICSBoardUpdateStyle12Parser extends ICSEventParser {
 	 evt.setBlackClock(Integer.parseInt(m.group(i=26)));
 	 evt.setMoveNumber(Integer.parseInt(m.group(i=27)));
 
-	 evt.setMoveTime(Integer.parseInt(m.group(i=29)) * 6000
-	          + Integer.parseInt(m.group(i=30)) * 100
+	 evt.setMoveTime(Integer.parseInt(m.group(i=29)) * 60000
+	          + Integer.parseInt(m.group(i=30)) * 1000
 	          + Integer.parseInt(m.group(i=31))
 		  );
 	 evt.setLag(Integer.parseInt(m.group(i=35)));
