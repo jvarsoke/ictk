@@ -18,7 +18,7 @@ Legend:
    [icc]    applies to support for the www.chessclub.com server
 
 
-0.2.0 - **IN PROGRESS** FICS Support (limited)
+0.2.0 - 2003-10-03 FICS Support (limited)
    [net]    added FICS support to main branch of library
 
    [fics]   removed BlockMode message chunking
