@@ -93,7 +93,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 			      PLAIN = "[0;m";
 
    static final protected Pattern 
-				  matchPattern,
 				  takebackPattern,
 				  availInfoPattern;
 
@@ -116,29 +115,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    //constructor//////////////////////////////////////////////////////////
    static {
       //patterns
-      matchPattern = Pattern.compile("^("                   //beginning
-                                    + "Challenge:\\s"
-				    + REGEX_handle          //challenger
-				    + "\\s"
-				    + REGEX_rating          //rating
-				    + "\\s"
-				    + "(\\[\\w*\\])?" //colors
-				    + "\\s?"
-				    + REGEX_handle          //challenged
-				    + "\\s"
-				    + REGEX_rating          //rating
-				    + "\\s"
-				    + "(\\w+)"              //rated/unrated
-				    + "\\s"
-				    + "(\\S+)"              //variant wild/8
-				    + "\\s"
-				    + "(\\d+)"              //init time
-				    + "\\s"
-				    + "(\\d+)"              //incr time
-				    + "\\."
-				    + ")"                   //end match
-          , Pattern.MULTILINE | Pattern.DOTALL);
-
       takebackPattern = Pattern.compile("^("                //beginning
                                     + REGEX_handle          //player
 				    + "\\swould like to take back\\s"
@@ -176,8 +152,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       port   = 5000;
 
       int i = 0;
-      //eventFactories = new ICSEventParser[16];
-      eventFactories = new ICSEventParser[15];
+      eventFactories = new ICSEventParser[16];
       eventFactories[i++] = FICSBoardUpdateStyle12Parser.getInstance();
       eventFactories[i++] = FICSMoveListParser.getInstance();
       eventFactories[i++] = FICSTellParser.getInstance();
@@ -193,6 +168,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       eventFactories[i++] = FICSSeekAdParser.getInstance();
       eventFactories[i++] = FICSSeekRemoveParser.getInstance();
       eventFactories[i++] = FICSSeekAdReadableParser.getInstance();
+      eventFactories[i++] = FICSChallengeParser.getInstance();
 
       router = new ICSEventRouter();
    }
@@ -684,9 +660,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       }
 
       if (found) { /*no-op*/ }
-      else if ((matcher = match(matchPattern, str)) != null)
-         sendMatchEvent(matcher);
-
       else if ((matcher = match(takebackPattern, str)) != null)
          sendTakeBackEvent(matcher);
       else if ((matcher = match(availInfoPattern, str)) != null)
@@ -761,10 +734,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    protected void sendMoveListEvent (Matcher m) {
       System.out.println(ESC + YELLOW + m.group() + ESC + PLAIN);
       debugGroupDump(m);
-   }
-
-   protected void sendMatchEvent (Matcher m) {
-      System.out.println(ESC + BOLD_RED + m.group() + ESC + PLAIN);
    }
 
    protected void sendTakeBackEvent (Matcher m) {

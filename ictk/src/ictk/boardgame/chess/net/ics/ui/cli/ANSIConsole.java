@@ -126,6 +126,11 @@ public class ANSIConsole implements ICSEventListener {
 	     break;
 
 	  default:
+
+	  case ICSEvent.CHALLENGE_EVENT:
+	     //TODO:should probably split line like Xboard
+	     prefix = ESC + BOLD_RED;  
+	     break;
        }
 
        if (showTimestamp) {

@@ -76,6 +76,10 @@
               varname="incr"
 	      functname="IncrementTime"
 	      />
+      <member id="challenge:computer"		typeref="boolean"
+              varname="computer"
+	      functname="Computer"
+	      />
 
       <!--parser-->
       <parser id="challenge:parser"
@@ -111,6 +115,9 @@ You can "accept" or "decline", or propose different parameters.
 	    \s
 	    (\d+)				<!-- incr time-->
 	    \.\n
+	    (?:--\*\*\s
+	    <regexref ref="regex:fics:player"/>
+	    \sis\sa\s(computer)\s\*\*--\n)?     <!-- computer account -->
 	    You\scan\s"accept"\sor\s"decline",\sor\spropose\sdifferent\sparameters\.
 	 </regex>
 
@@ -130,6 +137,11 @@ You can "accept" or "decline", or propose different parameters.
       }
 	 
       evt.setRated("rated".equals(m.group(7)));
+
+      //probably more than just "computer" here, but need to see it.
+      if (m.group(12) != null) {
+         evt.setComputer(true);
+      }
 	 </assignMatches>
 
          <!-- toNative -->
@@ -162,13 +174,21 @@ You can "accept" or "decline", or propose different parameters.
          sb.append("rated ");
       else
          sb.append("unrated ");
+
       sb.append(evt.getVariant())
         .append(" ")
 	.append(evt.getInitialTime())
 	.append(" ")
 	.append(evt.getIncrementTime())
-	.append(".\n")
-        .append(
+	.append(".\n");
+
+      if (evt.isComputer()) {
+         sb.append("--** ")
+	   .append(evt.getChallenger())
+	   .append(" is a computer **--\n");
+      }
+      
+      sb.append(
          "You can \"accept\" or \"decline\", or propose different parameters.");
 	    </code>
 	 </toNative>
