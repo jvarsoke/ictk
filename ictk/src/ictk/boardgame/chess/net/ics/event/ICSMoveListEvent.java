@@ -38,7 +38,7 @@ public class ICSMoveListEvent extends ICSEvent
    protected int boardNumber, initTime, incrTime;
    protected String white, black, status;
    protected ICSRating whiteRating, blackRating;
-   protected Calendar date;
+   protected ICSDate date;
    protected boolean isRated;
    protected ICSVariant variant;
    protected ICSResult result;
@@ -68,17 +68,14 @@ public class ICSMoveListEvent extends ICSEvent
    public ICSRating getBlackRating () { return blackRating; }
    public void setBlackRating (ICSRating rating) { blackRating = rating; }
 
-   public Calendar getDate () { return date; }
-   public void setDate (Calendar date) { this.date = date; }
-
    public ICSResult getResult () { return result; }
    public void setResult (ICSResult res) { result = res; }
 
    public int getInitialTime () { return initTime; }
    public void setInitialTime (int minutes) { initTime = minutes; }
 
-   public int getIncrementTime () { return incrTime; }
-   public void setIncrementTime (int seconds) { incrTime = seconds; }
+   public int getIncrement () { return incrTime; }
+   public void setIncrement (int seconds) { incrTime = seconds; }
 
    public boolean isRated () { return isRated; }
    public void setRated (boolean rated) { isRated = rated; }
@@ -86,6 +83,16 @@ public class ICSMoveListEvent extends ICSEvent
    public void setBoardNumber (int board) { boardNumber = board; }
 
    public int getBoardNumber () { return boardNumber; }
+
+   public void setStatus (String status) {
+      this.status = status;
+   }
+
+   public String getStatus () { return status; }
+
+
+   public void setDate (ICSDate date) { this.date = date; }
+   public ICSDate getDate () { return date; }
 
    public String getReadable () {
       return "Move List";

@@ -63,13 +63,15 @@ public class ICSMove {
       ms = moveTime % 1000;
 
       if (h > 1) {
-      sb.append(h).append(":");
+         sb.append(h).append(":");
 	 if (m < 10)
 	    sb.append(0);
-         sb.append(m).append(":");
-	 if (s < 10)
-	    sb.append(0);
       }
+
+      sb.append(m).append(":");
+      if (s < 10)
+         sb.append(0);
+
       sb.append(s).append(".");
       if (ms < 100)
          sb.append(0);

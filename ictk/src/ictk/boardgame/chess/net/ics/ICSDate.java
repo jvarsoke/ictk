@@ -108,7 +108,8 @@ public class ICSDate {
    public void setMinute (int min) { minute = min; }
    public void setTimeZone (String id) { tzoneID = id; }
 
-   /** Format: <pre>Sun Nov  3, 21:11 CET 2002</pre>
+   /** Returns a String in the common ICS date format.
+    *  Format: <pre>Sun Nov  3, 21:11 CET 2002</pre>
     */
    public String toString () {
       //Sun Nov  3, 21:11 CET 2002

@@ -148,8 +148,8 @@ public class ParserTest extends TestCase {
 	     nativeStr = parser.toNative(evt) + "\n";
 
              if (debug && !nativeStr.equals(mesg[i])) {
-		System.out.println("origin[" +i + "]: " + mesg[i]);
-		System.out.println("native[" +i + "]: " + nativeStr);
+		System.out.println("origin[" +i + "]: <<|" + mesg[i] + "|>>");
+		System.out.println("native[" +i + "]: <<|" + nativeStr + "|>>");
 	     }
 	     assertTrue(nativeStr.equals(mesg[i]));
 	 }

@@ -52,7 +52,6 @@ public class FICSMoveListParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
-   /*
       //debug = true;
       if (debug) {
          Log.addMask(ICSEventParser.DEBUG);
@@ -71,12 +70,10 @@ public class FICSMoveListParserTest extends ParserTest {
          Log.removeMask(ICSEventParser.DEBUG);
 	 debug = false;
       }
-      */
    }
 
    //inherited///////////////////////////////////////////////////////////
    public void testParseAll () {
-   /*
       //debug=true;
       if (debug) {
          Log.addMask(ICSEventParser.DEBUG);
@@ -89,12 +86,10 @@ public class FICSMoveListParserTest extends ParserTest {
          Log.removeMask(ICSEventParser.DEBUG);
 	 debug = false;
       }
-      */
    }
 
    //////////////////////////////////////////////////////////////////////
    public void testNative () {
-   /*
       //debug=true;
       if (debug) {
          Log.addMask(ICSEventParser.DEBUG);
@@ -107,6 +102,5 @@ public class FICSMoveListParserTest extends ParserTest {
          Log.removeMask(ICSEventParser.DEBUG);
 	 debug = false;
       }
-      */
    }
 }
