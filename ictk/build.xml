@@ -4,19 +4,23 @@
       Internet Chess ToolKit project build file
    </description>
 
-   <!-- configurable properties -->
-   <property name="home.dir"          value="/home/jvarsoke"/>
-   <property name="junit.home"        value="${home.dir}/lib/java"/>
-
    <!-- global properties -->
-   <property name="version"           value="0.1"/>
+   <property name="version"           value="0.1.1"/>
+
    <property name="source.dir"        value="src"/>
    <property name="test.dir"          value="test"/>
    <property name="build.dir"         value="build"/>
    <property name="docs.dir"          value="docs"/>
    <property name="output.jar"        value="ictk-${version}.jar"/>
 
+   <!-- 3rd party jar locations -->
+   <!-- these are jar files distributed with ictk -->
    <property name="3rdparty.libs.dir" value="lib"/>
+
+   <!-- environment properties  -->
+   <!-- might need to change this if your platform isn't supported by Ant -->
+   <property environment="env"/> 
+   <property name="junit.home"        value="${env.JUNIT_HOME}"/>
 
    <!-- source files to compile for distro -->
    <fileset dir="${source.dir}" casesensitive="yes">
@@ -48,10 +52,33 @@
    </path>
 
    <!-- tasks -->
-   <target name="init">
+
+   <!-- initialization and error checking .................................-->
+   <target name="init" depends="check_env,error_env" if="env_is_good">
       <!-- Generate time stamp -->
       <tstamp/>
    </target>
+
+   <!-- check to make sure the environment variable could be read -->
+   <target name="check_env">
+      <echo message="JUNIT_HOME = ${env.JUNIT_HOME}"/>
+      <condition property="env_is_good">
+         <and>
+               <equals arg1="${env.JUNIT_HOME}" arg2="$${env.JUNIT_HOME}"/>
+         </and>
+      </condition>
+   </target>
+
+   <target name="error_env" depends="env_check" unless="env_is_good">
+      <echo message="Error: Ant couldn't read your environment variables."/>
+      <echo message="If you're in a UNIX make sure your variables are"/>
+      <echo message="correctly exported.  If you're on a platform that Ant"/>
+      <echo message="doesn't yet know how to glean environment variables"
+      <echo message="from you'll need to set them manually.  Check in "
+      <echo message="the ENV configuration section of the build file."/>
+   </target>
+
+   <!-- ..................................................................-->
 
    <target name="dist" depends="jar" />
 
