@@ -264,11 +264,14 @@ public class PGNWriter extends ChessWriter {
       if (site == null)
          site = "?";
 
+      if (date == null)
+         date = "????.??.??";
+
       if (white == null)
-         white = "";
+         white = "?";
 
       if (black == null)
-         black = "";
+         black = "?";
 
       if (round == null)
          round = "-";  //round not appropriate
