@@ -81,16 +81,16 @@ public interface ContinuationList {
    /** this does not throw ArrayOutOfBoundsException if your ask
     *  an index out of range, you just get false returned.
     * 
-    *  @param  branch - which branch to look at (0) is the main line
-    *  @return false - there is no variation on that line
-    *  @return true  - there is a move after this one
+    *  @param  variation which branch to look at (0) is the main line
+    *  @return false     there is no variation on that line
+    *  @return true      there is a move after this one
     */
    public boolean exists (int variation);
 
    /* exists *************************************************************/
    /** determines if the move is in the current list of continuations
     *
-    *  @param move - is this move in the list of continuation
+    *  @param move is this move in the list of continuation
     */
    public boolean exists (Move move);
 
@@ -106,7 +106,7 @@ public interface ContinuationList {
     *  then this function returns the main line of descent for this
     *  game.
     *
-    *  @return null - if isTerminal() or the mainline has been set to null
+    *  @return null if isTerminal() or the mainline has been set to null
     */
    public Move getMainLine ();
 
@@ -168,10 +168,10 @@ public interface ContinuationList {
     *  must be the same.  That is, you can only add a move to the
     *  continuation list of the last move played.
     *
-    *  @param  if isMain is true then the move added will be the first 
+    *  @param  isMain If true then the move added will be the first 
     *          continuation.  All other moves will be bumped down (if the 
     *          mainline wasn't null to begin with). LIFO
-    *  @param  if isMain is not true then the move will be the last branch,
+    *          if isMake is not true then the move will be the last branch,
     *          in otherwords, appended to the list. FIFO
     */
    public void add (Move m, boolean isMain);
@@ -280,8 +280,8 @@ public interface ContinuationList {
     * Note: if a variation is promoted to the main-line and the main-line
     *       is null the "null" will not be bumped down the list.
     *
-    * @param num - how many places to displace the variations
-    * @param num - if 0 the variation will be promoted to the main line
+    * @param num how many places to displace the variations.
+    *            If 0 the variation will be promoted to the main line.
     * @return the index of this variation after the promotion
     * @throws IndexArrayOutOfBoundException if you promote past the main line
     * @throws NullPointerException if the move is not in the variation list
@@ -294,8 +294,8 @@ public interface ContinuationList {
     *  resulting mainline will be null and the old mainline will be the
     *  first variation.
     *
-    * @param num - how many places to displace the variations
-    * @param num - if 0 the variation will be demoted to last variation
+    * @param num how many places to displace the variations.
+    *            If 0 the variation will be demoted to last variation
     * @return the index of this variation after the promotion
     * @throws IndexArrayOutOfBoundException if demoted past the last variation
     * @throws NullPointerException if the move is not in the variation list

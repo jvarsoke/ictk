@@ -86,6 +86,7 @@
       <patternset id="non.test.sources">
          <include name="**/*.java"/>
 	 <exclude name="**/junk/**"/>
+	 <exclude name="**/_*.java"/>
       </patternset>
    </fileset>
 

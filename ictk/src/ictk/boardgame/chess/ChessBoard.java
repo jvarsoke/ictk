@@ -115,8 +115,8 @@ public class ChessBoard implements Board {
    }
 
    /** 
-    * @param true - the default chess position will be used.
-    * @param false - the board will be cleared and w/o pieces.
+    * @param defaultBoard if true the default chess position will be used.
+    *                     if false the board will be cleared and w/o pieces.
     */
    public ChessBoard (boolean defaultBoard) {
       squares = new Square[MAX_FILE][MAX_RANK];
@@ -134,9 +134,9 @@ public class ChessBoard implements Board {
    }
 
    /** 
-    * @param matrix - the position using English SAN notation
-    *                 for the pieces, (PNBRQK) where uppercase is
-    *                 used for White pieces and lowercase for Black.
+    * @param matrix the position using English SAN notation
+    *               for the pieces, (PNBRQK) where uppercase is
+    *               used for White pieces and lowercase for Black.
     */
    public ChessBoard (char[][] matrix) {
       this();
@@ -144,17 +144,17 @@ public class ChessBoard implements Board {
    }
 
    /** 
-    * @param matrix - the position using English SAN notation
-    *                 for the pieces, (PNBRQK) where uppercase is
-    *                 used for White pieces and lowercase for Black.
-    * @param isBlackMove - who's move is it?
-    * @param castleWK - can white castle Kingside?
-    * @param castleWQ - can white castle Queenside?
-    * @param castleBK - can white castle Kingside?
-    * @param castleBQ - can white castle Queenside?
-    * @param enpassantFile - the file (A-H) that is vulnerable to enpassant
-    * @param plyCount - the ply count for the 50 move rule.
-    * @param moveNum - which move number are we on?
+    * @param matrix the position using English SAN notation
+    *               for the pieces, (PNBRQK) where uppercase is
+    *               used for White pieces and lowercase for Black.
+    * @param isBlackMove who's move is it?
+    * @param castleWK can white castle Kingside?
+    * @param castleWQ can white castle Queenside?
+    * @param castleBK can white castle Kingside?
+    * @param castleBQ can white castle Queenside?
+    * @param enpassantFile the file (A-H) that is vulnerable to enpassant
+    * @param plyCount the ply count for the 50 move rule.
+    * @param moveNum which move number are we on?
     */
    public ChessBoard (char[][] matrix, 
    		 boolean isBlackMove,
@@ -356,12 +356,12 @@ public class ChessBoard implements Board {
    /** returns an array of the pieces of the team specified who can
     * attack the square specified.
     *
-    * @param sq       - square to do threat analysis for
-    * @param isBlack  - attackers must be of this team
+    * @param sq       square to do threat analysis for
+    * @param isBlack  attackers must be of this team
     *
-    * @return ChessPiece[]  - set of all pieces which have this square in their
+    * @return ChessPiece[] - set of all pieces which have this square in their
     *              legalDests variable
-    * @return null     - if no pieces threaten the square
+    * @return null         - if no pieces threaten the square
     */
    public ChessPiece[] getThreats (Square sq, boolean isBlack) {
       Iterator    team = null;
@@ -423,8 +423,8 @@ public class ChessBoard implements Board {
    /* isThreatened *********************************************************/
    /** is a ChessPiece attacking this square?
     *
-    * @param sq - the square in question.
-    * @param isBlack - which side do you suppose attacks this square?
+    * @param sq      the square in question.
+    * @param isBlack which side do you suppose attacks this square?
     */
    public boolean isThreatened (Square sq, boolean isBlack) {
         return (getThreats(sq, isBlack) != null);
@@ -433,7 +433,7 @@ public class ChessBoard implements Board {
    /* isThreatened *********************************************************/
    /** is a ChessPiece attacking this piece.
     *
-    * @param piece - the piece under possible attack
+    * @param piece the piece under possible attack
     */
    public boolean isThreatened (ChessPiece piece) {
         if (piece == null)
@@ -451,8 +451,8 @@ public class ChessBoard implements Board {
     * this is used to determine which pieces the King could take
     * this method is extremely similar to getThreats
     *
-    * @param sq       - square to do threat analysis for
-    * @param isBlack  - attackers must be of this team
+    * @param sq       square to do threat analysis for
+    * @param isBlack  attackers must be of this team
     *
     * @return ChessPiece[]  - set of all pieces which have this square in their
     *              guardSquares variable
@@ -493,11 +493,11 @@ public class ChessBoard implements Board {
     * this is used to determine which pieces the King could take
     * this method is extremely similar to getThreats
     *
-    * @param the piece to be guarded
+    * @param piece the piece to be guarded
     *
-    * @return ChessPiece[]  - set of all pieces which have this square in their
-    *              guardSquares variable
-    * @return null     - if no pieces threaten the square
+    * @return ChessPiece[] set of all pieces which have this square in their
+    *                      guardSquares variable
+    * @return null         if no pieces threaten the square
     */
    public ChessPiece[] getGuards (ChessPiece piece) {
         if (piece == null)
@@ -1137,8 +1137,8 @@ public class ChessBoard implements Board {
     *  NOTE: if the game is already is progress it might not be wise
     *  to add a piece.  the results are undefined.
     *
-    * @param file - the X coordinate (1-8)
-    * @param rank - the Y coordinate (1-8)
+    * @param file the X coordinate (1-8)
+    * @param rank the Y coordinate (1-8)
     */
    public void addPawn (int file, int rank, boolean isBlack) {
       ChessPiece p;
@@ -1155,8 +1155,8 @@ public class ChessBoard implements Board {
     *  NOTE: if the game is already is progress it might not be wise
     *  to add a piece.  the results are undefined.
     *
-    * @param file - the X coordinate (1-8)
-    * @param rank - the Y coordinate (1-8)
+    * @param file the X coordinate (1-8)
+    * @param rank the Y coordinate (1-8)
     */
    public void addKnight (int file, int rank, boolean isBlack) {
       ChessPiece p;
@@ -1173,8 +1173,8 @@ public class ChessBoard implements Board {
     *  NOTE: if the game is already is progress it might not be wise
     *  to add a piece.  the results are undefined.
     *
-    * @param file - the X coordinate (1-8)
-    * @param rank - the Y coordinate (1-8)
+    * @param file the X coordinate (1-8)
+    * @param rank the Y coordinate (1-8)
     */
    public void addBishop (int file, int rank, boolean isBlack) {
       ChessPiece p;
@@ -1191,8 +1191,8 @@ public class ChessBoard implements Board {
     *  NOTE: if the game is already is progress it might not be wise
     *  to add a piece.  the results are undefined.
     *
-    * @param file - the X coordinate (1-8)
-    * @param rank - the Y coordinate (1-8)
+    * @param file the X coordinate (1-8)
+    * @param rank the Y coordinate (1-8)
     */
    public void addRook (int file, int rank, boolean isBlack) {
       ChessPiece p;
@@ -1209,8 +1209,8 @@ public class ChessBoard implements Board {
     *  NOTE: if the game is already is progress it might not be wise
     *  to add a piece.  the results are undefined.
     *
-    * @param file - the X coordinate (1-8)
-    * @param rank - the Y coordinate (1-8)
+    * @param file the X coordinate (1-8)
+    * @param rank the Y coordinate (1-8)
     */
    public void addQueen (int file, int rank, boolean isBlack) {
       ChessPiece p;
@@ -1228,8 +1228,8 @@ public class ChessBoard implements Board {
     *  NOTE: if the game is already is progress it might not be wise
     *  to add a piece.  the results are undefined.
     *
-    * @param file - the X coordinate (1-8)
-    * @param rank - the Y coordinate (1-8)
+    * @param file the X coordinate (1-8)
+    * @param rank the Y coordinate (1-8)
     */
    public void addKing (int file, int rank, boolean isBlack) {
       ChessPiece p;
@@ -1291,7 +1291,7 @@ public class ChessBoard implements Board {
 
    /* setEnPassantFile *****************************************************/
    /** sets the file index (1-8) of the file where enpassant is legal
-    * @param NO_ENPASSANT if the file is not set
+    * @param f NO_ENPASSANT if the file is not set
     */
    public void setEnPassantFile (int f) {
       if (f > MAX_FILE) 
@@ -1302,7 +1302,7 @@ public class ChessBoard implements Board {
 
    /* setEnPassantFile *****************************************************/
    /** sets the file (a-h) of the file where enpassant is legal
-    * @param '-' if the file is not set
+    * @param f '-' if the file is not set
     */
    public void setEnPassantFile (char f) {
       enpassantFile = san.fileToNum(f);

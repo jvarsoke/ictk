@@ -166,7 +166,7 @@ public class ChessMove extends Move {
    }
 
    /** main int constructor 
-    * @param all numbers should be in the range 1-8
+    * All numbers should be in the range 1-8.
     * @param of origin file
     * @param or origin rank
     * @param df destination file

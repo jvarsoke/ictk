@@ -30,8 +30,9 @@ public interface BoardListener extends EventListener {
 
    /* boardUpdate ************************************************************/
    /** 
-    *  @param code indicates what type of update has occured. (MOVE_EVENT, 
-    *              POSITION_EVENT etc).
+    *  @param b     the board the event occured on.
+    *  @param event indicates what type of update has occured. (MOVE_EVENT, 
+    *               POSITION_EVENT etc).
     */
     /* considering these additional params
     *  @param location the coordinate(s) of the update (may be null).

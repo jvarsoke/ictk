@@ -243,8 +243,8 @@ public class NAG {
    /** translates the NAG number into its String representation.
     *  This would include !, ?, +=, and $123 when appropriate.
     *
-    *  @param allNumeric true will only return the numeric format.
-    *  @param allNumeric false will return symbols and numbers.
+    *  @param allNumeric if true will only return the numeric format.
+    *                    If false will return symbols and numbers.
     *  @return null if nag is out of range.
     */
    public static String numberToString (int nag, boolean allNumeric) {

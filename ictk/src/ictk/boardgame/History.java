@@ -404,7 +404,7 @@ public class History {
     * as is necessary to reach a game state where m was the last move 
     * executed on the board.
     *
-    * @param if Move == null a rewind() will be executed
+    * @param m if null a rewind() will be executed
     */
    public Move goTo (Move m) {
    /* tracks backward through the history list to the root node.
@@ -487,7 +487,9 @@ public class History {
     *  If there are less than N moves on the line it will stop at the 
     *  last move.  
     *
-    *  @param returns the number of moves actually moved through.
+    *  @param  n the number of moves to move through.
+    *  @return the number of moves actually moved through
+    *          (in the case of early termination of the line).
     */
    public int fastforward (int n) {
       notifyBoardsOfTraversal(true);
@@ -729,10 +731,9 @@ public class History {
     *  are being checked then a null result is considered the same
     *  as isUndecided();
     *
-    * @param checkAnno true will compare the annotations, prenotations, and 
-    * variation results as well.
-    *
-    * @param checkAnno false the results will also not be checked.
+    * @param checkAnno if true will compare the annotations, prenotations, and 
+    *                   variation results as well.
+    *                  If false the results will also not be checked.
     */
    public boolean deepEquals (History hist, boolean checkAnno) {
       boolean t = false;
