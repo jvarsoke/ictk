@@ -43,6 +43,7 @@
    <property name="test.dir"          value="test"/>
    <property name="build.dir"         value="build"/>
    <property name="docs.dir"          value="docs"/>
+   <property name="samples.dir"       value="samples"/>
    <property name="release.file"      value="ictk-${version}"/>
    <property name="output.jar"        value="${release.file}.jar"/>
 
@@ -317,6 +318,7 @@
 	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO 
 	   ${docs.dir}/**
 	   ${output.jar}
+	   ${samples.dir}/**
 	   "
 	   />
 
@@ -347,6 +349,7 @@
 	   ${source.dir}/**
 	   ${test.dir}/**
 	   ${lib.dir}/**
+	   ${samples.dir}/**
 	   "
 	   />
 
