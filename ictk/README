@@ -39,6 +39,12 @@ REQUIREMENTS
      this is only necessary if you wish to run the regression testing
      suite.
 
+   o Xalan-Java 2.5.0 or better
+     this is only necessary if you wish to generate the net events and
+     parsers from their XML source.  Really, any XSLT processor
+     should work, but Xalan-Java is integrated into the Ant build tool
+     configuration files.
+
 LICENSE
 -------
 
@@ -80,12 +86,21 @@ Then take the .jar file and either put it on your classpath:
 Or it might be easier to copy the .jar file to your Extension directory,
 which might look something like this: /usr/local/jdk/jre/lib/ext
 
- * Source:
+ * Source (generated):
 
-   If you've downloaded the source tar-ball then just untar it into a 
-directory of your choosing.  From there you can use Ant to build the 
+   If you've downloaded the (generated) source tar-ball then just untar it 
+into a directory of your choosing.  From there you can use Ant to build the 
 classes or the Jar file if need be.
 
+   $ ant compile
+
+ * Source (non-generated):
+
+   The non-generated version of the source tar-ball is default source 
+distribution.  It contains the XML source files necessary to generate the 
+ICS Event parsing Java source.
+
+   $ ant generate
    $ ant compile
 
 
@@ -129,3 +144,6 @@ FINAL WORD
 http://www.sourceforge.net/projects/ictk . You will also find the latest
 version there, as well as the CVS (which is highly unstable).  Enjoy 
 the library.
+
+---
+Last Updated: 2003-09-30 by jvarsoke

@@ -45,6 +45,15 @@ package goes in a subdirectory of the main game.  So if you were to add
 CrazyHouse to ictk you should put in under /ictk/boardgame/chess/crazyhouse.
 
 
+ICS EVENTS
+----------
+Most ICS event code is generated from XML through a XSTL translator against
+a template.  There are very few exceptions to this (style12 and movelist to 
+name just 2).  Submitting changes to the Java code for the generated files
+is okay, but it's prefered that you submit a change for the XML instead, or
+at least a change that doesn't necessitate changing the template.
+
+
 DOCUMENTATION
 -------------
 
@@ -75,3 +84,6 @@ line like this:
 
 
 Best of luck to you.
+
+---
+Last Updated: 2003-09-30 by jvarsoke

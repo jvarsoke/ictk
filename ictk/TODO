@@ -6,7 +6,7 @@ TODO List
 The following are features that on the drawing board for the future, and in 
 general order of priority:
 
-   o FICS support
+   o FICS support (continuing to implement full server protocol)
    o Cloning support for classes
    o CrazyHouse
    o BugHouse
@@ -27,3 +27,6 @@ general order of priority:
 
 For a more complete and updated list, check out the Features section of the
 ictk.sourceforge.net project page.
+
+---
+Last Updated: 2003-09-30 by jvarsoke
