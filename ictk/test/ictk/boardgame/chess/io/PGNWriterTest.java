@@ -34,7 +34,7 @@ import ictk.boardgame.chess.*;
 import java.io.*;
 
 public class PGNWriterTest extends TestCase {
-   public static String dataDir = "./";
+   public String dataDir = "./";
    String bulk_nonvariation = "test_nonvariation.pgn",
           bulk_variation = "test_variation.pgn",
           bulk_annotation = "test_annotation.pgn";
@@ -52,6 +52,9 @@ public class PGNWriterTest extends TestCase {
 
    public PGNWriterTest (String name) {
       super(name);
+
+      if (System.getProperty("ictk.boardgame.chess.io.dataDir") != null)
+         dataDir = System.getProperty("ictk.boardgame.chess.io.dataDir");
    }
 
    public void setUp () {
@@ -88,21 +91,28 @@ public class PGNWriterTest extends TestCase {
       //Log.addMask(SAN.DEBUG);
       //Log.addMask(PGNReader.DEBUG);
       //Log.addMask(ChessGameInfo.DEBUG);
-      int count = 0;
+      try { 
+	 int count = 0;
 
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + bulk_nonvariation)));
+	    in = new PGNReader(
+		    new FileReader(
+		       new File(dataDir + bulk_nonvariation)));
 
-	 while ((game = in.readGame()) != null) {
-	    writer = new PGNWriter(sw = new StringWriter()); 
-	    writer.writeGame(game);
-	    spgnin = new PGNReader(new StringReader(sw.toString()));
-	    game2 = spgnin.readGame();
-	    assertTrue(game.getHistory().equals(game2.getHistory()));
-	    assertTrue(((ChessGameInfo)game.getGameInfo())
-	      .equals(game2.getGameInfo()));
-	 }
+	    while ((game = in.readGame()) != null) {
+	       writer = new PGNWriter(sw = new StringWriter()); 
+	       writer.writeGame(game);
+	       spgnin = new PGNReader(new StringReader(sw.toString()));
+	       game2 = spgnin.readGame();
+	       assertTrue(game.getHistory().equals(game2.getHistory()));
+	       assertTrue(((ChessGameInfo)game.getGameInfo())
+		 .equals(game2.getGameInfo()));
+	    }
+      }
+      finally {
+          Log.removeMask(SAN.DEBUG);
+          Log.removeMask(PGNReader.DEBUG);
+          Log.removeMask(ChessGameInfo.DEBUG);
+      }
    }
 
    ///////////////////////////////////////////////////////////////////////////
@@ -190,6 +200,7 @@ public class PGNWriterTest extends TestCase {
 
       game.getHistory().next();
       game2.getHistory().next();
+
       assertTrue(game.getHistory().getCurrentMove().equals(
          game2.getHistory().getCurrentMove()));
 

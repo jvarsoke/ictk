@@ -41,7 +41,7 @@ public class ChessResult implements Result {
                            BLACK_WIN                      = WHITE_WIN + 1;
 
       /** what result has this Result been set to?*/
-   protected int index = 0;
+   protected int index = UNDECIDED;
 
       /* reason for the result ex: what the draw by repition, agreement, 
        * 50 move rule etc?*/

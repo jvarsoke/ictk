@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 public class PGNReaderTest extends TestCase {
-   public static String dataDir = "./";
+   public String dataDir = "./";
    String pgn_nonvariation = "test_nonvariation.pgn",
           pgn_variation    = "test_variation.pgn",
           pgn_annotation   = "test_annotation.pgn",
@@ -51,8 +51,13 @@ public class PGNReaderTest extends TestCase {
    List        games;
    ChessAnnotation anno;
 
+   //constructor
    public PGNReaderTest (String name) {
       super(name);
+
+      //so we can call the test from other directories.
+      if (System.getProperty("ictk.boardgame.chess.io.dataDir") != null)
+         dataDir = System.getProperty("ictk.boardgame.chess.io.dataDir");
    }
 
    public void setUp () {
@@ -71,6 +76,23 @@ public class PGNReaderTest extends TestCase {
       Log.removeMask(san.DEBUG);
       Log.removeMask(ChessBoard.DEBUG);
    }
+   ///////////////////////////////////////////////////////////////////////////
+   /** this is used for testing new PGNs that have revealed bugs.
+    *  After the bug is squashed the PGN should be moved to another
+    *  file to become a permenent member of the regression testing
+    *  suite.
+    */
+   public void testDebug () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_debug, false, -1);
+      //assertTrue(games.size() > 0);
+   }
+
 
    ///////////////////////////////////////////////////////////////////////////
    public void testBulkNonVariation () 
@@ -110,23 +132,6 @@ public class PGNReaderTest extends TestCase {
    }
 
    ///////////////////////////////////////////////////////////////////////////
-   /** this is used for testing new PGNs that have revealed bugs.
-    *  After the bug is squashed the PGN should be moved to another
-    *  file to become a permenent member of the regression testing
-    *  suite.
-    */
-   public void testDebug () 
-          throws FileNotFoundException,
-	  	 IOException, 
-	         InvalidGameFormatException,
-		 IllegalMoveException,
-		 AmbiguousMoveException,
-		 Exception {
-      games = loadGames(dataDir + pgn_debug, false, -1);
-      //assertTrue(games.size() > 0);
-   }
-
-   ///////////////////////////////////////////////////////////////////////////
    public void testAnnotationCommentAfterMove () 
           throws FileNotFoundException,
 	  	 IOException, 
@@ -144,6 +149,26 @@ public class PGNReaderTest extends TestCase {
 	 history.next();
 	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
 	 assertTrue(anno.getComment().equals("Best by test"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testNonVariationResultSwitchBug () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+
+      games = loadGames(dataDir + pgn_nonvariation, false, 4);
+      game = (ChessGame) games.get(4);
+
+      game.getHistory().rewind();
+      res = (ChessResult) game.getResult();
+      game.getHistory().goToEnd();
+      Result res2 = game.getHistory().getCurrentMove().getResult();
+      assertTrue(res.equals(res2));
+      assertTrue(res.isWhiteWin());
    }
 
    ///////////////////////////////////////////////////////////////////////////

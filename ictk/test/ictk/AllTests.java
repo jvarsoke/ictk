@@ -39,14 +39,7 @@ public class AllTests {
       TestSuite suite= new TestSuite("ictk Test");
       suite.addTest(ictk.boardgame.AllTests.suite());
       suite.addTest(ictk.boardgame.chess.AllTests.suite());
-
-      dataDir = "boardgame/chess/io/";
-
-      if (System.getProperty("ictk.boardgame.chess.io.dataDir") != null)
-         dataDir = System.getProperty("ictk.boardgame.chess.io.dataDir");
-
-      suite.addTest(ictk.boardgame.chess.io.AllTests.suite(dataDir));
-         
+      suite.addTest(ictk.boardgame.chess.io.AllTests.suite());
          
       return suite;
    }

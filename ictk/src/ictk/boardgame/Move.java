@@ -77,16 +77,20 @@ public abstract class Move {
       /**the next move by default. Is set each descent down the list.*/
    protected Move    prev;      //the previous move in the history of the game
 
+     /** typically this is only used for the end of a game or variation line
+      ** and indicates that there is some finality to the game at this point.
+      **/
+   protected Result     result;
+
      /** comment before the move. */
    protected Annotation prenotation,
      /** comment after the move */
                         annotation;
 
+   //Constructors/////////////////////////////////////////////////////////////
    public Move () {
       continuation = new ContinuationArrayList(this);
    }
-
-   //Constructors/////////////////////////////////////////////////////////////
 
    //Accessors///////////////////////////////////////////////////////////
    public History getHistory () { return history; }
@@ -230,7 +234,16 @@ public abstract class Move {
    /* getResult ********************************************************/
    /** returns the current game result on this move.
     */
-   public abstract Result getResult ();
+   public Result getResult () {
+      return result;
+   }
+
+   /* setResult ********************************************************/
+   /** sets the result.
+    */
+   public void setResult (Result res) {
+      result = res;
+   }
 
    // IO ////////////////////////////////////////////////////////////////
    public abstract String toString ();
@@ -249,6 +262,7 @@ public abstract class Move {
 	   .append("\n")
 	   .append("annotation: ").append(annotation)
 	   .append("\n")
+	   .append("result: ").append(result);
 	   ;
       return sb.toString();
    }

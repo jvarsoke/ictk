@@ -27,6 +27,8 @@
       -=[ ictk ]=- Internet Chess ToolKit
                    http://ictk.sourceforge.net
    </description>
+   <!-- environment properties  -->
+   <property environment="env"/> 
 
    <!-- global properties -->
    <property name="version"           value="0.1.1"/>
@@ -44,6 +46,12 @@
    <property name="release.file"      value="ictk-${version}"/>
    <property name="output.jar"        value="${release.file}.jar"/>
 
+   <!--JUnit -->
+   <!-- might need to change this if your platform isn't supported by Ant -->
+   <property name="junit.home"          value="${env.JUNIT_HOME}"/>
+   <property name="junit.print.results" value="yes"/>
+   <property name="junit.results.dir"   value="results"/>
+
    <!-- for latest CVS version use -Dcvs.tag=HEAD on the command line -->
    <property name="cvs.anon"
              value=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/ictk"/>
@@ -56,10 +64,6 @@
    <!-- these are jar files distributed with ictk -->
    <property name="lib.dir"           value="lib"/>
 
-   <!-- environment properties  -->
-   <!-- might need to change this if your platform isn't supported by Ant -->
-   <property environment="env"/> 
-   <property name="junit.home"        value="${env.JUNIT_HOME}"/>
 
    <!-- source files to compile for distro -->
    <fileset dir="${source.dir}" casesensitive="yes">
@@ -194,17 +198,43 @@
    </target>
 
 
-   <!-- test suite -->
+   <!-- the JUnit tests ..................................................-->
    <target name="test" depends="compile_test"
            description="performs the JUnit test battery">
-      <java
-         classname="ictk.AllTests"
-	 classpathref="compile_test.class.path">
+
+<!-- only used for the formatter
+      <mkdir dir="${junit.results.dir}"/>
+-->
+      <junit fork="no"
+             haltonerror="yes"
+	     printsummary="${junit.print.results}"
+	     >
+
+         <classpath>
+	    <pathelement path="${compile_test.class.path}"/>
+	 </classpath>
+
 	 <sysproperty 
 	    key="ictk.boardgame.chess.io.dataDir" 
 	    value="test/ictk/boardgame/chess/io/"
 	 />
-      </java>
+
+<!--
+	 <formatter type="plain"
+	            usefile="false"
+		    />
+-->
+
+	 <batchtest fork="no"
+	            todir="${junit.results.dir}"
+	            >
+	    <fileset dir="${test.dir}">
+	       <include name="**/*Test.java"/>
+	       <exclude name="**/AllTests.java"/>
+	       <exclude name="**/net/**"/>
+            </fileset>
+	 </batchtest>
+      </junit>
    </target>
 
    <!-- ..................................................................-->

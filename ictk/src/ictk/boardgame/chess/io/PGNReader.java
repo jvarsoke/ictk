@@ -179,6 +179,8 @@ public class PGNReader extends ChessReader {
 //NEED: should read all move data into one string (eliminate \n) until \n\n
 //NEED: ^ problem with ; comment
          //should detect '\n' and stop there. so can throw on bad move format
+      if (Log.debug)
+         Log.debug(DEBUG, "reading History");
 
       StringBuffer sb = new StringBuffer();
 
@@ -196,11 +198,13 @@ public class PGNReader extends ChessReader {
 
       String tok2 = null;
       while (st != null && st.hasMoreTokens()) {
-         if (Log.debug)
-	    Log.debug(DEBUG, "token: " + tok);
 
          tok = st.nextToken();
 
+         if (Log.debug)
+	    Log.debug(DEBUG, "token: " + tok);
+
+         //delimeter token
          if (tok.charAt(0) == ' '
 	     || tok.charAt(0) == '.' 
 	     || tok.startsWith("\n")) continue;  //token delim
@@ -305,9 +309,17 @@ public class PGNReader extends ChessReader {
          //move number or Result
 	 else if (Character.isDigit(tok.charAt(0))) {
 	    if ((res = (ChessResult) notation.stringToResult(tok)) != null) {
+	       if (Log.debug)
+	          Log.debug(DEBUG, "Result token: " + tok);
 	       done = true;
-	       if (lastMove != null)
+	       if (lastMove != null) {
 		  lastMove.setResult(res);
+		  if (Log.debug)
+		     Log.debug(DEBUG, "Result set: " + res);
+	       }
+	       else
+	          if (Log.debug)
+		     Log.debug(DEBUG, "Result not set; no last move");
 	    }
 	 }
 
@@ -438,6 +450,8 @@ public class PGNReader extends ChessReader {
 
          //undecided result of game
 	 else if (tok.charAt(0) == '*') {
+	    if (Log.debug)
+	       Log.debug(DEBUG, "Result token: " + tok);
 	    if (lastMove != null)
 	       lastMove.setResult(new ChessResult(ChessResult.UNDECIDED));
 	 }
@@ -449,9 +463,27 @@ public class PGNReader extends ChessReader {
 	       Log.debug(DEBUG, "No idea what this is: <" + tok + ">");
 	 }
       }
+
+      if (Log.debug) {
+         history.goToEnd();
+	 if (history.getCurrentMove() != null) {
+            Log.debug(DEBUG, "final result is: " 
+	       + history.getCurrentMove().getResult());
+	 }
+      }
+
       history.rewind();
-      if (count == 0) return null;
-      else return history;
+
+      if (count == 0) {
+         if (Log.debug)
+	    Log.debug(DEBUG, "finished reading History: empty");
+         return null;
+      }
+      else {
+         if (Log.debug)
+	    Log.debug(DEBUG, "finished reading History");
+         return history;
+      }
    }
 
    /* readBoard *********************************************************/

@@ -790,44 +790,6 @@ public class ChessBoard implements Board {
 	 return false;
    }
 
-   /* isDraw ****************************************************************/
-   /** returns if the game is drawn (see Move.isDraw()) */
-   public boolean isDraw () {
-      if (lastMove != null)
-         return lastMove.draw;
-      else
-         return false;
-   }
-
-   /* isResign **************************************************************/
-   /** returns if the game has been resigned by the player whose move it is*/
-   public boolean isResign () {
-      if (lastMove != null)
-         return lastMove.resign;
-      else
-         return false;
-   }
-
-   /* setDraw ***************************************************************/
-   /** sets the draw field of the last move executed.
-    */
-   protected void setDraw (boolean t) {
-      if (lastMove != null) 
-         lastMove.setDraw(t);
-      else //not implemented yet
-         throw new NullPointerException("Cannot draw a game with no moves.");
-   }
-
-   /* setResign *************************************************************/
-   /** sets the resign field of the last move executed.
-    */
-   protected void setResign (boolean t) {
-      if (lastMove != null)
-         lastMove.setResign(t);
-      else //not implemented yet
-         throw new NullPointerException("Cannot resign a game with no moves.");
-   }
-
    //Info///////////////////////////////////////////////////////////////////
    /** returns the character matrix array of the current board.  This will
     *  contain characters to represent the pieces.  The characters are of

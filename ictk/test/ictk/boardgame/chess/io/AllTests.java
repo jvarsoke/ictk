@@ -28,25 +28,18 @@ package ictk.boardgame.chess.io;
 import junit.framework.*;
 
 public class AllTests {
-   static protected String dataDir = "./";
 
    public static void main(String[] args) {
       junit.textui.TestRunner.run(suite());
    }
 
    public static Test suite () {
-      return suite(dataDir);
-   }
-	
-   public static Test suite (String dataDir) {
       TestSuite suite= new TestSuite("ictk.chess.io Test");
       suite.addTest(new TestSuite(NAGTest.class));
       suite.addTest(new TestSuite(ChessAnnotationTest.class));
       suite.addTest(new TestSuite(SANTest.class));
       suite.addTest(new TestSuite(FENTest.class));
-      PGNReaderTest.dataDir = dataDir;
       suite.addTest(new TestSuite(PGNReaderTest.class));
-      PGNWriterTest.dataDir = dataDir;
       suite.addTest(new TestSuite(PGNWriterTest.class));
       return suite;
    }

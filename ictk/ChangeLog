@@ -33,6 +33,9 @@ Legend:
 0.1.2 - *IN PROGRESS*
    [dev]    source distribution no longer comes with javadoc, since it can
             be easily created through the build tool.
+   [dev]    build.xml now uses the JUnit task instead of calling AllTests
+            directly as before.  junit.print.results can be used to 
+	    toggle summary display.
 
    [docs]   default distribution docs will not be for "public" members only.
             To create docs with different access use the build tool against
@@ -45,6 +48,14 @@ Legend:
    [chess]  fixed 776408 - double annotation do not respect variation bounds
    [chess]  fixed 777732 - PGNWriter not writing numeric NAGs
             {thanks: Jerome Zago for the bug report}
+   [chess]  fixed 777741 - Black resigns on White's move yields wrong result.
+            Carved out pre-Result object result code.  Now all results are
+	    as Result objects attached to the last move in the list.  Currently
+	    there is no provision for assuring that a Resulting move is
+	    terminal.  Also several functions were removed: 
+	    ChessBoard.setResign(), getResign, setDraw, getDraw, and similar 
+	    were removed from ChessMove.  You should now be using getResult().
+	    {thanks: Jermone Zago for the bug report}
 
 0.1.1 - 2003-07-20 bug fixes
    [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.

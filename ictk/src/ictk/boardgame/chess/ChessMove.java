@@ -122,10 +122,6 @@ public class ChessMove extends Move {
            checkmate,
       /** does the move result in stalemate */
 	   stalemate,
-      /** does the other player resign after this move */
-           resign,
-      /** is a draw agreed to after this move */
-           draw,
       /** is the move a castle on the queen's side */
 	   castleQueenside,
       /** is the move a castle on the king's side */
@@ -618,42 +614,22 @@ public class ChessMove extends Move {
       return stalemate;
    }
 
-   /* isResign *********************************************************/
-   /** does the other player resign after this move?
-    */
-   public boolean isResign () {
-      return resign;
-   }
-
-   /* isDraw ***********************************************************/
-   /** do both players agree to a draw after this move
-    *  this is not the same as a stalemate and is set seperately
-    */
-   public boolean isDraw () {
-      return draw;
-   }
-
    /* isEndOfGame ******************************************************/
    /** does this move terminate the game, either by checkmate, 
-    *  stalemate, draw or resign.  This does not indicate that
-    *  their is no current move that follows this move.
+    *  stalemate, or an ChessResult has been set for the move.  
+    *  This does <b>not</b> indicate that their is no current move that 
+    *  follows this move.
     */
    public boolean isEndOfGame () {
-      return (checkmate || stalemate || draw || resign);
+      return (checkmate || stalemate || 
+              (result != null && !result.isUndecided()));
    }
 
    /* getResult ***********************************************************/
    /** returns the result of the game.
     */
    public Result getResult () {
-      //FIXME: what if black resigned on white's move?
-      if (checkmate || resign)
-         return (isBlackMove()) ? new ChessResult(ChessResult.BLACK_WIN) 
-	                        : new ChessResult(ChessResult.WHITE_WIN);
-      else if (stalemate || draw)
-         return new ChessResult(ChessResult.DRAW);
-      else
-         return new ChessResult(ChessResult.UNDECIDED);
+      return result;
    }
 
    //move attribute sets////////////////////////////////////////////////////
@@ -671,44 +647,42 @@ public class ChessMove extends Move {
          check = t;
    }
 
+   /* setStalemate ********************************************************/
+   /** sets teh checkmate flag and also sets the result field
+    *  to a new ChessResult <b>if and only if</b> result was
+    *  null.  This is to allow irregularities such as when
+    *  the players don't know it's mate and one resigns.
+    */
    protected void setCheckmate (boolean t) {
       checkmate = t;
+      if (result == null)
+         result = new ChessResult((board.isBlackMove()) 
+	             ? ChessResult.BLACK_WIN
+	             : ChessResult.WHITE_WIN);
    }
 
+   /* setStalemate ********************************************************/
+   /** sets teh stalemate flag and also sets the result field
+    *  to a new ChessResult <b>if and only if</b> result was
+    *  null.  This is to allow irregularities such as when
+    *  the players don't know it's stalemate and one resigns.
+    */
    protected void setStalemate (boolean t) {
       stalemate = t;
+      if (result == null)
+         result = new ChessResult(ChessResult.DRAW);
    }
 
-   /* setResult ************************************************************/
-   /** sets the result of this game.
-    */
-   public void setResult (ChessResult res) {
-      switch (res.getIndex()) {
-         case ChessResult.WHITE_WIN: 
-	 case ChessResult.BLACK_WIN: setResign(true); break;
-	 case ChessResult.DRAW:      setDraw(true); break;
-	 case ChessResult.UNDECIDED:
-         default:        setResign(false);
-                         setDraw(false);
-      }
-   }
+   /* setResult **********************************************************/
+   public void setResult (Result res) {
+      result = res;
 
-   /* setResign ***********************************************************/
-   /** setting the result only affect the mainline
-    */
-   public void setResign (boolean t) {
-      resign = t;
-      if (t) draw = false;
-      continuation.setMainLineTerminal();
-   }
+      //need to make sure there are no moves after this one on this line.
+      if (res != null && !res.isUndecided())
+         continuation.setMainLineTerminal();
 
-   /* setDraw *************************************************************/
-   /** setting the result only affect the mainline
-    */
-   public void setDraw (boolean t) {
-      draw = t;
-      if (t) resign = false;
-      continuation.setMainLineTerminal();
+      //FIXME: should we walk back up the history and erase Results?
+      //FIXME: or erase result when we do an add(Move) to the main line?
    }
 
    //Execution/////////////////////////////////////////////////////////////
@@ -959,8 +933,7 @@ public class ChessMove extends Move {
 	   .append("   isDoubleCheck: " + doublecheck + "\n")
 	   .append("   isCheckmate: " + checkmate + "\n")
 	   .append("   isStalemate: " + stalemate + "\n")
-	   .append("   isResign: " + resign + "\n")
-	   .append("   isDraw: " + draw + "\n")
+	   .append("   result: " + result + "\n")
 	   .append("   isEndOfGame: " + isEndOfGame() + "\n")
 	   .append("   prenotation: ").append(getPrenotation())
 	   .append("\n")

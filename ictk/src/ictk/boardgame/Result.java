@@ -34,7 +34,7 @@ package ictk.boardgame;
  */
 public interface Result {
       /** the came has not been decided, or is still in progress*/
-   public static final int UNDECIDED = -2;
+   public static final int UNDECIDED = 0;
 
    /* isUndecided **********************************************************/
    /** returns true if the game is yet undecided.
