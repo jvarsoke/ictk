@@ -405,9 +405,6 @@ Move  homerg                  drakorg
 	         .append(moves[i].getMoveTimeAsString())
 	         .append(")\n");
 	 }
-
-	 if (!moves[moves.length-1].isBlack())
-	    sb.append("\n");
       }
 
       //current result

@@ -67,6 +67,8 @@
    <property name="xslt.home"         value="${env.XALAN_HOME}"/>
    <property name="xslt.ics.event.dir" 
              value="${source.dir}/ictk/boardgame/chess/net/ics/event"/>
+   <property name="xslt.ics.event.parser.dir" 
+             value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event"/>
 
       <!-- compile path for XSLT -->
    <path id="xslt.class.path">
@@ -146,6 +148,7 @@
            depends="check_xalan,error_xalan" 
 	   if="xalan_is_good"
            description="generates source code from XML files">
+      <!-- event and parsers -->
       <xslt 
          basedir="${xslt.ics.event.dir}"
 	 destdir="${xslt.ics.event.dir}"
@@ -162,20 +165,45 @@
          <fileset dir="${xslt.ics.event.dir}"
 	          includes="*.tmp.log"
 	 />
+      </concat>
 
+      <!-- parser tests -->
+      <xslt 
+         basedir="${xslt.ics.event.parser.dir}"
+	 destdir="${xslt.ics.event.parser.dir}"
+	 classpathref="xslt.class.path"
+	 style="${xslt.ics.event.parser.dir}/templateParser.xsl"
+	 includes="parserTests.xml"
+	 extension=".tmp.log"
+	 force="yes"
+	 >
+      </xslt>
+      <concat destfile="${xslt.ics.event.parser.dir}/genfiles.log">
+         <fileset dir="${xslt.ics.event.parser.dir}"
+	          includes="*.tmp.log"
+	 />
       </concat>
       <!-- get rid of the useless log files -->
       <delete>
          <fileset dir="${xslt.ics.event.dir}" 
                   includes="*.tmp.log"
 	 />
+         <fileset dir="${xslt.ics.event.parser.dir}" 
+                  includes="*.tmp.log"
+	 />
       </delete>
+
+      <!-- report all files -->
       <echo>Generated Files</echo>
       <concat>
          <fileset dir="${xslt.ics.event.dir}"
 	          includes="genfiles.log"
 	 />
+         <fileset dir="${xslt.ics.event.parser.dir}"
+	          includes="genfiles.log"
+	 />
       </concat>
+
    </target>
 
    <!-- compile targets -->
