@@ -1,0 +1,12 @@
+##FICSKibitzEventParserTest Data file
+##$Id$
+##Says
+Handle[12] says: Hey
+##Kibitzes
+Handle(1200)[12] kibitzes: Hey
+##Whispers
+Handle(1231)[99] whispers: Hey
+##Kibitz
+tjraczko(1520)[57] kibitzes: actually I have two brains.......one's out
+\   looking for the other!
+
