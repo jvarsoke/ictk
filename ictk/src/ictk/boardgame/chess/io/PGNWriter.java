@@ -639,8 +639,12 @@ public class PGNWriter extends ChessWriter {
 	       Log.debug(DEBUG, "writing: " + buffer.toString());
 	    buffer.delete(0, buffer.length());
 
-	    if (indentVariations && variationsDeep != 1)
-	       buffer.append(this.indentStr);
+	    if (indentVariations) {
+	       if (variationsDeep > 0)
+	          buffer.append(this.indentStr);
+	       if (variationsDeep > 1)
+	          buffer.append(this.indentStr);
+	    }
 
 	    buffer.append(str);
          }
