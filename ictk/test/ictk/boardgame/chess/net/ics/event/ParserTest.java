@@ -84,7 +84,7 @@ public class ParserTest extends TestCase {
 	    //otherwise just skip it
 	 }
 	 else {
-	    sb.append(line);
+	    sb.append(line).append("\n");
 	    lines++;
 	 }
       }
@@ -145,7 +145,7 @@ public class ParserTest extends TestCase {
 	 for (int i=0; i < mesg.length; i++) {
 	     evt = parser.createICSEvent(mesg[i]); 
 	     assertTrue(evt != null);
-	     nativeStr = parser.toNative(evt);
+	     nativeStr = parser.toNative(evt) + "\n";
 
              if (debug && !nativeStr.equals(mesg[i])) {
 		System.out.println("origin[" +i + "]: " + mesg[i]);
