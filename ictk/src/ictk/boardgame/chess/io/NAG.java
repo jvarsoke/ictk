@@ -157,8 +157,8 @@ public class NAG {
    }
 
    /* isSymbol **************************************************************/
-   /** checks to see if the number matches of the recognized symbols
-    *  such as !, ?!, +=, RR, D.
+   /** checks to see if the number matches of the recognized symbols.
+    *  Such as !, ?!, +=, RR, D.
     *
     *  @return true if the String exactly matches one of the standard symbols.
     */
@@ -189,8 +189,8 @@ public class NAG {
    }
 
    /* isSymbol **************************************************************/
-   /** checks to see if the String exactly matches of the recognized symbols
-    *  such as !, ?!, +=.
+   /** checks to see if the String exactly matches of the recognized symbols.
+    *  Such as !, ?!, +=.
     *
     *  @return true if the String exactly matches one of the standard symbols.
     */
