@@ -28,6 +28,7 @@
 		xmlns:redirect="http://xml.apache.org/xalan/redirect"
                 xmlns:str="http://ictk.sourceforge.net/namespace/string"
                 xmlns:text="http://ictk.sourceforge.net/namespace/text"
+		xmlns:java="java"
 		extension-element-prefixes="redirect"
 		>
 
@@ -81,6 +82,12 @@
  */
 
 package ictk.boardgame.chess.net.ics.event;
+
+/*--------------------------------------------------------------------------*
+ * This file was auto-generated 
+ * by $Id$
+ * on <xsl:value-of select="java:util.Date.new()"/>
+ *--------------------------------------------------------------------------*/
 
 import ictk.boardgame.chess.net.ics.*;
 import ictk.boardgame.chess.net.ics.fics.event.*;

@@ -28,6 +28,7 @@
 		xmlns:str="http://ictk.sourceforge.net/namespace/string"
 		xmlns:text="http://ictk.sourceforge.net/namespace/text"
 		xmlns:redirect="http://xml.apache.org/xalan/redirect"
+		xmlns:java="java"
 		extension-element-prefixes="redirect"
 		>
 
@@ -93,6 +94,12 @@
 package ictk.boardgame.chess.net.ics.<xsl:call-template name="str:toLower">
    <xsl:with-param name="input" select="@protocol"/>
    </xsl:call-template>.event;
+
+/*--------------------------------------------------------------------------*
+ * This file was auto-generated 
+ * by $Id$
+ * on <xsl:value-of select="java:util.Date.new()"/>
+ *--------------------------------------------------------------------------*/
 
 import ictk.boardgame.chess.net.ics.event.*;
 import ictk.boardgame.chess.net.ics.*;
