@@ -27,7 +27,7 @@ package ictk.boardgame.chess.net.ics;
 
 import java.util.regex.Matcher;
 
-/** Ratings are the strenght estimates on the server.
+/** Ratings are playing strength estimates on the server.
  */
 public class ICSRating {
 

@@ -1,0 +1,15 @@
+<html>
+<body>
+<p>The FICS event package contains all events and parsers for those events 
+that are generated from FICS servers.  Most of the default ICS parsers 
+appear here.  The events they are associated with generally appear in the 
+ICS event package.
+<p>Each parser implements the Singleton design pattern. Thus there can only be
+once instance of each parser (why would you nee more?).  You can get that
+instance via the .getInstance() method.
+<p>The toNative() method allows ICSEvents to be translated back into their
+original server output.  This is also mapped to the default 
+ICSEvent.toString() function
+</body>
+</html>
+

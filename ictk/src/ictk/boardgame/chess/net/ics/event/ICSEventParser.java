@@ -32,16 +32,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /* ICSEventParser ***********************************************************/
-/** The base class for all ICSEventParsers.
+/** Parses server messages and produces ICSEvent objects.  All parsers 
+ *  implement the Singleton design pattern. 
  */
 public abstract class ICSEventParser {
    public static final long DEBUG = Log.ICSEventParser;
    
    public static final String 
-      REGEX_handle    = "([\\w]+)",
-      REGEX_acct_type = "((?:\\([A-Z*]+\\))*)",
-      REGEX_rating    = "\\(\\s*([0-9+-]+[EP]?)\\)",
-      REGEX_mesg      = "((.|\\s+\\\\|\\s+:)*)",
          /*Sun Nov  3, 21:11 CET 2002*/
       REGEX_date      = "((\\w{3})\\s(\\w{3})\\s+"
                       + "(\\d+),\\s(\\d+):(\\d{2})\\s"

@@ -26,6 +26,9 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
+/** Events that occur on specific board.  For example, kibitzes,
+ *  moves etc.
+ */
 public interface ICSBoardEvent {
 
    public static final int NO_BOARD = -1;

@@ -27,6 +27,10 @@ package ictk.boardgame.chess.net.ics;
 import ictk.boardgame.chess.net.ics.event.*;
 import java.util.HashMap;
 
+/** Routes ICSEvent messages to ICSEventListeners. It is possible to
+ *  use one router for many live connections to different servers. At least
+ *  that's an intended goal.
+ */
 public class ICSEventRouter {
       /** the default router receives all events that aren't sent elsewhere*/
    ICSEventListener defaultRoute;
@@ -50,14 +54,28 @@ public class ICSEventRouter {
       boardSubscribers = new HashMap();
    }
 
+   /* setDefaltRoute ********************************************************/
+   /** This listener receives all message that are not exclusively
+    *  processed by some other listener.  Uncategorized output is also
+    *  sent to the default route.
+    */
    public void setDefaultRoute (ICSEventListener eh) {
       defaultRoute = eh;
    }
 
+   /* getDefaltRoute ********************************************************/
+   /** This listener receives all message that are not exclusively
+    *  processed by some other listener.  Uncategorized output is also
+    *  sent to the default route.
+    */
    public ICSEventListener getDefaultRoute () {
       return defaultRoute;
    }
 
+   /* dispatch **************************************************************/
+   /** an event sent to this method will be relayed to all the listeners
+    *  who are interested in it.
+    */
    public void dispatch (ICSEvent evt) {
       if (subscribers[evt.getEventType()] != null) {
       }
@@ -67,6 +85,11 @@ public class ICSEventRouter {
    }
 
    /* addEventListener ******************************************************/
+   /** tells the router that this listener would like to hear a particular
+    *  type of event.
+    *
+    *  @param icsEventNumber an ICSEvent.<FOO>_EVENT
+    */
    public void addEventListener (ICSEventListener eh,
                                  int icsEventNumber) {
    }
@@ -85,6 +108,10 @@ public class ICSEventRouter {
    }
 
    /* addChannelListener ***************************************************/
+   /** adds a listener to a particular channel.  This is useful if you want
+    *  to log particular channels, or send them to different display 
+    *  areas.
+    */
    public void addChannelListener (ICSEventListener eh,
                                    int channelNumber) {
    }

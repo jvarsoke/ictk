@@ -25,6 +25,8 @@
 
 package ictk.boardgame.chess.net.ics;
 
+/** Types of games available on ICS servers.
+ */
 public class ICSVariant {
    public static final int UNKNOWN        =  0,
 		           UNTIMED        =  1,

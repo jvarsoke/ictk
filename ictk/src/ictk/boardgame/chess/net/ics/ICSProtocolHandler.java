@@ -28,6 +28,9 @@ package ictk.boardgame.chess.net.ics;
 import java.net.*;
 import java.io.*;
 
+/** The generic connection object.  This handles logins, disconnects
+ *  and chunking the server messages.
+ */
 public abstract class ICSProtocolHandler implements Runnable {
    protected Thread thread;
 

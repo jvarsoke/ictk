@@ -27,6 +27,13 @@ package ictk.boardgame.chess.net.ics.event;
 
 import ictk.boardgame.chess.net.ics.*;
 
+/** Implement this interface to receive events from the server.  The object
+ *  must also tell the ICSRouter which events it would like to be notified
+ *  about.
+ */
 public interface ICSEventListener {
+   /** When an event is received by the ICSRouter and this object is on
+    *  the Listener list, this method will be called.
+    */
    public void icsEventDispatched (ICSEvent evt);
 }

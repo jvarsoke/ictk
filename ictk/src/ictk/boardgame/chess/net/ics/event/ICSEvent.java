@@ -33,6 +33,14 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/** <p>A message from the server indicating something happened. All events
+ *  are timestamped (with the client's receiving time).  If Log.debug is 
+ *  true then the original server message is also stored.  If Log.debug
+ *  isn't true you'll save some memory overhead and the native message
+ *  can be rebuilt from the appropriate parser.
+ *  <p>Fake messages are also supported (those issued by bots but 
+ *  intending to emulate the server).
+ */
 public abstract class ICSEvent {
    public static final long   DEBUG = Log.ICSEvent;
    public static final int    

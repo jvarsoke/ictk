@@ -27,6 +27,9 @@ package ictk.boardgame.chess.net.ics;
 
 import java.util.Calendar;
 
+/** This contians info on games such as initial time, increment and player
+ *  names.
+ */
 public class ICSGameInfo {
 
    protected boolean isBlack,

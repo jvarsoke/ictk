@@ -27,8 +27,9 @@ package ictk.boardgame.chess.net.ics;
 
 /**This interface is for those Events that are triggered as a response
  *  to the client's command.  The ResponseKey is an arbitrary identifier
- *  used to link back to the caller of the command
+ *  used to link back to the caller of the command.
  */
+ /* this is primarily for FICS BLOCK_MODE */
 public interface ICSResponse {
 
    /**Determines if this Event was generated in response to a client's command*/

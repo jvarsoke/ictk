@@ -35,9 +35,8 @@
 	  extends="ICSMessageEvent">
 
       <description>
-         This cooresponds to Kibitz, Whisper, and Board Say  messages.
+         This cooresponds to Kibitz, Whisper, and Board Say messages.
          The EventType tells which one it is.
-	 this is a really long description and I'm hoping to see the text wrap so I can test the new function I got from the book with all the new features this should look really good.
       </description>
 
       <implements idref="board"/>
