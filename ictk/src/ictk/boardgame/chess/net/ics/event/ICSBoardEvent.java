@@ -31,7 +31,8 @@ import ictk.boardgame.chess.net.ics.*;
  */
 public interface ICSBoardEvent {
 
-   public static final int NO_BOARD = -1;
+   public static final int NO_BOARD      = -1,
+                           PRIMARY_BOARD = -2;
 
    public int getBoardNumber ();
    public void setBoardNumber (int b);

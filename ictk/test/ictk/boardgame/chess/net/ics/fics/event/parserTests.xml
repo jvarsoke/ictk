@@ -219,4 +219,46 @@
 	 event="GenericBoard"
 	 >
    </unit>
+
+   <!-- generic board - Examine Commit ....................................-->
+   <unit id="examineCommit"
+         class="ExamineCommit"
+	 event="GenericBoard"
+	 >
+   </unit>
+
+   <!-- generic board - Examine Navigation End.............................-->
+   <unit id="examineNavigationEnd"
+         class="ExamineNavigationEnd"
+	 event="GenericBoard"
+	 >
+   </unit>
+
+   <!-- generic board - Examine Navigation End Variation...................-->
+   <unit id="examineNavigationEndVariation"
+         class="ExamineNavigationEndVariation"
+	 event="GenericBoard"
+	 >
+   </unit>
+   <!-- generic board - Examine Navigation Begin...........................-->
+   <unit id="examineNavigationBegin"
+         class="ExamineNavigationBegin"
+	 event="GenericBoard"
+	 >
+   </unit>
+
+   <!-- generic board - Examiner Self .....................................-->
+   <unit id="examinerSelf"
+         class="ExaminerSelf"
+	 event="GenericBoard"
+	 >
+   </unit>
+
+   <!-- generic board - Examiner Other.....................................-->
+   <unit id="examinerOther"
+         class="ExaminerOther"
+	 event="GenericBoard"
+	 >
+   </unit>
+
 </unitTest>

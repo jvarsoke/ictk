@@ -83,9 +83,16 @@ public abstract class ICSEvent {
 			      HISTORY_EVENT                = 28,
 
       //generic board events
-			      EXAMINE_NAVIGATION_EVENT     = 29,
-			      EXAMINE_REVERT_EVENT         = 30,
-			      NUM_EVENTS		   = 31;
+			      EXAMINE_NAVIGATION_EVENT         = 29,
+			      EXAMINE_NAVIGATION_END_EVENT     = 30,
+			      EXAMINE_NAVIGATION_BEGIN_EVENT   = 31,
+			      EXAMINE_NAVIGATION_END_VAR_EVENT = 32,
+			      EXAMINE_REVERT_EVENT             = 33,
+			      EXAMINE_COMMIT_EVENT             = 34,
+
+			      EXAMINER_SELF_EVENT              = 35,
+			      EXAMINER_OTHER_EVENT             = 36,
+			      NUM_EVENTS		       = 37;
 
       /** each event has a type for easy casting */
    protected int eventType = UNKNOWN_EVENT;

@@ -84,7 +84,7 @@
 	 </assignMatches>
 
          <!-- toNative -->
-         <toNative avgLength="46">
+         <toNative avgLength="48">
 	    <code format="java">
       sb.append("Game ")
         .append(evt.getBoardNumber())
@@ -135,7 +135,7 @@
 	 </assignMatches>
 
          <!-- toNative -->
-         <toNative avgLength="46">
+         <toNative avgLength="48">
 	    <code format="java">
       sb.append("Game ")
         .append(evt.getBoardNumber())
@@ -144,6 +144,248 @@
 	.append(" reverts to main line move ")
 	.append(evt.getData())
 	.append(".");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!--Examine Commit parser ............................................-->
+      <!-- Game 29: guesttick commits the subvariation.-->
+      <parser id="examineCommit:parser"
+              name="ExamineCommit"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINE_COMMIT"
+	      detectFake="no">
+         <description>
+	    This event is generated when one of the players examining a 
+	    game commits the subvariation (makes the variation the main line).
+	    The Data field is not used for anything.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    Game\s(\d+):\s
+	    <regexref ref="regex:fics:player"/>
+	    \scommits\sthe\ssubvariation\.
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="genericBoard:boardNumber"/>
+	    <regexgroup num="3" memberref="genericBoard:player"/>
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="48">
+	    <code format="java">
+      sb.append("Game ")
+        .append(evt.getBoardNumber())
+	.append(": ")
+	.append(evt.getPlayer())
+	.append(" commits the subvariation.");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!--Examine Navigation End Parser ....................................-->
+      <!-- You're at the end of the game. -->
+      <parser id="examineNavigationEnd:parser"
+              name="ExamineNavigationEnd"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINE_NAVIGATION_END"
+	      detectFake="no">
+
+         <description>
+	    When the player tries to navigate forward past the end of
+	    the game's history of moves, this warning is issued by the
+	    server.
+	    The BoardNumber for this event will always be
+	    ICSBoardEvent.PRIMARY_BOARD, since this is message only results
+	    from issuing the command on a board the user is examining.
+	    The Data field contains no information.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    You're\sat\sthe\send\sof\sthe\sgame\.
+	 </regex>
+
+         <!-- toNative -->
+         <toNative avgLength="31">
+	    <code format="java">
+      sb.append("You're at the end of the game.");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!--Examine Navigation End Variation..................................-->
+      <!-- You cannot go forward unless you are on the main line. -->
+      <parser id="examineNavigationEndVariation:parser"
+              name="ExamineNavigationEndVariation"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINE_NAVIGATION_END_VAR"
+	      detectFake="no">
+
+         <description>
+	    When the player tries to navigate forward in an uncommited
+	    variation, which hasn't become the main line yet.
+	    The BoardNumber for this event will always be
+	    ICSBoardEvent.PRIMARY_BOARD, since this is message only results
+	    from issuing the command on a board the user is examining.
+	    The Data field contains no information.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    You\scannot\sgo\sforward\sunless\syou\sare\son\sthe\smain\sline\.
+	 </regex>
+
+         <!-- toNative -->
+         <toNative avgLength="55">
+	    <code format="java">
+      sb.append("You cannot go forward unless you are on the main line.");
+	    </code>
+	 </toNative>
+      </parser>
+
+
+      <!--Examine Navigation Begin .........................................-->
+      <!-- You're at the beginning of the game. -->
+      <parser id="examineNavigationBegin:parser"
+              name="ExamineNavigationBegin"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINE_NAVIGATION_BEGIN"
+	      detectFake="no">
+
+         <description>
+	    When the player tries to navigate back past the start of
+	    the main line this event is issued by the server.
+	    The BoardNumber for this event will always be
+	    ICSBoardEvent.PRIMARY_BOARD, since this is message only results
+	    from issuing the command on a board the user is examining.
+	    The Data field contains no information.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    You're\sat\sthe\sbeginning\sof\sthe\sgame.
+	 </regex>
+
+         <!-- toNative -->
+         <toNative avgLength="37">
+	    <code format="java">
+      sb.append("You're at the beginning of the game.");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!-- Examiner Self...................................................-->
+      <!-- TibetianTick has made you an examiner of game 104.-->
+      <!-- You are no longer examining game 29.-->
+      <parser id="examinerSelf:parser"
+              name="ExaminerSelf"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINER_SELF"
+	      detectFake="no">
+         <description>
+	    This event is generated when someone has made the user an
+	    examiner of a game.  The Data field indicates whether 
+	    someone else has just made the user and examiner (1), or 
+	    whether the user has stopped examining a game (-1).
+	    If the user has just been made an examiner, then the
+	    Player field will return who made the user an examiner.
+	    If the user has stopped examining the game the 
+	    getPlayer() method will return null.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    <regexref ref="regex:fics:player"/>\s
+	    ((has\smade\syou\san\sexaminer\sof\sgame\s)
+	    |
+	    (are\sno\slonger\sexamining\sgame\s))
+	    (\d+)\.
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="genericBoard:player"/>
+	    <regexgroup num="6" memberref="genericBoard:boardNumber"/>
+      if (m.group(5) != null) {
+         evt.setPlayer(null);
+	 evt.setData(-1);
+      }
+      else {
+         evt.setData(1);
+      }
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="53">
+	    <code format="java">
+      if (evt.getData() == 1)
+         sb.append(evt.getPlayer())
+	   .append(" has made you an examiner of game ");
+      else
+         sb.append("You are no longer examining game ");
+      sb.append(evt.getBoardNumber())
+        .append(".");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!-- Examiner Other..................................................-->
+      <!-- guesttick is now an examiner of game 29.-->
+      <!-- guesttick stopped examining game 29.-->
+      <parser id="examinerOther:parser"
+              name="ExaminerOther"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINER_OTHER"
+	      detectFake="no">
+         <description>
+	    This event is issued when someone else becomes or stops
+	    being an examiner of a game the user is observing or 
+	    examining.
+	    The Data field indicates whether the user has become (1)
+	    or stopped (-1).
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    <regexref ref="regex:fics:player"/>\s
+	    ((is\snow\san\sexaminer\sof\sgame)
+	    |
+	    (stopped\sexamining\sgame))
+	    \s(\d+)\.
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="genericBoard:player"/>
+	    <regexgroup num="6" memberref="genericBoard:boardNumber"/>
+      if (m.group(5) != null) {
+	 evt.setData(-1);
+      }
+      else {
+         evt.setData(1);
+      }
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="50">
+	    <code format="java">
+         sb.append(evt.getPlayer());
+      if (evt.getData() == 1)
+	 sb.append(" is now an examiner of game ");
+      else
+         sb.append(" stopped examining game ");
+      sb.append(evt.getBoardNumber())
+        .append(".");
 	    </code>
 	 </toNative>
       </parser>

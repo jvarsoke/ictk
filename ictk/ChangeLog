@@ -34,8 +34,8 @@ Legend:
 	    Events well be consolidated in Generic forms.  You'll know which
 	    event is which by getEventType().
    [fics]   added events:
-               examine forward and backward
-               revert
+               examine, mex, forward, backward, revert, forward at end of game,
+	       back at begin of game, forward on variation.
    [test]   removed AllTests.java for Parser tests.
    [test]   added allTests.xsl to autogenerate the AllTest file, so we 
             don't miss any tests.  build.xml was changed to this effect.
