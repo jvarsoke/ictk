@@ -49,6 +49,11 @@
               varname="notified"
 	      functname="Notification"
               />
+      <member id="pcon:onNotifyList"   typeref="boolean"
+              varname="onNotifyList"
+	      functname="OnNotifyList"
+              />
+
 
       <!--pin parser-->
       <parser id="pcon:pinparser"
@@ -103,6 +108,7 @@
 	    <regexref ref="regex:fics:accountType"/>
 	    \shas\s
 	    (arrived|departed)
+	    (\sand\sisn't\son\syour\snotify\slist)?
 	    \.
 	 </regex>
 
@@ -112,6 +118,7 @@
 	    <regexgroup num="3" memberref="pcon:accountType"/>
       evt.setConnected("arrived".equals(m.group(4)));
       evt.setNotification(true);
+      evt.setOnNotifyList(m.group(5) != null);
       evt.setEventType(ICSEvent.PLAYER_NOTIFICATION_EVENT);
 	 </assignMatches>
 
@@ -124,9 +131,14 @@
         .append(" has ");
 
       if (evt.isConnected())
-         sb.append("arrived.");
+         sb.append("arrived");
       else
-         sb.append("departed.");
+         sb.append("departed");
+
+      if (evt.isOnNotifyList())
+         sb.append(" and isn't on your notify list");
+
+      sb.append(".");
 	    </code>
 	 </toNative>
       </parser>

@@ -4,3 +4,7 @@ Notification: mrbishop has arrived.
 Notification: mrbishop has departed.
 ##
 :Notification: mrbishop has departed.
+##
+Notification: drakorg has arrived and isn't on your notify list.
+##
+Notification: drakorg has departed and isn't on your notify list.
