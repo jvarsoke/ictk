@@ -172,7 +172,10 @@ public class SimplePGNDemo {
       println("       comments: " + comments);
       println("     variations: " + variations); //off mainline
 
-      println("         result: " + san.resultToString(game.getResult()));
+      if (game.getResult() == null)
+         println("         result: undecided");
+      else
+         println("         result: " + san.resultToString(game.getResult()));
       System.out.println();
    }
 
