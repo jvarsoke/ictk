@@ -164,7 +164,9 @@ public abstract class ICSProtocolHandler implements Runnable {
    }
 
    /* isConnected ************************************************************/
-   /** is the program currently connected to the host.
+   /** is the program currently connected to the host.  Note: this does
+    *  not indicate if the program is logged into the server.  You cannot
+    *  start sending commands yet.  Instead you need to use isLoggedIn();
     */
    public boolean isConnected () {
       if (socket == null)
