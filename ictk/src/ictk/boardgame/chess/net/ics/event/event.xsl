@@ -127,11 +127,18 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
 <xsl:apply-templates select="implements" mode="method"/>
    //readable//////////////////////////////////////////////////////////////
    public String getReadable () {
+      <xsl:choose>
+         <xsl:when test="count(parser) > 1">
       String str = null;
          switch (getEventType()) {
 	    <xsl:apply-templates select="parser" mode="readableSwitch"/>
 	 }
       return str;
+         </xsl:when>
+	 <xsl:otherwise>
+	    <xsl:apply-templates select="parser" mode="readable"/>
+	 </xsl:otherwise>
+      </xsl:choose>
    }
 }
 </redirect:write>
@@ -280,6 +287,13 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
    }
 
 </xsl:if>
+</xsl:template>
+
+<!-- readable (only one parser) -->
+<xsl:template match="parser" mode="readable">
+   <xsl:text>return </xsl:text>
+   <xsl:value-of select="concat(@protocol,@name,'Parser')"/>
+   <xsl:text>.getInstance().toNative(this);</xsl:text>
 </xsl:template>
 
 <!-- readableSwitch -->
