@@ -122,7 +122,7 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
 
    static {
       masterPattern  = Pattern.compile(
-         "^:?(" //begin
+         "^<xsl:if test="@detectFake='yes'">:?</xsl:if>(" //begin
 <xsl:apply-templates select="regex" mode="java"/>
          + ")"  //end
          , Pattern.MULTILINE);
@@ -183,6 +183,7 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
 </xsl:template>
 
 <!-- REGEX - process the regex to java code format -->
+<!-- FIXME: if the regex is a single line for some reason it is lost -->
 <xsl:template match="regex" mode="java">
 
    <xsl:call-template name="text:regex-format">

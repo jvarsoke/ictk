@@ -100,8 +100,8 @@ public class ANSIConsole implements ICSEventListener {
 
 /*
 	  case ICSEvent.SEEK_REMOVE_EVENT:
-	  case ICSEvent.SEEK_CLEAR_EVENT:
 	  */
+	  case ICSEvent.SEEK_CLEAR_EVENT:
 	  case ICSEvent.SEEK_AD_EVENT:
 
 	  case ICSEvent.PLAYER_CONNECTION_EVENT:

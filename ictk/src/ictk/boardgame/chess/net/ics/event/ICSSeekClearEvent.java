@@ -1,10 +1,8 @@
 /*
  *  ICTK - Internet Chess ToolKit
  *  More information is available at http://ictk.sourceforge.net
- *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  Copyright (C) 2003 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
- *
- *  $Id$
  *
  *  This file is part of ICTK.
  *
@@ -24,20 +22,45 @@
  */
 
 package ictk.boardgame.chess.net.ics.event;
+
+/*--------------------------------------------------------------------------*
+ * This file was auto-generated 
+ * by $Id$
+ * on Sun Aug 24 12:53:05 EST 2003
+ *--------------------------------------------------------------------------*/
+
 import ictk.boardgame.chess.net.ics.*;
+import ictk.boardgame.chess.net.ics.fics.event.*;
+import ictk.util.Log;
 
 import java.util.regex.*;
+import java.io.IOException;
 
-public class ICSSeekClearEvent extends ICSEvent 
-                                        implements ICSSeekEvent {
-   public static final int SEEK_CLEAR_EVENT = ICSEvent.SEEK_CLEAR_EVENT;
+/**
+ * This message from the server indicates that all known seeks should 
+ * be cleared.                                                        
+ */
+public class ICSSeekClearEvent extends ICSEvent {
 
-   //instance/////////////////////////////////////////////////////////////
+
+   //static initializer/////////////////////////////////////////////////////
+   protected static final int SEEK_CLEAR_EVENT =  ICSEvent.SEEK_CLEAR_EVENT;
+
+   
+
+   //instance vars//////////////////////////////////////////////////////////
+
+
+   //constructors///////////////////////////////////////////////////////////
    public ICSSeekClearEvent () {
       super(SEEK_CLEAR_EVENT);
    }
 
+   //assessors/////////////////////////////////////////////////////////////
+   //mutators//////////////////////////////////////////////////////////////
+
+   //readable//////////////////////////////////////////////////////////////
    public String getReadable () {
-      return "<SeekClear>";
+      return FICSSeekClearParser.getInstance().toNative(this);
    }
 }
