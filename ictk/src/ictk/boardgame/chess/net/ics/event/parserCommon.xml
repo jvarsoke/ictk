@@ -93,4 +93,12 @@
       <regex id="regex:fics:result">(\S+)</regex>
    </membertype>
 
+   <!-- variant -->
+   <membertype id="variant" 
+	       type="ICSVariant"
+	       varname="variant"
+	       functname="Variant">
+      <regex id="regex:fics:variant">(\S+)</regex>
+   </membertype>
+
 </ictkml>

@@ -104,11 +104,13 @@ public class ANSIConsole implements ICSEventListener {
 	  case ICSEvent.SEEK_CLEAR_EVENT:
 	  case ICSEvent.PLAYER_CONNECTION_EVENT:
 	  case ICSEvent.PLAYER_NOTIFICATION_EVENT:
+	  */
 	  case ICSEvent.GAME_RESULT_EVENT:
 	  case ICSEvent.GAME_CREATED_EVENT:
 	     prefix = ESC + BOLD_BLACK;
 	     break;
 
+/*
 	  case ICSEvent.SEEK_AD_READABLE_EVENT:
 	  case ICSEvent.GAME_NOTIFICATION_EVENT:
 	     prefix = ESC + BLUE;

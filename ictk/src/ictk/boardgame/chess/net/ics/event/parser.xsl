@@ -277,6 +277,11 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
       select="$regexgroup"/>)));<!-- -->
       </xsl:when>
 
+      <xsl:when test="$type='ICSVariant'">
+      evt.setVariant(new ICSVariant(m.group(<xsl:value-of 
+      select="$regexgroup"/>)));<!-- -->
+      </xsl:when>
+
       <!-- unknown -->
       <xsl:otherwise>
       //FIXME: don't know how to set type <xsl:value-of select="@type"/>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE ictkml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- tell event ........................................................-->
+   <event id="gameCreated" 
+          class="GameCreated"
+	  enum="GAME_CREATED">
+
+      <description>
+         These are game result notifications.  Typically they are seen as part
+	 of setting <i>gin 1</i> on the server.
+      </description>
+
+      <implements idref="board"/>
+
+      <member id="gameCreated:boardNumber"      typeref="boardNumber"
+              inherit="method"
+	      />
+      <member id="gameCreated:whitePlayer"      typeref="player"
+              varname="white"
+	      functname="WhitePlayer"
+              />
+      <member id="gameCreated:blackPlayer"      typeref="player"
+              varname="black"
+	      functname="BlackPlayer"
+              />
+      <member id="gameCreated:continued"        typeref="boolean"
+	      varname="continued"
+	      functname="Continued"
+	      />
+      <member id="gameCreated:rated"            typeref="boolean"
+              varname="rated"
+	      functname="Rated"
+              />
+      <member id="gameCreated:variant"          typeref="variant"/>
+
+
+      <!--parser-->
+      <parser id="gameCreated:parser"
+              name="GameCreated"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="yes">
+
+         <!-- regex -->
+	 <regex>
+            \{Game\s
+            (\d+)                               <!-- game number -->
+            \s\(
+	    <regexref ref="regex:fics:player"/> <!--white-->
+            \svs\.\s
+	    <regexref ref="regex:fics:player"/> <!--black-->
+            \)\s
+            (Creating|Continuing)               <!-- continued -->
+            \s
+            (rated|unrated)                     <!-- rated? -->
+            \s
+	    <regexref ref="regex:fics:variant"/> <!--variant-->
+            \smatch\.}
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="gameCreated:boardNumber"/>
+	    <regexgroup num="3" memberref="gameCreated:whitePlayer"/>
+	    <regexgroup num="4" memberref="gameCreated:blackPlayer"/>
+	    <regexgroup num="7" memberref="gameCreated:variant"/>
+      evt.setContinued("Continuing".equals(m.group(5)));
+      evt.setRated("rated".equals(m.group(6)));
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="50">
+	    <code format="java">
+      sb.append("{Game ")
+        .append(evt.getBoardNumber())
+        .append(" (")
+        .append(evt.getWhitePlayer())
+        .append(" vs. ")
+        .append(evt.getBlackPlayer())
+        .append(") ");
+
+      if (evt.isContinued())
+         sb.append("Continuing ");
+      else
+         sb.append("Creating ");
+
+      if (!evt.isRated())
+         sb.append("un");
+
+      sb.append("rated ")
+        .append(evt.getVariant())
+        .append(" match.}");
+	    </code>
+
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>
