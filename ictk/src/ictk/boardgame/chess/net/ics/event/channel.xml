@@ -122,7 +122,8 @@
          <!-- regex -->
 	 <regex>
 	    (
-	    (-->\s)       <!-- emotes -->
+	    (-->\s)      <!-- emotes -->
+	    (?:\n\\\s+)? <!-- in rare case of no-space long message  -->
 	    <regexref ref="regex:fics:player"/>
 	    <regexref ref="regex:fics:accountType"/>
 	    <regexref ref="regex:fics:message"/>
