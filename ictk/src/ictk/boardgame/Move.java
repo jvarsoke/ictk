@@ -238,13 +238,16 @@ public abstract class Move {
 
    /* getResult ********************************************************/
    /** returns the current game result on this move.
+    *
+    *  @return null if no result has been assigned to this move.
     */
    public Result getResult () {
       return result;
    }
 
    /* setResult ********************************************************/
-   /** sets the result.
+   /** sets the result. Note: a move does not have to be terminal to 
+    *  have a result.
     */
    public void setResult (Result res) {
       result = res;
