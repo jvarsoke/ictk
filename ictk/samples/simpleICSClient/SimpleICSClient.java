@@ -34,37 +34,59 @@
  */
 
 import ictk.boardgame.chess.net.ics.ui.cli.ANSIConsole;
+import ictk.boardgame.chess.net.ics.ICSProtocolHandler;
+import ictk.boardgame.chess.net.ics.ICSEventRouter;
 import ictk.boardgame.chess.net.ics.fics.FICSProtocolHandler;
+import ictk.boardgame.chess.net.ics.event.ICSEvent;
 
 public class SimpleICSClient {
    String handle;
    String passwd;
 
-   FICSProtocolHandler fics;
+   ICSProtocolHandler ics;
    ANSIConsole ansiConsole;
    CommandInput commandLine;
    
-   /** Creates new form SimpleICSClient */
-    public SimpleICSClient(String handle, String passwd) {
-        this.handle = handle;
-	this.passwd = passwd;
+   /** creates a new SimpleICSClient registereing the ICS protocol handler
+    *  and the default listener for all events.
+    */
+   public SimpleICSClient(String handle, String passwd) {
+      this.handle = handle;
+      this.passwd = passwd;
 
-	fics = new FICSProtocolHandler();
-	ansiConsole = new ANSIConsole();
-	fics.getEventRouter().setDefaultListener(ansiConsole);
+      ics = new FICSProtocolHandler();
+      ansiConsole = new ANSIConsole();
 
-        commandLine = new CommandInput("Simple ICS Client", fics);
-    }
+      ICSEventRouter router = ics.getEventRouter();
+      router.setDefaultListener(ansiConsole);
 
+      //channel 1 (help) goes to a different listener
+      router.addChannelListener(ICSEvent.CHANNEL_EVENT, 1,
+				new ChannelListenerExample());
+
+      //need all other channel events to still go to ansiConsole
+      ics.getEventRouter().addEventListener(ICSEvent.CHANNEL_EVENT, ansiConsole);
+
+      //so the main ChannelEvent listener doesn't also get the event
+      router.setChannelExclusive(ICSEvent.CHANNEL_EVENT, 1, true);
+      //so the defaultListener doesn't get the event
+      router.setExclusive(ICSEvent.CHANNEL_EVENT, true);
+
+      commandLine = new CommandInput("Simple ICS Client", ics);
+   }
+
+    /** if not already connected this will establish a connection to the
+     *  server.
+     */
     public void connect() {
        // Add your handling code here:
-       if (!fics.isConnected()) {
+       if (!ics.isConnected()) {
           try {
 	     System.out.println("[Client] attempting to connect");
-	     fics.setHandle(handle);
-	     fics.setPassword(passwd);
-	     fics.setLagCompensation(true);
-             fics.connect();
+	     ics.setHandle(handle);
+	     ics.setPassword(passwd);
+	     ics.setLagCompensation(true);
+             ics.connect();
 	  }
 	  catch (java.net.UnknownHostException e) {
 	     e.printStackTrace();

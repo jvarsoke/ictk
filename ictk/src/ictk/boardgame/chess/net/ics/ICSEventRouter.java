@@ -32,6 +32,8 @@ import java.util.HashMap;
  *  that's an intended goal.
  */
 public class ICSEventRouter {
+      /** key offset for integers so they can be put in the hash */
+   protected static int OFFSET = 1000;
       /** the default listener receives all events or those not sent to a 
        ** exclusive listener (depending on set options). */
    ICSEventListener defaultListener;
@@ -43,33 +45,23 @@ public class ICSEventRouter {
        ** and the [1] set the the channel number,
        ** the value is a ICSEventListener[] */
    protected HashMap chSubscribers,
-
-      /** subscribers to individual boards.
-       ** the key is the board number.
-       ** the value is a 3 element array of 
-       ** ICSEventListener arrays.  The 3 elements
-       ** indicate types of events the listener wants*/
-                     boardSubscribers;
+      /** determines if the channel(shout, tournament channel,  etc) 
+       ** events will be sent only to the listener subscribing
+       ** specifically to the channel number.  If this is false
+       ** the CHANNEL_EVENT or SHOUT_EVENT listener will also 
+       ** receive the event. */
+                     chExclusive;
 
       /** a list of which events are exclusively listed to by the 
        ** subscriber (event if null) instead of also being sent 
        ** to the defaultListener */
    protected boolean[] exclusive;
 
-      /** determines if the channel(shout, tournament channel,  etc) 
-       ** events will be sent only to the listener subscribing
-       ** specifically to the channel number.  If this is false
-       ** the CHANNEL_EVENT or SHOUT_EVENT listener will also 
-       ** receive the event. */
-   protected boolean exclusiveChannel,
-
-                     exclusiveBoard;
-
 
    public ICSEventRouter () {
       subscribers = new ICSEventListener[ICSEvent.NUM_EVENTS][];
       chSubscribers = new HashMap();
-      boardSubscribers = new HashMap();
+      chExclusive = new HashMap();
       exclusive = new boolean[ICSEvent.NUM_EVENTS];
    }
 
@@ -96,6 +88,7 @@ public class ICSEventRouter {
     *  who are interested in it.
     */
    public void dispatch (ICSEvent evt) {
+      Integer key = null;
       int type = evt.getEventType(),
           i = 0;
       ICSEventListener[] listeners = null;
@@ -107,12 +100,13 @@ public class ICSEventRouter {
          case ICSEvent.CHANNEL_EVENT:
          case ICSEvent.TOURNAMENT_CHANNEL_EVENT:
          case ICSEvent.SHOUT_EVENT:
-	    int[] key = new int[2];
-	    key[0] = type;
-	    key[1] = ((ICSChannelEvent) evt).getChannel();
+	    key = new Integer(type * OFFSET 
+	                      + ((ICSChannelEvent) evt).getChannel());
 
 	    listeners = (ICSEventListener[]) chSubscribers.get(key);
-	    done = exclusiveChannel;
+	    done = (listeners != null) 
+	         && isChannelExclusive(type, 
+		       ((ICSChannelEvent) evt).getChannel());
 
 	    break;
 
@@ -150,8 +144,11 @@ public class ICSEventRouter {
     *
     *  @param icsEventNumber an ICSEvent.<FOO>_EVENT
     */
-   public void addEventListener (ICSEventListener eh,
-                                 int icsEventNumber) {
+   public void addEventListener (int icsEventNumber,
+                                 ICSEventListener eh) {
+
+      subscribers[icsEventNumber] 
+         = _addListener(subscribers[icsEventNumber], eh);
    }
 
    /* setExclusive **********************************************************/
@@ -196,14 +193,12 @@ public class ICSEventRouter {
     *  @param channelNumber is number of the channel, or in the case of 
     *                     shouts is the type of shout.
     */
-   public void addChannelListener (ICSEventListener eh,
-                                   int channelType,
-                                   int channelNumber) {
-      int[] key = new int[2];
-      ICSEventListener[] list;
+   public void addChannelListener (int channelType,
+                                   int channelNumber,
+				   ICSEventListener eh) {
 
-      key[0] = channelType;
-      key[1] = channelNumber;
+      Integer key = new Integer(channelType * OFFSET + channelNumber);
+      ICSEventListener[] list;
 
       list = (ICSEventListener[]) chSubscribers.get(key);
       list = _addListener(list, eh);
@@ -211,14 +206,11 @@ public class ICSEventRouter {
       chSubscribers.put(key, list);
    }
 
-   public void removeChannelListener (ICSEventListener eh,
-                                   int channelType,
-                                   int channelNumber) {
-      int[] key = new int[2];
+   public void removeChannelListener (int channelType,
+                                   int channelNumber,
+				   ICSEventListener eh) {
+      Integer key = new Integer(channelType * OFFSET + channelNumber);
       ICSEventListener[] list;
-
-      key[0] = channelType;
-      key[1] = channelNumber;
 
       list = (ICSEventListener[]) chSubscribers.get(key);
       list = _removeListener(list, eh);
@@ -227,6 +219,21 @@ public class ICSEventRouter {
          chSubscribers.remove(key);
       else
          chSubscribers.put(key, list);
+   }
+
+   public void setChannelExclusive (int channelType,
+                                    int channelNumber,
+				    boolean t) {
+      Integer key = new Integer(channelType * OFFSET + channelNumber);
+      chExclusive.put(key, ((t) ? Boolean.TRUE : Boolean.FALSE));
+   }
+
+   public boolean isChannelExclusive (int channelType,
+                                      int channelNumber) {
+      Integer key = new Integer(channelType * OFFSET + channelNumber);
+      Boolean b = null;
+      return ((b = (Boolean) chExclusive.get(key)) != null) 
+             && b == Boolean.TRUE;
    }
 
    /* _addListener **********************************************************/
