@@ -24,26 +24,29 @@
  */
 
 /*
- * TestClient.java
+ * SimpleICSClient.java
  *
  * Created on March 12, 2002, 10:43 PM
  */
 
-package ictk.boardgame.chess.net;
-
+/* SimpleICSClient ***********************************************************/
 /**
+ * This is a simple ICS Chess Server client.  It logs in and color codes
+ * the text.  There is no Board associated with it yet, so playing a 
+ * game is not practical.  But it should give the simpist idea of how
+ * to write an interface with the ICTK library.
  *
  * @author  jvarsoke
  */
-public class TestClient extends javax.swing.JFrame implements java.awt.event.ActionListener {
+public class SimpleICSClient extends javax.swing.JFrame implements java.awt.event.ActionListener {
 
    static java.lang.String handle;
    static java.lang.String passwd;
 
    ictk.boardgame.chess.net.ics.fics.FICSProtocolHandler fics;
    
-   /** Creates new form TestClient */
-    public TestClient() {
+   /** Creates new form SimpleICSClient */
+    public SimpleICSClient() {
         initComponents();
 	fics = new ictk.boardgame.chess.net.ics.fics.FICSProtocolHandler();
 	connect(null);
@@ -58,7 +61,7 @@ public class TestClient extends javax.swing.JFrame implements java.awt.event.Act
        tfCommand = new javax.swing.JTextField();
        bConnect = new javax.swing.JButton();
        
-       setTitle("ICS Test Client");
+       setTitle("ICTK Sample ICS Client");
        addWindowListener(new java.awt.event.WindowAdapter() {
           public void windowClosing(java.awt.event.WindowEvent evt) {
              exitForm(evt);
@@ -136,7 +139,7 @@ public class TestClient extends javax.swing.JFrame implements java.awt.event.Act
        }
        handle = args[0];
        passwd = args[1];
-       new TestClient().show();
+       new SimpleICSClient().show();
     }
 
     public void actionPerformed(java.awt.event.ActionEvent actionEvent) {

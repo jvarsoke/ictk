@@ -262,8 +262,6 @@
 	       <include name="**/*Test.java"/>
 	       <exclude name="**/AllTests.java"/>
 	       <exclude name="**/junk/**"/>
-	       <exclude name="**/TestClient.java"/>
-	       <exclude name="**/TestTimeseal.java"/>
 	       <exclude name="**/ParserTest.java"/>
 	      <!-- <exclude name="**/net/**"/>
 	      -->

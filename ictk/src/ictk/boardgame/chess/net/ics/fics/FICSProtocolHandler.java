@@ -660,13 +660,10 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    }
 
    /* parse () **************************************************************/
-   /** The 'datagram' or message chunk has already been establish, not we
+   /** The 'datagram' or message chunk has already been establish, now we
     *  just gotta figure out what the message is and send it to the right
     *  listeners.
     */
-    /* What I wouldn't give for function pointers.  Yes, I know I can use
-     * reflection, but don't want to burn the CPU on it.
-     */
    protected void parse (CharSequence str) {
       ICSEvent icsEvent = null;
       Matcher matcher = null;

@@ -70,4 +70,27 @@ public class FICSTellEventParserTest extends ParserTest {
          Log.removeMask(ICSEventParser.DEBUG);
       }
    }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testMessage1 () {
+   debug = true;
+      if (debug)
+         Log.addMask(ICSEventParser.DEBUG);
+
+      try {
+	 parser.setDebug(true);
+	 evt = (ICSTellEvent) parser.createICSEvent(mesg[1]);
+	 assertTrue(evt != null);
+	 assertTrue(evt.getPlayer().equals("Handle"));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.COMPUTER));
+	 assertTrue(evt.getMessage().equals("Hey"));
+	 assertFalse(evt.isFake());
+	 assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
+
+	 assertFalse(evt.getMessage().equals("hey"));
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+      }
+   }
 }

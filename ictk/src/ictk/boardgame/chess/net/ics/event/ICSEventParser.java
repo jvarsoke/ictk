@@ -102,7 +102,7 @@ public abstract class ICSEventParser {
    public Matcher match (CharSequence s) {
       Matcher m = pattern.matcher(s);
 
-      if (m.lookingAt())
+      if (m.find())
          return m;
       else
          return null;
