@@ -103,11 +103,12 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
       if (event == BoardEvent.TRAVERSAL_BEGIN)
          waitingForTraversalEnd = true;
 
+      if (event == BoardEvent.TRAVERSAL_END)
+         waitingForTraversalEnd = false;
+
       if (!waitingForTraversalEnd)
          update(); 
 
-      if (event == BoardEvent.TRAVERSAL_END)
-         waitingForTraversalEnd = false;
    }
    //instance/////////////////////////////////////////////////////////////////
 
