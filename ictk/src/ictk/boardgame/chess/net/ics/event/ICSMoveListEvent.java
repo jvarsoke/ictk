@@ -30,6 +30,10 @@ import ictk.boardgame.chess.net.ics.fics.event.FICSMoveListParser;
 import java.io.IOException;
 import java.util.Calendar;
 
+/* ICSMoveListEvent *********************************************************/
+/** A list of moves from a game.  This is the result of the commands:
+ *  "moves" or "smoves".
+ */
 public class ICSMoveListEvent extends ICSEvent 
                               implements ICSBoardEvent{
    //static///////////////////////////////////////////////////////////////

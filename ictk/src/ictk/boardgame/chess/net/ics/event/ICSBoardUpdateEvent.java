@@ -26,14 +26,27 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
+/* ICSBoardUpdateEvent ******************************************************/
+/** A board representation that indicates the client should update the
+ *  local representation of the board.  An example of this is Sytle12.
+ */
 public class ICSBoardUpdateEvent extends ICSEvent 
                                           implements ICSBoardEvent {
+
    public static final int EVENT_TYPE = ICSEvent.BOARD_UPDATE_EVENT;
+
+      /** this is an isolated position the user is looking at.  This
+       ** arrises as a result of "ref 3" or the "sposition" command */
    public static final int ISO_POSITION_RELATION = -3,
+      /** this is a game being examined that the user is observing */
                            OBSERVING_EXAMINED_RELATION = -2,
+      /** this is a game the user is observing */
 			   EXAMINING_RELATION = 2,
+      /** this is a game the user is playing but it is not his move */
 			   PLAYING_NOT_MY_MOVE_RELATION = -1,
+      /** this is a game the user is playing and it is his move */
 			   PLAYING_MY_MOVE_RELATION = 1,
+      /** this is a game being played that the user is observing */
 			   OBSERVING_PLAY_RELATION = 0;
                            
    String white, black, verboseMove, sanMove;
@@ -50,7 +63,8 @@ public class ICSBoardUpdateEvent extends ICSEvent
                  irreversable,  
                  boardNumber,
 		 moveNumber,
-/*** my relation to this game:
+
+/** my relation to this game:
     -3 isolated position, such as for "ref 3" or the "sposition" command
     -2 I am observing game being examined
      2 I am the examiner of this game
@@ -188,6 +202,8 @@ public class ICSBoardUpdateEvent extends ICSEvent
    }
 
    ////////////////////////////////////////////////////////////////////////
+   /** this is completely temporary and only for diagnostic purposes.
+    */
    public String getReadable () {
       StringBuffer sb = new StringBuffer(80);
       sb.append("Board Update(" + getBoardNumber() + "): ")
@@ -236,5 +252,4 @@ public class ICSBoardUpdateEvent extends ICSEvent
    public String toString () {
       return getReadable();
    }
-
 }

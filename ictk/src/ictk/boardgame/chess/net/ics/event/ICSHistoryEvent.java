@@ -28,6 +28,10 @@ import ictk.boardgame.chess.net.ics.*;
 
 import java.io.IOException;
 
+/* ICSHistoryEvent **********************************************************/
+/** A history of games played by a particular user.  This is the result
+ *  of the "history" command.
+ */
 public class ICSHistoryEvent extends ICSEvent {
    //static///////////////////////////////////////////////////////////////
    protected static final int HISTORY_EVENT = ICSEvent.HISTORY_EVENT;
@@ -48,8 +52,9 @@ public class ICSHistoryEvent extends ICSEvent {
    public ICSGameInfo[] getHistoryList () { return list; }
    public void setHistoryList (ICSGameInfo[] l) { list = l; }
 
+   /** doesn't do much yet.
+    */
    public String getReadable () {
       return "History List";
    }
-
 }

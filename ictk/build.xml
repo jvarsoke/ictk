@@ -269,6 +269,9 @@
       <mkdir dir="${junit.results.dir}"/>
 -->
 
+      <!-- if this fails you probably don't have $JUNIT_HOME/junit.jar in your
+           CLASSPATH (which is required for Ant to use the JUnit task
+      -->
       <junit fork="no"
              haltonerror="yes"
 	     haltonfailure="yes"
@@ -393,7 +396,7 @@
    </target>
 
    <!-- binary distribution files -->
-   <target name="bin" depends="clean,jar,jar-nonet,docs"
+   <target name="bin" depends="clean,generate,jar,jar-nonet,docs"
            description="create the binary release file">
       <property name="bin.include"
            value="
@@ -450,7 +453,6 @@
 	    />
       </tar>
    </target>
-
 
    <!-- ..................................................................-->
 
@@ -513,6 +515,9 @@
       <delete dir="${build.dir}" />
       <delete dir="${docs.dir}" />
       <delete file="${output.jar}" />
+      <echo message="To delete generated code use (unix):"/>
+      <echo message="   $ (cd src/ictk/boardgame/chess/net/ics/event &amp;&amp; cat genfiles.log | xargs rm)"/>
+      <echo message="   $ (cd test/ictk/boardgame/chess/net/ics/fics/event &amp;&amp; cat genfiles.log | xargs rm)"/>
    </target>
 
    <!-- ..................................................................-->

@@ -6,6 +6,13 @@ These are general features, improvements and changes made to
 the suite of classes in ictk.  If you want a more specific
 account of what was changed look at the ChangeLog file.
 
+0.2.0 - **IN PROGRESS** FICS Support
+   o Limited FICS support
+   o Timeseal support
+   o XSLT java code generation for ICS events
+   o Sample ICS Client
+   o PGN bugs fixed
+
 0.1.3 - 2003-08-17 Bug fix and CLI display
    o Added an event structure for getting board updates
    o TxChessBoardDisplay (CLI) implements the event structure
