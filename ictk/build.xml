@@ -32,6 +32,10 @@
    <property name="version"           value="0.1.1"/>
    <property name="cvs.tag"           value="ictk-v0_1_1-Release"/>
    <property name="build.file.id"     value="$Id$"/>
+   <!-- if you want 'protected' docs, you should set this variable 
+	on the command line -->
+   <property name="docs.access"       value="public"/>
+
 
    <property name="source.dir"        value="src"/>
    <property name="test.dir"          value="test"/>
@@ -234,12 +238,35 @@
       <mkdir dir="${docs.dir}"/>
 
       <javadoc 
+         access="${docs.access}"
 	 source="1.4"
 	 packagenames="ictk.*"
 	 author="false"
 	 destdir="${docs.dir}"
 	 windowtitle="-=[ ictk ]=- API Documentation"
-	 classpathref="compile.class.path">
+	 doctitle="-=[ ictk ]=- API Documentation"
+	 header="&lt;b&gt;Internet Chess ToolKit&lt;/b&gt;
+	         &lt;br&gt;
+		 &lt;font size='-1'&gt;v${version}&lt;/font&gt;
+		 "
+	 footer="&lt;font size='-1'&gt;
+	         &lt;a href='http://www.sourceforge.net/projects/ictk/'&gt;
+		    Submit a bug or feature
+	         &lt;/a&gt;
+		 &lt;br&gt;
+		 Visit the &lt;a href='http://ictk.sourceforge.net/'&gt;
+		    Website
+	         &lt;/a&gt;
+		 &lt;br&gt;
+		 Internet Chess ToolKit is licensed under the 
+	         &lt;a href='http://www.gnu.org/copyleft/gpl.html'&gt;
+		 GPL v2
+	         &lt;/a&gt;.
+		 &lt;/font&gt;
+		 "
+	 overview="${source.dir}/ictk/overview.html"
+	 classpathref="compile.class.path"
+	 >
 	 <fileset dir="${source.dir}" casesensitive="yes">
 	    <patternset refid="non.test.sources"/>
 	 </fileset>
@@ -282,14 +309,13 @@
    </target>
 
    <!-- source distribution files -->
-   <target name="src" depends="compile_test,docs"
+   <target name="src" depends="compile_test"
            description="create the source release file">
 
       <property name="src.include"
            value="
 	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO
 	   build.xml
-	   ${docs.dir}/**
 	   ${source.dir}/**
 	   ${test.dir}/**
 	   ${lib.dir}/**

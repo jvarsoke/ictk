@@ -7,6 +7,8 @@ Legend:
    [all]    applies to all
    [dev]    applies to some development tool
    [test]   applies to the test suite
+   [docs]   applies to documentation
+
    [chess]  applies to chess model or io
    [gui]    applies to gui components
    [net]    applies to internet communication features
@@ -27,6 +29,13 @@ Legend:
    [fics]   added test suites for the parsers
    [fics]   added template files for Parsers and ParserTest to auto generate
             these files.
+
+0.1.2 - *IN PROGRESS*
+   [dev]    source distribution no longer comes with javadoc, since it can
+            be easily created through the build tool.
+   [docs]   default distribution docs will not be for "public" members only.
+            To create docs with different access use the build tool against
+	    the source with -Ddocs.access=<access_type> on the command line.
 
 0.1.1 - 2003-07-20 bug fixes
    [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.
