@@ -26,20 +26,41 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
-import java.util.regex.*;
+//import java.util.regex.*;
 import java.io.IOException;
 
-public abstract class ICSChannelEvent extends ICSMessageEvent {
+/* ICSChannelEvent **********************************************************/
+/** Channel Events double as Shout Events as well, since shouts are
+ *  really nothing more than channels.
+ */
+public class ICSChannelEvent extends ICSMessageEvent {
    //static///////////////////////////////////////////////////////////////
-   public static final int CHANNEL_EVENT = ICSEvent.CHANNEL_EVENT;
+   protected static final int CHANNEL_EVENT = ICSEvent.CHANNEL_EVENT;
+
+   public static final int SHOUT_CHANNEL  = -1,
+                           SSHOUT_CHANNEL = -2,
+			   CSHOUT_CHANNEL = -3,
+			   TSHOUT_CHANNEL = -4;
+
 
    //instance/////////////////////////////////////////////////////////////
+
+      /** this is the channel number, or type of shout */
    protected int channel;
+
+      /** is this an emote.  In shout this looks like "--> handle hugs"
+       ** In channel tells this looks like "handle(50): <-- hugs"*/
+   protected boolean isEmote; 
+
    protected ICSAccountType accountType;
    
    //constructors/////////////////////////////////////////////////////////
-   public ICSChannelEvent (ICSProtocolHandler server) {
-      super(server, CHANNEL_EVENT);
+   public ICSChannelEvent () {
+      super(CHANNEL_EVENT);
+   }
+
+   public void setAccountType (ICSAccountType t) {
+      accountType = t;
    }
 
    public ICSAccountType getAccountType () {
@@ -54,8 +75,50 @@ public abstract class ICSChannelEvent extends ICSMessageEvent {
       this.channel = channel;
    }
 
-   public String toString () {
-      return getPlayer() + getAccountType() + "(" + getChannel() + ")"
-         + ": " + getMessage();
+   public boolean isEmote () {
+      return isEmote;
+   }
+
+   public void setEmote (boolean t) {
+      isEmote = t;
+   }
+
+   public String getReadable () {
+      if (channel >= 0)
+         return getPlayer() 
+	        + getAccountType() 
+		+ "(" + getChannel() + ")"
+		+ ": "
+		+ ((isEmote()) ? "<-- " : "")
+                + getMessage();
+      else {
+	 if (channel == SHOUT_CHANNEL && isEmote())
+	    return 
+	        "--> " 
+		+ getPlayer() 
+		+ getAccountType() 
+		+ getMessage();
+	 else if (ICSEvent.UNKNOWN_EVENT == eventType) {
+	    return getMessage();
+	 }
+	 else {
+	    StringBuffer sb = new StringBuffer();
+	    sb.append(getPlayer())
+	      .append(getAccountType())
+	      .append(" ");
+
+	    switch (channel) {
+	       case CSHOUT_CHANNEL: sb.append("c-"); break;
+	       case SSHOUT_CHANNEL: sb.append("s-"); break;
+	       case TSHOUT_CHANNEL: sb.append("t-"); break;
+	       default:
+	    }
+	    sb.append("shouts: ");
+	    if (channel == SHOUT_CHANNEL && isEmote())
+	       sb.append("<-- ");
+	    sb.append(getMessage());
+	    return sb.toString();
+	 }
+      }
    }
 }

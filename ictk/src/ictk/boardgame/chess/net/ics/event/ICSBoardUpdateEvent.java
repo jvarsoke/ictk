@@ -26,9 +26,9 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
-public abstract class ICSBoardUpdateEvent extends ICSEvent 
+public class ICSBoardUpdateEvent extends ICSEvent 
                                           implements ICSBoardEvent {
-   public static final int BOARD_UPDATE_EVENT = ICSEvent.BOARD_UPDATE_EVENT;
+   public static final int EVENT_TYPE = ICSEvent.BOARD_UPDATE_EVENT;
    public static final int ISO_POSITION_RELATION = -3,
                            OBSERVING_EXAMINED_RELATION = -2,
 			   EXAMINING_RELATION = 2,

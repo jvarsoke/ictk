@@ -26,18 +26,16 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
-import java.util.regex.*;
 import java.io.IOException;
 
-public abstract class ICSHistoryEvent extends ICSEvent {
+public class ICSHistoryEvent extends ICSEvent {
    //static///////////////////////////////////////////////////////////////
-   public static final int HISTORY_EVENT = ICSEvent.HISTORY_EVENT;
+   protected static final int HISTORY_EVENT = ICSEvent.HISTORY_EVENT;
 
 
    //instance/////////////////////////////////////////////////////////////
    ICSGameInfo[] list;
    String player;
-
    
    //constructors/////////////////////////////////////////////////////////
    public ICSHistoryEvent (ICSProtocolHandler server) {
@@ -49,4 +47,9 @@ public abstract class ICSHistoryEvent extends ICSEvent {
 
    public ICSGameInfo[] getHistoryList () { return list; }
    public void setHistoryList (ICSGameInfo[] l) { list = l; }
+
+   public String getReadable () {
+      return "History List";
+   }
+
 }

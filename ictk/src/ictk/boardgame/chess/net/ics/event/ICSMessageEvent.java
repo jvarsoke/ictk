@@ -30,15 +30,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class ICSMessageEvent extends ICSEvent {
-      /** used to tag QTells that pose as something else*/
-   boolean isFake;
-      
    String player;
 
    //Contstructors/////////////////////////////////////////////////////////////
    public ICSMessageEvent (ICSProtocolHandler server, int eventType) {
       super(server, eventType);
    }
+
+   public ICSMessageEvent (int eventType) {
+      super(eventType);
+   }
+
 
    /*setPlayer****************************************************************/
    /**sets the author of this message

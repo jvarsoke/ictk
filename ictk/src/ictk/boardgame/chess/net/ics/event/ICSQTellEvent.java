@@ -42,9 +42,11 @@ public abstract class ICSQTellEvent extends ICSEvent {
       super(server, QTELL_EVENT);
    }
 
+/*
    public String toString () {
       return getMessage();
    }
+*/
 }
 
 

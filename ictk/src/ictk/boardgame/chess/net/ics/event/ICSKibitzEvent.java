@@ -24,7 +24,9 @@
  */
 
 package ictk.boardgame.chess.net.ics.event;
+
 import ictk.boardgame.chess.net.ics.*;
+import ictk.util.Log;
 
 import java.util.regex.*;
 import java.io.IOException;
@@ -33,30 +35,42 @@ import java.io.IOException;
 /**This cooresponds to Kibits messages and Whisper messages.  A flag
  * descerns which one it is.
  */
-public abstract class ICSKibitzEvent extends ICSMessageEvent 
+public class ICSKibitzEvent extends ICSMessageEvent 
                             implements ICSBoardEvent {
 
    //static initializer/////////////////////////////////////////////////////
-   public static final int KIBITZ_EVENT =  ICSEvent.KIBITZ_EVENT,
-                           WHISPER_EVENT = ICSEvent.WHISPER_EVENT;
+   protected static final int KIBITZ_EVENT =  ICSEvent.KIBITZ_EVENT,
+                              WHISPER_EVENT = ICSEvent.WHISPER_EVENT,
+			      BOARD_SAY_EVENT = ICSEvent.BOARD_SAY_EVENT;
 
    //instance vars//////////////////////////////////////////////////////////
-   protected boolean isWhisper;
    protected int boardNumber;
    protected ICSAccountType accountType;
    protected ICSRating rating;
 
    //constructors///////////////////////////////////////////////////////////
-   public ICSKibitzEvent (ICSProtocolHandler server) {
-      super(server, KIBITZ_EVENT);
+   public ICSKibitzEvent () {
+      super(KIBITZ_EVENT);
    }
 
    public ICSAccountType getAccountType () {
       return accountType;
    }
 
+   public void setAccountType (ICSAccountType acct) {
+      accountType = acct;
+   }
+
+   /** BOARD_SAY_EVENTs have no rating associated with them
+    */
    public ICSRating getRating () {
       return rating;
+   }
+
+   /** BOARD_SAY_EVENTs have no rating associated with them
+    */
+   public void setRating (ICSRating rating) {
+      this.rating = rating;
    }
 
    //ICSBoardEvent Interface//////////////////////////////////////////////////
@@ -68,8 +82,8 @@ public abstract class ICSKibitzEvent extends ICSMessageEvent
       return boardNumber;
    }
 
-   public String toString () {
-      StringBuffer sb = new StringBuffer();
+   public String getReadable () {
+      StringBuffer sb = new StringBuffer(20);
 
       sb.append(getPlayer());
 
@@ -80,10 +94,17 @@ public abstract class ICSKibitzEvent extends ICSMessageEvent
 
       sb.append("[").append(getBoardNumber()).append("]");
 
-      if (isWhisper) 
-         sb.append(" whispers: ");
-      else
-         sb.append(" kibitzes: ");
+      switch (eventType) {
+         case ICSEvent.WHISPER_EVENT:
+            sb.append(" whispers: "); break;
+	 case ICSEvent.KIBITZ_EVENT:
+            sb.append(" kibitzes: "); break;
+	 case ICSEvent.BOARD_SAY_EVENT:
+            sb.append(" says: "); break;
+	 default:
+	    Log.error(Log.PROG_ERROR, 
+	       "Received bad eventType: " + eventType);
+      }
 
       sb.append(getMessage());
 

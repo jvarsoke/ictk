@@ -26,12 +26,11 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
-import java.util.regex.*;
 import java.io.IOException;
 
-public abstract class ICSGameResultEvent extends ICSEvent 
+public class ICSGameResultEvent extends ICSEvent 
                                       implements ICSBoardEvent {
-   public static final int GAME_RESULT_EVENT 
+   protected static final int GAME_RESULT_EVENT 
                 = ICSEvent.GAME_RESULT_EVENT;
 
    //instance/////////////////////////////////////////////////////////////
@@ -39,8 +38,8 @@ public abstract class ICSGameResultEvent extends ICSEvent
    protected int boardNumber;
    protected ICSResult result;
 
-   public ICSGameResultEvent (ICSProtocolHandler server) {
-      super(server, GAME_RESULT_EVENT);
+   public ICSGameResultEvent () {
+      super(GAME_RESULT_EVENT);
    }
 
    //getters and setters//////////////////////////////////////////////////////
@@ -52,9 +51,6 @@ public abstract class ICSGameResultEvent extends ICSEvent
 
    public int getBoardNumber () { return boardNumber; }
    public void setBoardNumber (int board) { boardNumber = board; }
-
-   public String getDescription () { return getMessage(); }
-   public void setDescription (String s) { setMessage(s); }
 
    public ICSResult getResult () { return result; }
    public void setResult (ICSResult res) { result = res; }
@@ -68,9 +64,5 @@ public abstract class ICSGameResultEvent extends ICSEvent
 	.append(getBlackPlayer())
 	.append(" " + getResult());
       return sb.toString();
-   }
-
-   public String toString () {
-      return getReadable();
    }
 }

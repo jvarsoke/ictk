@@ -28,17 +28,16 @@ import ictk.boardgame.chess.net.ics.*;
 
 import java.util.regex.*;
 
-public abstract class ICSSeekClearEvent extends ICSEvent 
+public class ICSSeekClearEvent extends ICSEvent 
                                         implements ICSSeekEvent {
    public static final int SEEK_CLEAR_EVENT = ICSEvent.SEEK_CLEAR_EVENT;
 
    //instance/////////////////////////////////////////////////////////////
-   public ICSSeekClearEvent (ICSProtocolHandler server) {
-      super(server, SEEK_CLEAR_EVENT);
+   public ICSSeekClearEvent () {
+      super(SEEK_CLEAR_EVENT);
    }
 
-   ////////////////////////////////////////////////////////////////////////
-   public String toString () {
+   public String getReadable () {
       return "<SeekClear>";
    }
 }

@@ -30,7 +30,7 @@ import java.util.regex.*;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-public abstract class ICSSeekRemoveEvent 
+public class ICSSeekRemoveEvent 
                       extends ICSEvent 
 		      implements ICSSeekEvent {
    public static final int SEEK_REMOVE_EVENT = ICSEvent.SEEK_REMOVE_EVENT;
@@ -38,8 +38,8 @@ public abstract class ICSSeekRemoveEvent
    //instance/////////////////////////////////////////////////////////////
    protected int[] ads;
 
-   public ICSSeekRemoveEvent (ICSProtocolHandler server) {
-      super(server, SEEK_REMOVE_EVENT);
+   public ICSSeekRemoveEvent () {
+      super(SEEK_REMOVE_EVENT);
    }
 
    //getters and setters//////////////////////////////////////////////////////
@@ -55,5 +55,20 @@ public abstract class ICSSeekRemoveEvent
       return ads.length;
    }
 
+   public void setAds (int[] ads) {
+      this.ads = ads;
+   }
 
+   public int[] getAds () {
+      return ads;
+   }
+
+   public String getReadable () {
+      StringBuffer sb = new StringBuffer(20);
+      sb.append("<SeekRemove> ");
+      for (int i=0; i < ads.length; i++)
+         sb.append(ads[i]);
+
+      return sb.toString();
+   }
 }

@@ -29,22 +29,28 @@ import ictk.boardgame.chess.net.ics.*;
 import java.util.regex.*;
 import java.io.IOException;
 
-public abstract class ICSPlayerNotificationEvent extends ICSEvent {
-   public static final int PLAYER_NOTIFICATION_EVENT 
-                = ICSEvent.PLAYER_NOTIFICATION_EVENT;
+public class ICSPlayerNotificationEvent extends ICSEvent {
+   protected static final int PLAYER_NOTIFICATION_EVENT 
+                = ICSEvent.PLAYER_NOTIFICATION_EVENT,
+		              PLAYER_CONNECTION_EVENT
+	        = ICSEvent.PLAYER_CONNECTION_EVENT;
 
    //instance/////////////////////////////////////////////////////////////
-   protected boolean isConnection;
+   protected boolean isConnected,
+                     isNotification;
    protected String player;
    protected ICSAccountType accountType;
 
-   public ICSPlayerNotificationEvent (ICSProtocolHandler server) {
-      super(server, PLAYER_NOTIFICATION_EVENT);
+   public ICSPlayerNotificationEvent () {
+      super(PLAYER_NOTIFICATION_EVENT);
    }
 
    //getters and setters//////////////////////////////////////////////////////
-   public boolean isConnection () { return isConnection; }
-   public void setConnection (boolean t) { isConnection = t; }
+   public boolean isConnected () { return isConnected; }
+   public void setConnected (boolean t) { isConnected = t; }
+
+   public boolean isOnNotificationList () { return isNotification; }
+   public void setOnNotificationList (boolean t) { isNotification = t; }
 
    public String getPlayer () { return player; }
    public void setPlayer (String handle) { player = handle; }
@@ -54,9 +60,27 @@ public abstract class ICSPlayerNotificationEvent extends ICSEvent {
        accountType = account;
    }
 
-   ////////////////////////////////////////////////////////////////////////
-   public String toString () {
-      return "Notification: " + getPlayer() + getAccountType()
-          + " has " + ((isConnection) ? "arrived" : "departed");
+   public String getReadable () {
+      StringBuffer sb = new StringBuffer(40);
+
+      if (isNotification) {
+	 sb.append("Notification: ")
+	   .append(getPlayer())
+	   .append(getAccountType())
+	   .append(" has ")
+	   .append(((isConnected) ? "arrived" : "departed"));
+      }
+      else {
+	sb.append("[")
+	   .append(getPlayer())
+	   .append(" has ");
+	 if (isConnected)
+	    sb.append("connected");
+	 else
+	    sb.append("disconnected");
+	 sb.append(".]");
+      }
+
+      return sb.toString();
    }
 }

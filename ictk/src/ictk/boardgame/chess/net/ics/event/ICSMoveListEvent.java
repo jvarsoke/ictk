@@ -26,11 +26,10 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
-import java.util.regex.*;
 import java.io.IOException;
 import java.util.Calendar;
 
-public abstract class ICSMoveListEvent extends ICSEvent 
+public class ICSMoveListEvent extends ICSEvent 
                                                implements ICSBoardEvent{
    //static///////////////////////////////////////////////////////////////
    public static final int MOVE_LIST_EVENT = ICSEvent.MOVE_LIST_EVENT;
@@ -84,11 +83,11 @@ public abstract class ICSMoveListEvent extends ICSEvent
    public boolean isRated () { return isRated; }
    public void setRated (boolean rated) { isRated = rated; }
 
-
    public void setBoardNumber (int board) { boardNumber = board; }
 
    public int getBoardNumber () { return boardNumber; }
 
-   
-
+   public String getReadable () {
+      return "Move List";
+   }
 }

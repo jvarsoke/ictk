@@ -29,9 +29,9 @@ import ictk.boardgame.chess.net.ics.*;
 import java.util.regex.*;
 import java.io.IOException;
 
-public abstract class ICSGameCreatedEvent extends ICSEvent 
+public class ICSGameCreatedEvent extends ICSEvent 
                                       implements ICSBoardEvent {
-   public static final int GAME_CREATED_EVENT 
+   protected static final int GAME_CREATED_EVENT
                 = ICSEvent.GAME_CREATED_EVENT;
 
    //instance/////////////////////////////////////////////////////////////
@@ -41,13 +41,8 @@ public abstract class ICSGameCreatedEvent extends ICSEvent
    protected boolean isRated;
    protected boolean isContinued;
 
-   public ICSGameCreatedEvent (ICSProtocolHandler server) {
-      super(server, GAME_CREATED_EVENT);
-   }
-
-   public ICSGameCreatedEvent (ICSProtocolHandler server, Matcher m) {
-      this(server);
-      assignMatches(m);
+   public ICSGameCreatedEvent () {
+      super(GAME_CREATED_EVENT);
    }
 
    //getters and setters//////////////////////////////////////////////////////
@@ -90,7 +85,4 @@ public abstract class ICSGameCreatedEvent extends ICSEvent
       return sb.toString();
    }
 
-   public String toString () {
-      return getReadable();
-   }
 }

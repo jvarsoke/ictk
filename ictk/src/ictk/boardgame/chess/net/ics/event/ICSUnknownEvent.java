@@ -26,10 +26,25 @@
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
 
-public interface ICSBoardEvent {
+import java.util.regex.*;
 
-   public static final int NO_BOARD = -1;
+/* ICSUnknownEvent ***********************************************************/
+/** this is for unclassified events.
+ */
+public class ICSUnknownEvent extends ICSEvent {
+   public static final int UNKNOWN_EVENT = ICSEvent.UNKNOWN_EVENT;
 
-   public int getBoardNumber ();
-   public void setBoardNumber (int b);
+   //Contstructors/////////////////////////////////////////////////////////////
+   public ICSUnknownEvent (ICSProtocolHandler server) {
+      super(server, UNKNOWN_EVENT);
+   }
+
+   public ICSUnknownEvent (ICSProtocolHandler server, String mesg) {
+      super(server, UNKNOWN_EVENT);
+      message = mesg;
+   }
+
+   public String getReadable () {
+      return message;
+   }
 }

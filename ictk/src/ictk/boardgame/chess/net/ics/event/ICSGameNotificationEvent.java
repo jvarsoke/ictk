@@ -29,9 +29,9 @@ import ictk.boardgame.chess.net.ics.*;
 import java.util.regex.*;
 import java.io.IOException;
 
-public abstract class ICSGameNotificationEvent extends ICSEvent 
+public class ICSGameNotificationEvent extends ICSEvent 
                                       implements ICSBoardEvent {
-   public static final int GAME_NOTIFICATION_EVENT 
+   protected static final int GAME_NOTIFICATION_EVENT
                 = ICSEvent.GAME_NOTIFICATION_EVENT;
 
    //instance/////////////////////////////////////////////////////////////
@@ -41,8 +41,8 @@ public abstract class ICSGameNotificationEvent extends ICSEvent
    protected ICSVariant variant;
    protected int time, incr, boardNumber;
 
-   public ICSGameNotificationEvent (ICSProtocolHandler server) {
-      super(server, GAME_NOTIFICATION_EVENT);
+   public ICSGameNotificationEvent () {
+      super(GAME_NOTIFICATION_EVENT);
    }
 
    //getters and setters//////////////////////////////////////////////////////

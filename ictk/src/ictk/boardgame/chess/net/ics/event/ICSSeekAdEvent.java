@@ -29,7 +29,7 @@ import ictk.boardgame.chess.net.ics.*;
 import java.util.regex.*;
 import java.io.IOException;
 
-public abstract class ICSSeekAdEvent extends ICSEvent implements ICSSeekEvent {
+public class ICSSeekAdEvent extends ICSEvent implements ICSSeekEvent {
    public static final int SEEK_AD_EVENT = ICSEvent.SEEK_AD_EVENT;
 
    public static final int COLOR_UNSPECIFIED = 0,
@@ -57,12 +57,8 @@ public abstract class ICSSeekAdEvent extends ICSEvent implements ICSSeekEvent {
    protected int     color;
    protected ICSVariant variant;
 
-   public ICSSeekAdEvent (ICSProtocolHandler server, int eventType) {
-      super(server, eventType);
-   }
-
-   public ICSSeekAdEvent (ICSProtocolHandler server) {
-      this(server, SEEK_AD_EVENT);
+   public ICSSeekAdEvent () {
+      super(SEEK_AD_EVENT);
    }
 
    //getters and setters//////////////////////////////////////////////////////
@@ -81,8 +77,8 @@ public abstract class ICSSeekAdEvent extends ICSEvent implements ICSSeekEvent {
    public int getInitialTime () { return time; }
    public void setInitialTime (int itime) { time = itime; }
 
-   public int getTimeIncrement () { return incr; }
-   public void setTimeIncrement (int incr) { this.incr = incr; }
+   public int getIncrement () { return incr; }
+   public void setIncrement (int incr) { this.incr = incr; }
 
    public int getRatingRangeLow () { return rangeLow; }
    public void setRatingRangeLow (int rating) { rangeLow = rating; }
@@ -97,13 +93,18 @@ public abstract class ICSSeekAdEvent extends ICSEvent implements ICSSeekEvent {
    public void setManual (boolean t) { isManual = t; }
 
    public boolean isRestrictedByFormula () { return isRestrictedByFormula; }
-   public void setRestrictedByFormula (boolean t) { isRestrictedByFormula = t; }
+   public void setRestrictedByFormula (boolean t) { 
+      isRestrictedByFormula = t; 
+   }
 
    public boolean meetsFormula () { return meetsFormula; }
    public void setMeetsFormula (boolean t) { meetsFormula = t; }
 
    public int getColor () { return color; }
    public void setColor (int color) { this.color = color; }
+
+   public ICSVariant getVariant () { return variant; }
+   public void setVariant (ICSVariant variant) { this.variant = variant; }
 
    ////////////////////////////////////////////////////////////////////////
    public String getReadable () {
@@ -142,9 +143,5 @@ public abstract class ICSSeekAdEvent extends ICSEvent implements ICSSeekEvent {
         
 
       return sb.toString();
-   }
-
-   public String toString () {
-      return getReadable();
    }
 }

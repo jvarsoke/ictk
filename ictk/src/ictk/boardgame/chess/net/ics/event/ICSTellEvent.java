@@ -30,38 +30,40 @@ import java.util.regex.*;
 import java.io.IOException;
 
 
-public abstract class ICSTellEvent extends ICSMessageEvent {
+public class ICSTellEvent extends ICSMessageEvent {
 
    //static initializer/////////////////////////////////////////////////////
    public static final int TELL_EVENT =  ICSEvent.TELL_EVENT,
                            SAY_EVENT  =  ICSEvent.SAY_EVENT;
 
    //instance vars//////////////////////////////////////////////////////////
-   protected boolean isSay;
    protected ICSAccountType accountType;
 
    //constructors///////////////////////////////////////////////////////////
-   protected ICSTellEvent (ICSProtocolHandler server, int eventType) {
-      super(server, eventType);
-
+   public ICSTellEvent () {
+      super(TELL_EVENT);
    }
 
-   public ICSTellEvent (ICSProtocolHandler server) {
-      this(server, TELL_EVENT);
+   public void setAccountType (ICSAccountType acct) {
+      accountType = acct;
    }
 
    public ICSAccountType getAccountType () {
       return accountType;
    }
 
-   public String toString () {
+   public boolean isSay () {
+      return eventType == ICSEvent.SAY_EVENT;
+   }
+
+   public String getReadable () {
       StringBuffer sb = new StringBuffer();
 
       sb.append(getPlayer());
 
       sb.append(getAccountType());
 
-      if (isSay) 
+      if (eventType == ICSEvent.SAY_EVENT) 
          sb.append(" says: ");
       else
          sb.append(" tells you: ");
