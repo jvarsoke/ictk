@@ -195,7 +195,7 @@ public class PGNReader extends ChessReader {
       }
 
       //now we have whole move list in the sb
-      st = new StringTokenizer(sb.toString(), " .(){};\n", true);
+      st = new StringTokenizer(sb.toString(), " .(){};\t\n", true);
 
       String tok2 = null;
       while (st != null && st.hasMoreTokens()) {
@@ -233,7 +233,8 @@ public class PGNReader extends ChessReader {
 	    while (!done && st.hasMoreTokens()) {
 	       tok2 = st.nextToken();
 	       if (tok2.startsWith("\n")) done = true;
-	       else sb.append(tok2);
+	       else if (!tok2.equals("\t"))
+	          sb.append(tok2);
 	    }
 
 	    if (Log.debug)
@@ -281,7 +282,7 @@ public class PGNReader extends ChessReader {
 		     sb.append(tok2.substring(0, tok2.length()-1));
 	          done = true;
 	       }
-	       else
+	       else if (!tok2.equals("\n") && !tok2.equals("\t"))
 	          sb.append(tok2);
 	    }
 
