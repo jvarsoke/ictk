@@ -52,7 +52,6 @@ public abstract class ICSEvent {
 			      GAME_NOTIFICATION_EVENT      =  4,
 			      TAKEBACK_REQUEST_EVENT       =  5,
 
-
 			      CHANNEL_EVENT                =  6,
 			      SHOUT_EVENT                  =  7,
 			      TOURNAMENT_CHANNEL_EVENT     =  8,
@@ -82,7 +81,11 @@ public abstract class ICSEvent {
 
 			      PLAYER_CONNECTION_EVENT      = 27,
 			      HISTORY_EVENT                = 28,
-			      NUM_EVENTS		   = 29;
+
+      //generic board events
+			      EXAMINE_NAVIGATION_EVENT     = 29,
+			      EXAMINE_REVERT_EVENT         = 30,
+			      NUM_EVENTS		   = 31;
 
       /** each event has a type for easy casting */
    protected int eventType = UNKNOWN_EVENT;

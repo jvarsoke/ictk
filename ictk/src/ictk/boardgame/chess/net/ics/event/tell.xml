@@ -38,9 +38,9 @@
          Direct tells to the user through "tell" or "say".
       </description>
 
-      <member id="kibitz:player"      typeref="player"/>
-      <member id="kibitz:accountType" typeref="accountType"/>
-      <member id="kibitz:message"     typeref="message"     inherit="yes"/>
+      <member id="tell:player"      typeref="player"/>
+      <member id="tell:accountType" typeref="accountType"/>
+      <member id="tell:message"     typeref="message"     inherit="yes"/>
 
       <!--parser-->
       <parser id="tell:parser"
@@ -59,9 +59,9 @@
 
          <!-- assignMatches -->
 	 <assignMatches format="java">
-	    <regexgroup num="2" memberref="kibitz:player"/>
-	    <regexgroup num="3" memberref="kibitz:accountType"/>
-	    <regexgroup num="5" memberref="kibitz:message"/>
+	    <regexgroup num="2" memberref="tell:player"/>
+	    <regexgroup num="3" memberref="tell:accountType"/>
+	    <regexgroup num="5" memberref="tell:message"/>
       if ("tells you".equals(m.group(4))) {
          evt.setEventType(ICSEvent.TELL_EVENT);
       }

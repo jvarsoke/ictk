@@ -144,7 +144,8 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
    /* createICSEvent ********************************************************/
    public ICSEvent createICSEvent (Matcher match) {
       ICSEvent evt = new ICS<xsl:value-of select="../@class"/>Event();
-         assignMatches(match, evt);
+         <xsl:if test="@enum">evt.setEventType(ICSEvent.<xsl:value-of select="@enum"/>_EVENT);
+         </xsl:if>assignMatches(match, evt);
 
 	 return evt;
    }

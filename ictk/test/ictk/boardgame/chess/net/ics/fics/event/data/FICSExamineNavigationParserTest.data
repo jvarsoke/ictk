@@ -1,0 +1,13 @@
+##$Id$
+## forward 1  (forward report, then style12)
+Game 29: TibetianTick goes forward 1 move.
+## forward N  (forward report, then style12)
+Game 29: TibetianTick goes forward 22 moves.
+## backward 1  (backward report, then style12)
+Game 29: TibetianTick backs up 1 move.
+## backward N  (backward report, then style12)
+Game 29: TibetianTick backs up 22 moves.
+## back 999
+Game 29: guesttick backs up 9999 moves.
+## for 9999
+Game 29: guesttick goes forward 9999 moves.

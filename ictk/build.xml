@@ -68,7 +68,7 @@
    <property name="xslt.home"         value="${env.XALAN_HOME}"/>
    <property name="xslt.ics.event.dir" 
              value="${source.dir}/ictk/boardgame/chess/net/ics/event"/>
-   <property name="xslt.ics.event.parser.dir" 
+   <property name="xslt.ics.event.parser.test.dir" 
              value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event"/>
 
       <!-- compile path for XSLT -->
@@ -170,17 +170,17 @@
 
       <!-- parser tests -->
       <xslt 
-         basedir="${xslt.ics.event.parser.dir}"
-	 destdir="${xslt.ics.event.parser.dir}"
+         basedir="${xslt.ics.event.parser.test.dir}"
+	 destdir="${xslt.ics.event.parser.test.dir}"
 	 classpathref="xslt.class.path"
-	 style="${xslt.ics.event.parser.dir}/templateParser.xsl"
+	 style="${xslt.ics.event.parser.test.dir}/templateParser.xsl"
 	 includes="parserTests.xml"
 	 extension=".tmp.log"
 	 force="yes"
 	 >
       </xslt>
-      <concat destfile="${xslt.ics.event.parser.dir}/genfiles.log">
-         <fileset dir="${xslt.ics.event.parser.dir}"
+      <concat destfile="${xslt.ics.event.parser.test.dir}/genfiles.log">
+         <fileset dir="${xslt.ics.event.parser.test.dir}"
 	          includes="*.tmp.log"
 	 />
       </concat>
@@ -189,18 +189,37 @@
          <fileset dir="${xslt.ics.event.dir}" 
                   includes="*.tmp.log"
 	 />
-         <fileset dir="${xslt.ics.event.parser.dir}" 
+         <fileset dir="${xslt.ics.event.parser.test.dir}" 
                   includes="*.tmp.log"
 	 />
       </delete>
 
+      <!-- generate AllTests.java -->
+      <xslt 
+         basedir="${xslt.ics.event.parser.test.dir}"
+	 destdir="${xslt.ics.event.parser.test.dir}"
+	 classpathref="xslt.class.path"
+	 style="${xslt.ics.event.parser.test.dir}/allTests.xsl"
+	 in="${xslt.ics.event.parser.test.dir}/parserTests.xml"
+	 out="${xslt.ics.event.parser.test.dir}/AllTests.java"
+	 force="yes"
+	 >
+      </xslt>
+      <concat append="true"
+              destfile="${xslt.ics.event.parser.test.dir}/genfiles.log"
+          >AllTests.java</concat>
+
       <!-- report all files -->
-      <echo>Generated Files</echo>
+      <echo>Generated Files: ${xslt.ics.event.dir}</echo>
       <concat>
          <fileset dir="${xslt.ics.event.dir}"
 	          includes="genfiles.log"
 	 />
-         <fileset dir="${xslt.ics.event.parser.dir}"
+      </concat>
+
+      <echo>Generated Files: ${xslt.ics.event.parser.test.dir}</echo>
+      <concat>
+         <fileset dir="${xslt.ics.event.parser.test.dir}"
 	          includes="genfiles.log"
 	 />
       </concat>
@@ -517,8 +536,8 @@
       <delete dir="${docs.dir}" />
       <delete file="${output.jar}" />
       <echo message="To delete generated code use (unix):"/>
-      <echo message="   $ (cd src/ictk/boardgame/chess/net/ics/event &amp;&amp; cat genfiles.log | xargs rm)"/>
-      <echo message="   $ (cd test/ictk/boardgame/chess/net/ics/fics/event &amp;&amp; cat genfiles.log | xargs rm)"/>
+      <echo message="   $ (cd ${xslt.ics.event.dir} &amp;&amp; cat genfiles.log | xargs rm)"/>
+      <echo message="   $ (cd ${xslt.ics.event.parser.test.dir} &amp;&amp; cat genfiles.log | xargs rm)"/>
    </target>
 
    <!-- ..................................................................-->

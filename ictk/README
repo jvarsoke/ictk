@@ -25,21 +25,21 @@ And hopefully they'll be OS independent and open source.
 REQUIREMENTS
 ------------
 
-   o JDK 1.4 or better
+   o JDK 1.4 or better                               http://java.sun.com/
      this is mostly due to the use of "assert" throughout the
      source, the Regex libraries, and java.nio libraries for
      ictk.boardgame.chess.net.
 
-   o Ant 1.5 or better
+   o Ant 1.5 or better                             http://ant.apache.org/
      this is because earlier versions did not support the 
      javac -source 1.4 feature.  You can do most things with
      Ant 1.4, but you can't generate the javadoc with it.
 
-   o JUnit 3.8.0 or better
+   o JUnit 3.8.0 or better                  http://junit.sourceforge.net/
      this is only necessary if you wish to run the regression testing
      suite.
 
-   o Xalan-Java 2.5.0 or better
+   o Xalan-Java 2.5.0 or better            http://xml.apache.org/xalan-j/
      this is only necessary if you wish to generate the net events and
      parsers from their XML source.  Really, any XSLT processor
      should work, but Xalan-Java is integrated into the Ant build tool

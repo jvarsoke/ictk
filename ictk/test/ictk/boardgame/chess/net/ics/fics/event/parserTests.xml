@@ -205,4 +205,18 @@
 	 event="Challenge"
 	 >
    </unit>
+
+   <!-- generic board - Examine Navigation.................................-->
+   <unit id="examineNavigation"
+         class="ExamineNavigation"
+	 event="GenericBoard"
+	 >
+   </unit>
+
+   <!-- generic board - Examine Revert ....................................-->
+   <unit id="examineRevert"
+         class="ExamineRevert"
+	 event="GenericBoard"
+	 >
+   </unit>
 </unitTest>

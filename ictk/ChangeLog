@@ -27,6 +27,18 @@ Legend:
 	    in string.xsl, where the function "toUpper" was called instead
 	    of "str:toUpper"
 	    [thanks: Jerome Zago for his persistence in proving the bug existed]
+   [fics]   added GenericBoardEvent and bevy of Parser classes to go with it.
+            this is a change from the original idea of a seperate class for
+	    every event.  But that ends up being a rediculous amount of
+	    Event classes.  Instead there will be a parser for each, but
+	    Events well be consolidated in Generic forms.  You'll know which
+	    event is which by getEventType().
+   [fics]   added events:
+               examine forward and backward
+               revert
+   [test]   removed AllTests.java for Parser tests.
+   [test]   added allTests.xsl to autogenerate the AllTest file, so we 
+            don't miss any tests.  build.xml was changed to this effect.
 
 0.2.0 - 2003-10-03 FICS Support (limited)
    [net]    added FICS support to main branch of library
