@@ -47,6 +47,10 @@ Legend:
 	    on the console (System.out). The output is ANSI color coded
 	    as defined by ANSIConsole. The Forte(tm) form file is also 
 	    provided in case someone wishes to modify through that IDE.
+   [chess]  fixed 801272 - PGNWriter added superfluious results
+            PGN standard specifies only an end result, not results for
+	    variations.
+	    {thanks: Jerome Zago}
 
 0.1.3 - 2003-08-17 a bug, events & and a CLI Board
    [chess]  fixed 784950 - wrong disambiguation

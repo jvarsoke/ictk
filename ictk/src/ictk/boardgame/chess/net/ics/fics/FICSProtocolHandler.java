@@ -562,7 +562,8 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 		  catch (NumberFormatException e) {
 		     idBuff.rewind();
 		     cmdBuff.rewind();
-		     ICSErrorLog.report("Couldn't parse an int for the block"
+		     Log.error(Log.PROG_ERROR,
+		        "Couldn't parse an int for the block"
 		        + "{" + block_state + "}"
 		        + " id(" + idBuff.toString() 
 			+ ") or cmd(" + cmdBuff.toString() + "):"
@@ -618,7 +619,8 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 			}
 			break;
 		     default:
-		        ICSErrorLog.report("FICSChunker has a block_state of "
+		        Log.error(Log.PROG_ERROR, 
+			"FICSChunker has a block_state of "
 			  + block_state);
 			block_state = 0;
 			assert false : "FICSChunker error in block_state";

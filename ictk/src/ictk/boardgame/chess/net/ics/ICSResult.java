@@ -25,6 +25,8 @@
 
 package ictk.boardgame.chess.net.ics;
 
+import ictk.util.Log;
+
 public class ICSResult {
    public static final int UNDECIDED = 0,
    			   WHITE_WIN = 1,
@@ -56,7 +58,8 @@ public class ICSResult {
       else if ("0-1".equals(s))
          result = BLACK_WIN;
       else {
-         ICSErrorLog.report("ICSResult received '" + s + "' as a result.");
+         Log.error(Log.PROG_WARNING, 
+	    "ICSResult received '" + s + "' as a result.");
 	 result = UNDECIDED;
       }
    }

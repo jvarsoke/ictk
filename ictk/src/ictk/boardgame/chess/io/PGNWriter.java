@@ -367,8 +367,8 @@ public class PGNWriter extends ChessWriter {
 
 	 if (result == null || result.isUndecided())
 	    formatOutput("*", _RESULT);
-	 //else  nothing to do, already printed
-	    //sb.append(" ").append(notation.resultToString(result));
+	 else
+	    formatOutput(notation.resultToString(result), _RESULT);
 
          //empty buffer
          if (buffer.length() != 0)
@@ -531,16 +531,12 @@ public class PGNWriter extends ChessWriter {
 	 }
 
 	 //if this is a terminal node and the line ends with
-	 //a result then we need to print that result for
-	 //this variation.
+	 //a result we don't do anything with the result
+	 //as the PGN standard specifies only one result for 
+	 //the entire move body.
+	 //TODO: might want to put it in a comment it it's not
+	 //      the mainline.
 	 else {
-	    ChessResult result = null;
-
-	    if (cont != null && cont.getDepartureMove() != null)
-	       result = (ChessResult) cont.getDepartureMove().getResult();
-
-	    if (result != null && !result.isUndecided())
-	       formatOutput(notation.resultToString(result), _RESULT);
 	 }
    }
 
