@@ -39,6 +39,7 @@ public abstract class ICSEvent {
                               UNKNOWN_EVENT                =  0,
 			      BOARD_UPDATE_EVENT           =  1,
 			      CHANNEL_EVENT                =  2,
+			      SHOUT_EVENT                  =  3,
 
    			      SEEK_AD_EVENT                =  4,
 			      SEEK_REMOVE_EVENT            =  5,

@@ -28,7 +28,7 @@
    ]>
 
 <icsevtml>
-   <!-- kibitz ............................................................-->
+   <!-- channel............................................................-->
    <event id="channel" 
           class="Channel"
 	  enum="CHANNEL"
@@ -140,6 +140,7 @@
 
          <!-- assignMatches -->
 	 <assignMatches format="java">
+      evt.setEventType(ICSEvent.SHOUT_EVENT);
       //emote
       if (m.group(3) != null) {
             evt.setChannel(ICSChannelEvent.EMOTE_CHANNEL);

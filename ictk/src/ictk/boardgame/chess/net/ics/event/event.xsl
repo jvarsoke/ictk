@@ -121,8 +121,11 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
 <xsl:apply-templates select="implements" mode="method"/>
    //readable//////////////////////////////////////////////////////////////
    public String getReadable () {
-      return FICS<xsl:value-of select="@class"/>EventParser
-         .getInstance().toNative(this);
+      String str = null;
+         switch (getEventType()) {
+	    <xsl:apply-templates select="parser" mode="readableSwitch"/>
+	 }
+      return str;
    }
 }
 </redirect:write>
@@ -266,5 +269,17 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
    }
 
 </xsl:if>
+</xsl:template>
+
+<xsl:template match="parser" mode="readableSwitch">
+   <xsl:variable name="uc_parser_name">
+      <xsl:call-template name="str:toUpper">
+         <xsl:with-param name="input" select="@name"/>
+      </xsl:call-template>
+   </xsl:variable>
+         case ICSEvent.<xsl:value-of select="$uc_parser_name"/>_EVENT:
+            str = <xsl:value-of select="concat(@protocol,@name,'EventParser')"
+	       />.getInstance().toNative(this);
+	    break;
 </xsl:template>
 </xsl:stylesheet>

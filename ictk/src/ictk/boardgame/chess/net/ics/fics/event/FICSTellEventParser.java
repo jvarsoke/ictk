@@ -83,15 +83,15 @@ public class FICSTellEventParser extends ICSEventParser {
       
       evt.setFake(detectFake(m.group(0)));
       
+	    
       evt.setPlayer(m.group(2));
       
+	    
       evt.setAccountType(parseICSAccountType(m, 3));
       
+	    
       evt.setMessage(m.group(5));
       
-	    
-	    
-	    
       if ("tells you".equals(m.group(4))) {
          evt.setEventType(ICSEvent.TELL_EVENT);
       }

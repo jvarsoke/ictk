@@ -85,12 +85,16 @@ public class FICSKibitzEventParser extends ICSEventParser {
       
       evt.setFake(detectFake(m.group(0)));
       
+	    
       evt.setPlayer(m.group(2));
       
+	    
       evt.setAccountType(parseICSAccountType(m, 3));
       
+	    
       evt.setRating(parseICSRating(m, 4));
       
+	    
       try {
          evt.setBoardNumber(Integer.parseInt(m.group(5)));
       }
@@ -106,13 +110,9 @@ public class FICSKibitzEventParser extends ICSEventParser {
          return;
       }
       
+	    
       evt.setMessage(m.group(7));
       
-	    
-	    
-	    
-	    
-	    
       if ("whispers".equals(m.group(6))) {
          evt.setEventType(ICSEvent.WHISPER_EVENT);
       }

@@ -94,6 +94,7 @@ public class FICSShoutEventParser extends ICSEventParser {
       
       evt.setFake(detectFake(m.group(0)));
       
+      evt.setEventType(ICSEvent.SHOUT_EVENT);
       //emote
       if (m.group(3) != null) {
             evt.setChannel(ICSChannelEvent.EMOTE_CHANNEL);

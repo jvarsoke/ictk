@@ -44,11 +44,16 @@ public class SimpleICSClient extends javax.swing.JFrame implements java.awt.even
    static java.lang.String passwd;
 
    ictk.boardgame.chess.net.ics.fics.FICSProtocolHandler fics;
+   ictk.boardgame.chess.net.ics.ui.cli.ANSIConsole ansiConsole;
    
    /** Creates new form SimpleICSClient */
     public SimpleICSClient() {
         initComponents();
 	fics = new ictk.boardgame.chess.net.ics.fics.FICSProtocolHandler();
+
+	ansiConsole = new ictk.boardgame.chess.net.ics.ui.cli.ANSIConsole();
+	fics.getRouter().setDefaultRoute(ansiConsole);
+
 	connect(null);
     }
 

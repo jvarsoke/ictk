@@ -31,6 +31,7 @@ import ictk.util.Log;
 import ictk.boardgame.chess.net.ics.fics.event.*;
 import ictk.boardgame.chess.net.ics.event.*;
 import ictk.boardgame.chess.net.ics.*;
+import ictk.boardgame.chess.net.ics.ui.cli.*;
 import ictk.boardgame.chess.net.*;
 
 import java.net.*;
@@ -195,9 +196,11 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
       int i = 0;
       //eventFactories = new ICSEventParser[16];
-      eventFactories = new ICSEventParser[2];
+      eventFactories = new ICSEventParser[4];
       eventFactories[i++] = FICSTellEventParser.getInstance();
       eventFactories[i++] = FICSKibitzEventParser.getInstance();
+      eventFactories[i++] = FICSChannelEventParser.getInstance();
+      eventFactories[i++] = FICSShoutEventParser.getInstance();
       /*
       eventFactories[i++] = new ICSBoardUpdateStyle12Event(this);
       eventFactories[i++] = new FICSPlayerConnectionEventParser();
@@ -217,13 +220,16 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       eventFactories[i++] = new FICSQTellEvent(this);
       */
       router = new ICSEventRouter();
-      router.setDefaultRoute(new ANSIConsole());
    }
 
    public FICSProtocolHandler (String host, int port) {
       this();
       this.host = host;
       this.port = port;
+   }
+
+   public ICSEventRouter getRouter() {
+      return router;
    }
 
    //methods/////////////////////////////////////////////////////////////////
@@ -790,11 +796,5 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       for(int i=0; i<=m.groupCount(); i++) {
          System.out.println(i + ": " + m.group(i));
       }
-   }
-
-
-   //main -- test/////////////////////////////////////////////////////////
-
-   public static void main (String[] args) {
    }
 }

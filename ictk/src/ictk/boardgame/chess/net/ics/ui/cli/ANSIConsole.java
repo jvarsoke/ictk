@@ -23,7 +23,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package ictk.boardgame.chess.net;
+package ictk.boardgame.chess.net.ics.ui.cli;
 
 import ictk.boardgame.chess.net.ics.*;
 import ictk.boardgame.chess.net.ics.event.*;
@@ -62,23 +62,27 @@ public class ANSIConsole implements ICSEventListener {
       String prefix = null;
 
        switch (evt.getEventType()) {
-       /*
+
           case ICSEvent.CHANNEL_EVENT:
 	     switch (((ICSChannelEvent) evt).getChannel()) {
 	        case 1:  prefix = ESC + CYAN; break;
 		case 85:
 		case 88: prefix = ESC + YELLOW; break;
+		default: prefix = ESC + BOLD_CYAN;
+	     }
+	     break;
+
+	  case ICSEvent.SHOUT_EVENT:
+	     switch (((ICSChannelEvent) evt).getChannel()) {
+	        case ICSChannelEvent.EMOTE_CHANNEL: 
 	        case ICSChannelEvent.SHOUT_CHANNEL: prefix = ESC + GREEN; 
 		   break;
 	        case ICSChannelEvent.SSHOUT_CHANNEL: 
 	        case ICSChannelEvent.CSHOUT_CHANNEL: 
 	        case ICSChannelEvent.TSHOUT_CHANNEL: 
 		   prefix = ESC + BOLD_GREEN; 
-		   break;
-		default: prefix = ESC + BOLD_CYAN;
 	     }
 	     break;
-	     */
 
 	  case ICSEvent.TELL_EVENT:
 	  case ICSEvent.SAY_EVENT:
