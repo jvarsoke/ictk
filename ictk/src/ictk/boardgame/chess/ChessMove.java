@@ -313,7 +313,9 @@ public class ChessMove extends Move {
    
    /* execute **********************************************************/
    /** affects the change on the board.
-    *  special handling of enpassant and castling
+    *  special handling of enpassant and castling.
+    *  This function also asks the associated board for fire a
+    *  boardUpdate() to all listeners.
     */
    protected void execute ()  
           throws IllegalMoveException, 
@@ -458,6 +460,10 @@ public class ChessMove extends Move {
 	    board.genLegalDests();
 
 	 verified = true;
+
+         //broadcast changes in the model
+         board.fireBoardEvent(BoardEvent.MOVE);
+
 	 if (Log.debug) {
 	    Log.debug(DEBUG, "execute successful");
 	    Log.debug2(DEBUG, board);
@@ -532,6 +538,9 @@ public class ChessMove extends Move {
          executed = false;
 
          board.staleLegalDests = true;
+
+         //broadcast changes in the model
+         board.fireBoardEvent(BoardEvent.UNMOVE);
 
 	 if (Log.debug) {
 	    Log.debug(DEBUG, "unexecute successful");

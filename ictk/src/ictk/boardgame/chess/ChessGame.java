@@ -69,7 +69,7 @@ public class ChessGame implements SingleBoardGame {
       }
 
       if (history == null)
-         history = new History();
+         history = new History(this);
    }
 
    //Game Methods/////////////////////////////////////////////////////////////

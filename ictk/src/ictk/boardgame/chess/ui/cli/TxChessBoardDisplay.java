@@ -26,6 +26,7 @@ package ictk.boardgame.chess.ui.cli;
 
 import ictk.boardgame.Board;
 import ictk.boardgame.BoardListener;
+import ictk.boardgame.BoardEvent;
 import ictk.boardgame.chess.ChessBoard;
 import ictk.boardgame.chess.ChessPiece;
 import ictk.boardgame.chess.Square;
@@ -70,6 +71,10 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
       /** present coordinates in lowercase */
 		     lowercaseCoords;
 
+      /** this is used to keep track of whether events we're receiving
+       ** are part of a traversal or not. */
+      protected boolean waitingForTraversalEnd = false;
+
 
    //constructors/////////////////////////////////////////////////////////////
    public TxChessBoardDisplay (ChessBoard board, OutputStream out) {
@@ -90,8 +95,19 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
    }
 
    //BoardListenerd Interface/////////////////////////////////////////////////
-   public void boardUpdate (Board b, int code) { 
-      update(); 
+   /** the board display is updated (printed to stream) for every event
+    *  except durning traversal, in which only the final position causes
+    *  a new board to be displayed.
+    */
+   public void boardUpdate (Board b, int event) { 
+      if (event == BoardEvent.TRAVERSAL_BEGIN)
+         waitingForTraversalEnd = true;
+
+      if (!waitingForTraversalEnd)
+         update(); 
+
+      if (event == BoardEvent.TRAVERSAL_END)
+         waitingForTraversalEnd = false;
    }
    //instance/////////////////////////////////////////////////////////////////
 

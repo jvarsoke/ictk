@@ -27,16 +27,15 @@ package ictk.boardgame;
 import java.util.EventListener;
 
 public interface BoardListener extends EventListener {
-   public int MOVE     = 1,
-              POSITION = 2;
 
    /* boardUpdate ************************************************************/
    /** 
-    *  @param code indicates what type of update has occured. (MOVE, POSITION).
+    *  @param code indicates what type of update has occured. (MOVE_EVENT, 
+    *              POSITION_EVENT etc).
     */
     /* considering these additional params
     *  @param location the coordinate(s) of the update (may be null).
     *  @param aspect optional parameter providing more info on the update.
     */
-   public void boardUpdate (Board b, int code);
+   public void boardUpdate (Board b, int event);
 }

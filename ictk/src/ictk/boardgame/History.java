@@ -90,6 +90,8 @@ import java.util.ListIterator;
 public class History {
    public static final long DEBUG = Log.History;
 
+      /** the Game this History is associated with */
+   protected Game game;
       /**the array of first moves entire list.  This move is only used because
          of its access to the variation operations*/
    protected ContinuationList head;
@@ -105,13 +107,14 @@ public class History {
 
 
    //Constructors//////////////////////////////////////////////////////////
-   public History () {
-      this(1);
+   public History (Game game) {
+      this(game, 1);
    }
 
    /** @param initMoveNum the number of the first move. (default: 1)
     */
-   public History (int initMoveNum) {
+   public History (Game game, int initMoveNum) {
+      this.game = game;
       head = new ContinuationArrayList(null);
       currMove = null;
       currMoveNumber = initialMoveNumber = initMoveNum;
@@ -416,6 +419,7 @@ public class History {
       if (m.getHistory() != this) 
          throw new IllegalArgumentException (
 	     "Can't goTo() a move that doesn't belong to this history list.");
+
       LinkedList tracks = new LinkedList();
       ListIterator li;
       Move walker = m;
@@ -424,7 +428,9 @@ public class History {
          tracks.addFirst(walker);
       } while ((walker = walker.prev) != null);
 
-      rewind();  //go back to the beginning
+      notifyBoardsOfTraversal(true);
+
+      _rewind();  //go back to the beginning
 
       li = tracks.listIterator(0);
       while (li.hasNext()) {
@@ -445,6 +451,7 @@ public class History {
 
 	 currMove = walker;
       }
+      notifyBoardsOfTraversal(false);
 
       assert getCurrentMove() == m : "History couldn't walk back to " + m 
           + " last move is " + getCurrentMove();
@@ -452,15 +459,27 @@ public class History {
       return m;
    }
 
-   /* rewind () ***********************************************************/
-   /**  undoes any moves already done until we are at the begining
+   /* _rewind *************************************************************/
+   /** the protected version of rewind() that does not notify the board
+    *  of the traversal.
     */
-   public void rewind () {
+   protected void _rewind () {
       while (currMove != null) {
          currMove.unexecute();
 	 currMove = currMove.prev;
       }
       currMoveNumber = initialMoveNumber;
+   }
+
+   /* rewind () ***********************************************************/
+   /**  undoes any moves already done until we are at the begining
+    */
+   public void rewind () {
+      notifyBoardsOfTraversal(true);
+
+      _rewind();
+
+      notifyBoardsOfTraversal(false);
    }
 
    /* fastforward *********************************************************/
@@ -471,11 +490,16 @@ public class History {
     *  @param returns the number of moves actually moved through.
     */
    public int fastforward (int n) {
+      notifyBoardsOfTraversal(true);
+
       int count = 0;
       while (hasNext() && count < n) {
          next();
 	 count++;
       }
+
+      notifyBoardsOfTraversal(false);
+
       return count;
    }
 
@@ -484,9 +508,13 @@ public class History {
     *  performing all moves on the branch's main line as it goes.
     */
    public void goToEnd () {
+      notifyBoardsOfTraversal(true);
+
       while (hasNext()) {
          next();
       }
+
+      notifyBoardsOfTraversal(false);
    }
 
    /* rewindToLastFork() **************************************************/
@@ -498,12 +526,16 @@ public class History {
    public Move rewindToLastFork () {
       if (currMove == null) return currMove;
 
+      notifyBoardsOfTraversal(true);
+
       do {
          currMove.unexecute();
 	 currMoveNumber--;
 	 currMove = currMove.prev;
       } while (currMove != null 
                && !currMove.getContinuationList().hasVariations());
+
+      notifyBoardsOfTraversal(false);
 
       return currMove;
    }
@@ -875,5 +907,30 @@ public class History {
     */
    public int hashCode () {
       return 0;
+   }
+
+   //utility functions////////////////////////////////////////////////////////
+   /** sends  BoardEvent.TRAVERSAL_(BEGIN/END) to all boards
+    *  associate with this game.<br>
+    *  Note: this function does assume that this History, and all Boards are
+    *  unified under one Game.  If this is not true, and this history is
+    *  for severall Game objects that use different boards, some boards will
+    *  not get notified.
+    *
+    *  @param begin if TRUE then TRAVERSAL_BEGIN is sent.
+    *  @param begin if FALSE then TRAVERSAL_END is sent.
+    */
+   protected void notifyBoardsOfTraversal (boolean begin) {
+      Board[] boards = null;
+      int event = ((begin) ? BoardEvent.TRAVERSAL_BEGIN 
+                           : BoardEvent.TRAVERSAL_END);
+
+         boards = game.getBoards();
+
+	 if (boards != null) {
+	    for (int i=0; i < boards.length; i++) {
+	       boards[i].fireBoardEvent(event);
+	    }
+	 }
    }
 }

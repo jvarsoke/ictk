@@ -171,14 +171,19 @@ public abstract class Move {
    //Execution///////////////////////////////////////////////////////////
 
    /* execute **********************************************************/
-   /** affects the change on the board.
+   /** affects the change on the board. It should also call
+    *  fireBoardEvent(BoardEvent.MOVE) for the board to 
+    *  propagate the changes to all listeners.
     */
    protected abstract void execute ()  
           throws IllegalMoveException, 
 	         OutOfTurnException;
 
    /* unexecute *******************************************************/
-   /** undo the this move
+   /** undo the move onb the board.  This does not imply a takeback, but
+    *  only that the move should be unplayed.  It should also call
+    *  fireBoardEvent(BoardEvent.UNMOVE) for the board to 
+    *  propagate the changes to all listeners.
     */
    protected abstract void unexecute();
 

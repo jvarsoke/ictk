@@ -45,7 +45,17 @@ Legend:
    [cli]    added 788096 - CLI display for ChessBoards
             Also added BoardListener keep displays notified of changes in the
 	    underlying model.
-	    {note: very unstable code right now, don't submit bugs}
+   [cli]    added TxChessBoardDisplay
+            This is an only email CC chess coorispondence program's output
+	    format.  There are several options to control how the output looks.
+
+   [chess]  added  Board controllers like History and ChessMove now 
+            trigger Board to send updateBoard() to all BoardListeners.
+	    When History does a long series of moves (such as in rewind()
+	    or fastForward()) a TRAVERSAL_BEGIN event is sent first to notify
+	    the Listener that it might not want to update the board until
+	    the TRAVERSAL_END is called.
+
 
 0.1.2 - 2003-08-04 bug fixes (mostly)
    [dev]    source distribution no longer comes with javadoc, since it can

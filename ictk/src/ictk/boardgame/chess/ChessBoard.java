@@ -1362,6 +1362,8 @@ public class ChessBoard implements Board {
    }
 
    //Events///////////////////////////////////////////////////////////////////
+
+   /* addBoardListerner *****************************************************/
    public void addBoardListener (BoardListener bl) {
       int size = 0;
       boolean found = false;
@@ -1384,10 +1386,12 @@ public class ChessBoard implements Board {
       listeners = bls;
    }
 
+   /* getBoardListerners ****************************************************/
    public BoardListener[] getBoardListeners () {
       return listeners;
    }
 
+   /* removeBoardListener ***************************************************/
    public void removeBoardListener (BoardListener bl) {
       int size = 0,
           idx  = 0;
@@ -1417,6 +1421,13 @@ public class ChessBoard implements Board {
 	 System.arraycopy(listeners, idx+1, bls, idx, size-1);
 
       listeners = bls;
+   }
+
+   /* fireBoardEvent ********************************************************/
+   public void fireBoardEvent (int event) {
+      if (listeners != null)
+         for (int i=0; i < listeners.length; i++)
+	    listeners[i].boardUpdate(this, event);
    }
 
    ///////////////////////////////////////////////////////////////////////////

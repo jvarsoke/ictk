@@ -96,4 +96,14 @@ public interface Board {
 
    /* getBoardListener ***************************************************/
    public BoardListener[] getBoardListeners ();
+
+   /* fireBoardEvent *****************************************************/
+   /** this is used by controllers (such as History) to fire board events 
+    *  to BoardListeners.  It also good to use this function to update
+    *  all BoardListeners on things like a position change, instead of 
+    *  updating the displays individually.
+    *
+    *  @param event the BoardEvent.<EVENT> you wish to send to listeners
+    */
+   public void fireBoardEvent (int event);
 }
