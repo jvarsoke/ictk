@@ -37,8 +37,15 @@ Legend:
 	    so users can manually set it.
 	    {thanks: Jerome Zago for the bug report & suggestions}
    [dev]    added "dist" targets to build.xml.  This allows for easy building
-            of the distribution files.  For now, it requires a connection
-	    to the CVS.
+            of the distribution files.
+   [dev]    added "cvs" target to build.xml
+            By specifying the cvs.tag you can retrieve releases from the CVS.
+	    By default the build file will get the release that build file
+	    corrisponds to.  If you want the development version from the CVS
+	    you should specify -Dcvs.tag=HEAD on the Ant command-line.
+   [dev]    added "cvs" ability to log onto the developers' CVS.
+            Sometimes the public/anonymous CVS isn't very current. You can
+	    use the developers' CVS by -Dcvs.login=<sf_userid>
 
    [test]   fixed 771165 - testCheckmateSmother3: wrong assertions
             Test was passing because of bug 771063.  Test corrected.

@@ -104,11 +104,14 @@
    <!-- display version information -->
    <target name="version"
            description="display version information">
-      <echo message="      ictk: ictk-${version}"/>
-      <echo message="   cvs tag: ${cvs.tag}"/>
-      <echo message="build file: ${build.file.id}"/>
-      <echo message="       Ant: ${ant.version}"/>
-      <echo message="      Java: ${ant.java.version}"/>
+      <echo message="-=[ ictk ]=- Internet Chess ToolKit"/>
+      <echo message="             http://ictk.sourceforge.net"/>
+      <echo message=""/>
+      <echo message="       ictk: ictk-${version}"/>
+      <echo message="    cvs tag: ${cvs.tag}"/>
+      <echo message=" build file: ${build.file.id}"/>
+      <echo message="        ant: ${ant.version}"/>
+      <echo message="        jdk: ${ant.java.version}"/>
    </target>
 
    <!-- initialization and error checking .................................-->

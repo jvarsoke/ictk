@@ -44,7 +44,34 @@ If you're writing a variant of an already existing game make sure its
 package goes in a subdirectory of the main game.  So if you were to add
 CrazyHouse to ictk you should put in under /ictk/boardgame/chess/crazyhouse.
 
+
 DOCUMENTATION
 -------------
 
 As you can see almost all my methods have JavaDoc headers.  Yours should too.
+
+
+CVS
+---
+
+Check the CVS for newer versions before you start patching something.  You
+can contact me before you start your patch to find out if I've a newer
+version on my harddrive that I haven't checked in yet (pleasure of the sole
+developer).
+
+The build file has targets that will help you out. "cvs" can be used to
+export a version of the distribution to the ./release directory.  You can
+specify the release version by using cvs.tag on the command line.
+
+   $ ant -Dcvs.tag=HEAD cvs
+
+This will retrieve the latest and greatest (read unstable) version of all files.
+For this you can use the public CVS or the developers' CVS.  The latter is often
+more current (to the minute).  By default the public CVS is used, but if you'd
+like to use the developers' just specify your sourceforge userid on the command
+line like this:
+
+   $ ant -Dcvs.login=<sf_userid> cvs
+
+
+Best of luck to you.
