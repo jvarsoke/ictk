@@ -35,9 +35,11 @@ import java.io.*;
 
 public class PGNWriterTest extends TestCase {
    public String dataDir = "./";
-   String bulk_nonvariation = "test_nonvariation.pgn",
-          bulk_variation = "test_variation.pgn",
-          bulk_annotation = "test_annotation.pgn";
+   String pgn_nonvariation = "test_nonvariation.pgn",
+          pgn_variation    = "test_variation.pgn",
+          pgn_annotation   = "test_annotation.pgn",
+	  pgn_debug	   = "test_debug.pgn";
+
    PGNWriter writer;
    SAN san;
    ChessBoard board;
@@ -81,6 +83,79 @@ public class PGNWriterTest extends TestCase {
    }
 
    ///////////////////////////////////////////////////////////////////////////
+   /* this tests to make sure variations are not nested unnecessiarily.
+    * The move string should look like this: 1.e4 e5 ( 1...c5 ) (1...e6 ) *
+    * Not like this:                         1.e4 e5 ( 1...c5 ( 1...e6 ) ) *
+    * bug: 778408
+    */
+   public void testVariationNesting () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      //Log.addMask(SAN.DEBUG);
+      //Log.addMask(PGNReader.DEBUG);
+      //Log.addMask(ChessGameInfo.DEBUG);
+      try { 
+            game = new ChessGame();
+            board = (ChessBoard) ((ChessGame) game).getBoard();
+
+            move = (ChessMove) san.stringToMove(board, "e4");
+            game.getHistory().add(move);
+
+            //main line
+	    move = (ChessMove) san.stringToMove(board, "e5");
+            game.getHistory().add(move);
+
+	    game.getHistory().prev();
+
+            //variation 1
+	    move = (ChessMove) san.stringToMove(board, "c5");
+            game.getHistory().add(move);
+
+	    game.getHistory().prev();
+
+            //variation 2
+	    move = (ChessMove) san.stringToMove(board, "e6");
+            game.getHistory().add(move);
+
+            writer = new PGNWriter(sw = new StringWriter());
+	    writer.writeGame(game);
+
+	    BufferedReader in = new BufferedReader(
+	                           new StringReader(sw.toString()));
+	    boolean found = false;
+	    String line = null;
+
+	    while (!found && (line = in.readLine()) != null) {
+	       found = line.startsWith("1.e4");
+	    }
+
+	    assertTrue(found);
+            int openVarIndex = line.indexOf('(');
+	    assertTrue(openVarIndex != -1);
+
+	    int closeVarIndex = line.indexOf(')');
+	    assertTrue(closeVarIndex != -1);
+
+	    int nextOpenVarIndex = line.indexOf('(', openVarIndex+1);
+	    assertTrue(nextOpenVarIndex != -1);
+
+            //make sure we closed the first variation before opening the 2nd.
+	    assertTrue(closeVarIndex < nextOpenVarIndex);
+
+      }
+      finally {
+          Log.removeMask(SAN.DEBUG);
+          Log.removeMask(PGNReader.DEBUG);
+          Log.removeMask(ChessGameInfo.DEBUG);
+          Log.removeMask(PGNWriter.DEBUG);
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
    public void testBulkNonVariation () 
           throws FileNotFoundException,
 	  	 IOException, 
@@ -96,7 +171,7 @@ public class PGNWriterTest extends TestCase {
 
 	    in = new PGNReader(
 		    new FileReader(
-		       new File(dataDir + bulk_nonvariation)));
+		       new File(dataDir + pgn_nonvariation)));
 
 	    while ((game = in.readGame()) != null) {
 	       writer = new PGNWriter(sw = new StringWriter()); 
@@ -112,6 +187,7 @@ public class PGNWriterTest extends TestCase {
           Log.removeMask(SAN.DEBUG);
           Log.removeMask(PGNReader.DEBUG);
           Log.removeMask(ChessGameInfo.DEBUG);
+          Log.removeMask(PGNWriter.DEBUG);
       }
    }
 
@@ -126,11 +202,14 @@ public class PGNWriterTest extends TestCase {
       //Log.addMask(SAN.DEBUG);
       //Log.addMask(PGNReader.DEBUG);
       //Log.addMask(ChessGameInfo.DEBUG);
+      //Log.addMask(PGNWriter.DEBUG);
+
       int count = 0;
+      try {
 
 	 in = new PGNReader(
 		 new FileReader(
-		    new File(dataDir + bulk_variation)));
+		    new File(dataDir + pgn_variation)));
 
 	 while ((game = in.readGame()) != null) {
 	    writer = new PGNWriter(sw = new StringWriter()); 
@@ -145,6 +224,21 @@ public class PGNWriterTest extends TestCase {
 	    assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
 	    assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
 	 }
+      }
+      catch (Exception e) {
+         if (Log.isDebug(PGNWriter.DEBUG)) {
+            System.out.println("Game: " + count);
+            new PGNWriter(System.err).writeGame(game); 
+         }
+	 
+         throw e;
+      }
+      finally {
+          Log.removeMask(SAN.DEBUG);
+          Log.removeMask(PGNReader.DEBUG);
+          Log.removeMask(ChessGameInfo.DEBUG);
+          Log.removeMask(PGNWriter.DEBUG);
+      }
    }
 
    ///////////////////////////////////////////////////////////////////////////

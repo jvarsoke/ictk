@@ -224,8 +224,6 @@ public class PGNWriter extends ChessWriter {
 
          sb = new StringBuffer();
 
-	 //walkMoveTree((ChessMove) history.getFirst(), num, sb);
-
          if (Log.debug)
 	    Log.debug(DEBUG, "walking the History move tree");
 
@@ -337,23 +335,27 @@ public class PGNWriter extends ChessWriter {
 	             needNumber = true;
 		  }
 	       }
-	    }
 
-            //decend each variation starting with the last
-	    for (int j=cont.size()-1; j >= 0; j--) {
-	       m = (ChessMove) cont.get(j);
-
-	       if (m != null) {
+               //decend for all variations (non-mainline)
+	       if (m != null && i > 0) {
+	          if (Log.debug)
+		     Log.debug(DEBUG, m + " descending variation");
 	          walkMoveTreeBreadthFirst(m.getContinuationList(), 
 		     num + ((isBlackMove) ? 1 : 0), sb);
 
-		  if (j > 0) {
-		     sb.append(" ) ");
-		     needNumber = true;
-		  }
+		  sb.append(" ) ");
+		  needNumber = true;
 	       }
 	    }
 
+            //now do main-line
+	    m = (ChessMove) cont.get(0);
+	    if (m != null) {
+	       if (Log.debug)
+		  Log.debug(DEBUG, m + " descending mainline");
+	       walkMoveTreeBreadthFirst(m.getContinuationList(), 
+		  num + ((isBlackMove) ? 1 : 0), sb);
+	    }
 	 }
 	 //if this is a terminal node and the line ends with
 	 //a result then we need to print that result for
