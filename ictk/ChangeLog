@@ -36,6 +36,9 @@ In progress
 	    most platforms.  An error is printed if Ant can't find that info
 	    so users can manually set it.
 	    {thanks: Jerome Zago for the bug report & suggestions}
+   [dev]    added "dist" targets to build.xml.  This allows for easy building
+            of the distribution files.  For now, it requires a connection
+	    to the CVS.
 
    [test]   fixed 771165 - testCheckmateSmother3: wrong assertions
             Test was passing because of bug 771063.  Test corrected.

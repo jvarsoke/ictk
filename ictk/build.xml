@@ -1,17 +1,24 @@
-
 <project name="ictk" default="compile">
    <description>
-      Internet Chess ToolKit project build file
+      -=[ ictk ]=- Internet Chess ToolKit: project build file
    </description>
 
    <!-- global properties -->
    <property name="version"           value="0.1.1"/>
+   <!--
+   <property name="cvs.tag"           value="Release-ictk-v0_1_1"/>
+   -->
+   <property name="cvs.tag"           value="HEAD"/>
 
    <property name="source.dir"        value="src"/>
    <property name="test.dir"          value="test"/>
    <property name="build.dir"         value="build"/>
    <property name="docs.dir"          value="docs"/>
-   <property name="output.jar"        value="ictk-${version}.jar"/>
+   <property name="release.dir"       value="release"/>
+   <property name="staging.dir"       value="release/ictk-${version}"/>
+   <property name="release.file"      value="ictk-${version}"/>
+   <property name="output.jar"        value="${release.file}.jar"/>
+   <property name="cvs.anon"          value=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/ictk"/>
 
    <!-- 3rd party jar locations -->
    <!-- these are jar files distributed with ictk -->
@@ -62,6 +69,11 @@
    </path>
 
    <!-- tasks -->
+   <!-- display version information -->
+   <target name="version"
+           description="display version information">
+      <echo message="Current version is: ictk-${version}"/>
+   </target>
 
    <!-- initialization and error checking .................................-->
    <target name="init">
@@ -89,11 +101,9 @@
 
    <!-- ..................................................................-->
 
-   <target name="dist" depends="jar" />
-
    <!-- compile targets -->
    <target name="compile" depends="init"
-           description="compiling the source">
+           description="compiling the source (w/ debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
          source="1.4"
@@ -108,7 +118,7 @@
 
    <!-- compile targets -->
    <target name="optimize" depends="init"
-           description="compiling the optimized source">
+           description="compiles the optimized source (w/o debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
          source="1.4"
@@ -121,11 +131,13 @@
       </javac>
    </target>
 
+   <!-- ..................................................................-->
+
    <!--test targets -->
    <target name="compile_test" 
            depends="check_junit,error_junit,compile" 
 	   if="junit_is_good"
-           description="compiling the regression testing source">
+           description="compiles the regression testing source">
       <mkdir dir="${build.dir}"/>
       <javac 
          source="1.4"
@@ -141,7 +153,7 @@
 
    <!-- test suite -->
    <target name="test" depends="compile_test"
-           description="performing JUnit test battery">
+           description="performs the JUnit test battery">
       <java
          classname="ictk.AllTests"
 	 classpathref="compile_test.class.path">
@@ -152,10 +164,11 @@
       </java>
    </target>
 
+   <!-- ..................................................................-->
 
-   <!--distro targets -->
+   <!--jar targets -->
    <target name="jar" depends="compile"
-           description="building the jar file">
+           description="builds the jar file">
       <jar 
          jarfile="${output.jar}"
          basedir="${build.dir}"
@@ -165,7 +178,7 @@
    </target>
 
    <target name="optimized-jar" depends="clean, optimize"
-           description="building the optimized jar file">
+           description="builds the optimized jar file">
       <jar 
          jarfile="${output.jar}"
          basedir="${build.dir}"
@@ -173,6 +186,8 @@
       />
 	<!-- manifest="manifest.txt" -->
    </target>
+
+   <!-- ..................................................................-->
 
    <!-- documentation -->
    <target name="docs" depends="compile"
@@ -192,11 +207,125 @@
       </javadoc>
    </target>
 
+   <!-- ..................................................................-->
+
+   <!-- distro -->
+   <target name="dist" depends="bin,src"
+           description="create both the binary and source release files.">
+
+   </target>
+
+   <!-- FIXME: the distro files aren't exactly what I want here.
+               They should _either_ copy from the local directories (what I want).
+	       Or they should grab from the CVS (what I'd like as an alternative).
+	       But they really shouldn't do both.  Right now this is a cludge.
+               -->
+
+   <!-- common to all distribution targets -->
+   <target name="common_dist" depends="compile,docs">
+      <mkdir dir="${release.dir}"/>
+      <mkdir dir="${staging.dir}"/>
+      <copy file="AUTHORS"   todir="${staging.dir}"/>
+      <copy file="COPYING"   todir="${staging.dir}"/>
+      <copy file="ChangeLog" todir="${staging.dir}"/>
+      <copy file="HACKING"   todir="${staging.dir}"/>
+      <copy file="NEWS"      todir="${staging.dir}"/>
+      <copy file="README"    todir="${staging.dir}"/>
+      <copy file="TODO"      todir="${staging.dir}"/>
+      <copy todir="${staging.dir}/${docs.dir}">
+         <fileset dir="${docs.dir}"/>
+      </copy>
+   </target>
+
+   <!-- binary distribution files -->
+   <target name="bin" depends="common_dist,jar"
+           description="create the binary release file">
+      <copy file="${output.jar}" 
+            todir="${staging.dir}"/>
+
+      <chmod dir="${staging.dir}"
+             perm="ugo+rx"
+	     type="dir"
+	     includes="**"
+	     />
+      <chmod dir="${staging.dir}"
+             perm="ugo+r"
+	     type="file"
+	     includes="**"
+	     />
+
+      <zip destfile="${release.dir}/${release.file}.zip"
+           basedir="${release.dir}"
+	   includes="${release.file}/**"
+	   update="true"
+	   />
+      <tar destfile="${release.dir}/${release.file}.tar.gz"
+           basedir="${release.dir}"
+	   includes="${release.file}/**"
+	   compression="gzip"
+	   />
+   </target>
+
+   <!-- source distribution files -->
+   <target name="src" depends="common_dist"
+           description="create the source release file">
+      <copy file="build.xml"   
+            todir="${staging.dir}"/>
+
+      <cvspass cvsroot="${cvs.anon}"
+               password=""
+	       />
+      <cvs  command="export"
+            dest="${staging.dir}"
+	    cvsRoot="${cvs.anon}"
+	    package="ictk/src ictk/test ictk/lib"
+	    tag="${cvs.tag}"
+	    />
+
+      <move todir="${staging.dir}/src">
+         <fileset dir="${staging.dir}/ictk/src"/>
+      </move>
+      <move todir="${staging.dir}/test">
+         <fileset dir="${staging.dir}/ictk/test"/>
+      </move>
+      <move todir="${staging.dir}/lib">
+         <fileset dir="${staging.dir}/ictk/lib"/>
+      </move>
+      <delete dir="${staging.dir}/ictk/"/>
+
+      <chmod dir="${staging.dir}"
+             perm="ugo+rx"
+	     type="dir"
+	     includes="**"
+	     />
+      <chmod dir="${staging.dir}"
+             perm="ugo+r"
+	     type="file"
+	     includes="**"
+	     />
+
+      <zip destfile="${release.dir}/${release.file}-src.zip"
+           basedir="${release.dir}"
+	   includes="${release.file}/**"
+	   excludes="${release.file}/${output.jar}"
+	   update="true"
+	   />
+      <tar destfile="${release.dir}/${release.file}-src.tar.gz"
+           basedir="${release.dir}"
+	   includes="${release.file}/**"
+	   excludes="${release.file}/${output.jar}"
+	   compression="gzip"
+	   />
+   </target>
+
+   <!-- ..................................................................-->
+
    <!-- clean -->
    <target name="clean"
-           description="clean up">
+           description="delete all built files and documentation">
       <delete dir="${build.dir}" />
       <delete dir="${docs.dir}" />
       <delete file="${output.jar}" />
+      <delete dir="${staging.dir}" /> <!-- but leave the compressed files-->
    </target>
 </project>
