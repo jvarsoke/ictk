@@ -35,7 +35,7 @@ REQUIREMENTS
      javac -source 1.4 feature.  You can do most things with
      Ant 1.4, but you can't generate the javadoc with it.
 
-   o JUnit
+   o JUnit 3.8.0 or better
      this is only necessary if you wish to run the regression testing
      suite.
 
