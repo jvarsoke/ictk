@@ -38,7 +38,6 @@
 	on the command line -->
    <property name="docs.access"       value="public"/>
 
-
    <property name="source.dir"        value="src"/>
    <property name="test.dir"          value="test"/>
    <property name="build.dir"         value="build"/>
@@ -53,6 +52,7 @@
    <property name="junit.print.results" value="yes"/>
    <property name="junit.results.dir"   value="results"/>
 
+   <!-- CVS -->
    <!-- for latest CVS version use -Dcvs.tag=HEAD on the command line -->
    <property name="cvs.anon"
              value=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/ictk"/>
@@ -62,6 +62,21 @@
    <property name="release.dir"       value="release"/>
    <property name="staging.dir"       value="release/${cvs.tag}"/>
 
+   <!-- XSLT -->
+   <!-- XSLT used for generation of code from XML files -->
+   <property name="xslt.home"         value="${env.XALAN_HOME}"/>
+   <property name="xslt.ics.event.dir" 
+             value="${source.dir}/ictk/boardgame/chess/net/ics/event"/>
+
+      <!-- compile path for XSLT -->
+   <path id="xslt.class.path">
+      <fileset dir="${xslt.home}/bin">
+	 <include name="*.jar"/>
+      </fileset>
+   </path>
+
+
+   <!-- libs -->
    <!-- these are jar files distributed with ictk -->
    <property name="lib.dir"           value="lib"/>
 
@@ -148,6 +163,33 @@
    </target>
 
    <!-- ..................................................................-->
+
+   <!-- code generation -->
+   <target name="generate" depends="init"
+           description="generates source code from XML files">
+      <xslt 
+         basedir="${xslt.ics.event.dir}"
+	 destdir="${xslt.ics.event.dir}"
+	 classpathref="xslt.class.path"
+	 style="${xslt.ics.event.dir}/event.xsl"
+	 includes="*.xml"
+	 excludes="*Common.xml"
+	 extension=".tmp.log"
+	 force="yes"
+	 >
+      </xslt>
+      <concat>
+         <fileset dir="${xslt.ics.event.dir}"
+	          includes="*.tmp.log"
+	 />
+      </concat>
+      <!-- get rid of the useless log files -->
+      <delete>
+         <fileset dir="${xslt.ics.event.dir}" 
+                  includes="*.tmp.log"
+	 />
+      </delete>
+   </target>
 
    <!-- compile targets -->
    <target name="compile" depends="init"

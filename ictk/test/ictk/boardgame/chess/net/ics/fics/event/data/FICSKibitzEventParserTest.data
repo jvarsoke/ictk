@@ -1,0 +1,26 @@
+##FICSKibitzEventParserTest Data file
+##$Id$
+##normal
+Handle(1902)[7] kibitzes: hey
+##low rating
+Handle( 902)[7] kibitzes: hey
+##really low rating
+Handle(   1)[7] kibitzes: hey
+##2digit board number
+Handle(   1)[65] kibitzes: hey
+##long
+Handle(1902)[65] kibitzes: one two three four five six seven eight nine ten
+\   eleven twelve thirteen fourteen fifteen sixteen
+##whisper
+Handle(1902)[7] whispers: hey
+##say
+Handle[7] says: hey
+##computer say
+Handle(C)[26] says: hey
+##admin 
+Handle(*)[26] says: hey
+##admin sr
+Handle(*)(SR)[26] says: hey
+##tm
+Baylan(TM)[94] says: Purple!
+

@@ -31,7 +31,12 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* ICSEventParser ***********************************************************/
+/** The base class for all ICSEventParsers.
+ */
 public abstract class ICSEventParser {
+   public static final long DEBUG = Log.ICSEventParser;
+   
    public static final String 
       REGEX_handle    = "([\\w]+)",
       REGEX_acct_type = "((?:\\([A-Z*]+\\))*)",
@@ -53,10 +58,19 @@ public abstract class ICSEventParser {
        ** appropriately with inheritance. */
    protected Pattern pattern;
 
+      /** set debugging on for this instance of the parser */
+   protected boolean debug;
 
+   //constructor//////////////////////////////////////////////////////////////
    protected ICSEventParser (Pattern master) {
       pattern = master;
    }
+
+   /* setDebug **************************************************************/
+   /** turns debugging on for this parser.  You must also set Log.debug to
+    *  true and Log.addMask() to see debugging output.
+    */
+   public void setDebug (boolean t) { debug = t; }
 
    /* getPattern ************************************************************/
    /** returns the pattern being used for this EventParser
@@ -87,7 +101,8 @@ public abstract class ICSEventParser {
     */
    public Matcher match (CharSequence s) {
       Matcher m = pattern.matcher(s);
-      if (m.find())
+
+      if (m.lookingAt())
          return m;
       else
          return null;
@@ -136,7 +151,7 @@ public abstract class ICSEventParser {
 
    public abstract String toNative (ICSEvent evt);
 
-   /* parseAccountType ******************************************************/
+   /* parseICSAccountType ***************************************************/
    /** Parses an account type and logs the correct errors if one is
     *  encountered.
     *
@@ -144,7 +159,7 @@ public abstract class ICSEventParser {
     *  @param index - which match group is the AccountType ?
     *  @return always returns a valid ICSAccountType object, never null
     */
-   protected ICSAccountType parseAccountType (Matcher match, int index) {
+   protected ICSAccountType parseICSAccountType (Matcher match, int index) {
       ICSAccountType acct = null;
          try {
             if (match.group(index) != null) 
@@ -157,18 +172,20 @@ public abstract class ICSEventParser {
                "Can't parse account type: "
                + match.group(index) + " of " + match.group(0));
             acct = new ICSAccountType();
+	    if (Log.debug && debug)
+	       Log.debug(DEBUG, "regex:", match);
          }
       return acct;
    }
 
-   /* parseRating ************************************************************/
+   /* parseICSRating *********************************************************/
    /** Parses a rating and logs the correct errors if one is encountered.
     *
     *  @param match - the whole Matcher object (needed for error reporting)
     *  @param index - which match group is the Rating
     *  @return null - if no rating was encountered or an error occured
     */
-   protected ICSRating parseRating (Matcher match, int index) {
+   protected ICSRating parseICSRating (Matcher match, int index) {
       ICSRating rating = null;
 
 	 try {
@@ -179,6 +196,8 @@ public abstract class ICSEventParser {
 	    Log.error(Log.PROG_WARNING, 
 	      "Can't parse rating" 
 	      + match.group(index) + " of " + match.group(0));
+	    if (Log.debug && debug)
+	       Log.debug(DEBUG, "regex:", match);
 	 }
       return rating;
    }

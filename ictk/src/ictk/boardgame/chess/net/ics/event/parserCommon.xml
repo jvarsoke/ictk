@@ -1,0 +1,72 @@
+<ictkml>
+   <!-- This document is a library of often used classes, interfaces
+        and membertypes (including regexs).
+   -->
+
+   <!-- class ............................................................. -->
+   <class id="ICSEvent"/>
+   <class id="ICSMessageEvent"/>
+   <class id="ICSEventParser"/>
+
+   <!-- interface ......................................................... -->
+   <!-- BoardEvent -->
+   <interface id="board" type="ICSBoardEvent">
+      <method>
+         <code format="java">
+   public int getBoardNumber () { 
+      return boardNumber; 
+   }
+	 </code>
+      </method>
+
+      <method>
+         <code format="java">
+   public void setBoardNumber (int board) { 
+      this.boardNumber = board; 
+   }
+	 </code>
+      </method>
+   </interface>
+
+   <!-- membertypes........................................................ -->
+   <!-- player -->
+   <membertype id="player"
+	       type="String"
+               varname="player"
+	       functname="Player">
+      <regex id="regex:fics:player">([\w]+)</regex>
+   </membertype>
+
+   <!-- message -->
+
+   <!-- accountType -->
+   <membertype id="accountType" 
+	       type="ICSAccountType"
+	       varname="acctType"
+	       functname="AccountType">
+      <regex id="regex:fics:accountType">((?:\([A-Z*]+\))*)</regex>
+   </membertype>
+
+   <!-- rating -->
+   <membertype id="rating"
+	       type="ICSRating"
+               varname="rating"
+	       functname="Rating">
+      <regex id="regex:fics:rating">\(\s*([0-9+-]+[EP]?)\)</regex>
+   </membertype>
+
+   <!-- boardNumber -->
+   <membertype id="boardNumber"
+	       type="int"
+               varname="boardNumber"
+	       functname="BoardNumber">
+   </membertype>
+
+   <membertype id="message"
+	       type="String"
+               varname="mesg"
+	       functname="Message">
+      <regex id="regex:fics:message">((?:.|\s+\\|\s+:)*)</regex>
+   </membertype>
+
+</ictkml>

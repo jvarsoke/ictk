@@ -24,6 +24,7 @@
  */
 
 package ictk.boardgame.chess.net.ics.fics.event;
+
 import ictk.boardgame.chess.net.ics.event.*;
 import ictk.boardgame.chess.net.ics.*;
 import ictk.util.Log;
@@ -31,27 +32,37 @@ import ictk.util.Log;
 import java.util.regex.*;
 import java.io.IOException;
 
-
+/**
+ * Direct tells to the user through "tell" or "say".                  
+ */
 public class FICSTellEventParser extends ICSEventParser {
+
    //static/////////////////////////////////////////////////////////////////
+   public static FICSTellEventParser singleton;
    public static final Pattern masterPattern;
 
    static {
       masterPattern  = Pattern.compile(
-          "^:?("            //begin full match
-//<template function=regex>
-	  + REGEX_handle
-	  + REGEX_acct_type
-	  + "\\s(tells you|says):\\s"
-	  + REGEX_mesg
-//</template>
-	  + ")"             //end
-          , Pattern.MULTILINE);
+         "^:?(" //begin
+         + "([\\w]+)"
+         + "((?:\\([A-Z*]+\\))*)"
+         + "\\s(tells\\syou|says):\\s"
+         + "((?:.|\\s+\\\\|\\s+:)*)"
+
+         + ")"  //end
+         , Pattern.MULTILINE);
+
+      singleton = new FICSTellEventParser();
    }
 
    //instance///////////////////////////////////////////////////////////////
-   public FICSTellEventParser () {
+   protected FICSTellEventParser () {
       super(masterPattern);
+   }
+
+   /* getInstance ***********************************************************/
+   public static ICSEventParser getInstance () {
+       return singleton;
    }
 
    /* createICSEvent ********************************************************/
@@ -66,40 +77,53 @@ public class FICSTellEventParser extends ICSEventParser {
    public void assignMatches (Matcher m, ICSEvent event) {
       ICSTellEvent evt = (ICSTellEvent) event;
 
+      if (Log.debug && debug)
+         Log.debug(DEBUG, "assigning matches", m);
+
+      
       evt.setFake(detectFake(m.group(0)));
-
-//<template function=assignMatches>
+      
       evt.setPlayer(m.group(2));
-
-      evt.setAccountType(parseAccountType(m, 3));
-
-      if ("says".equals(m.group(4))) 
-         evt.setEventType(ICSEvent.SAY_EVENT);
-      else
-         evt.setEventType(ICSEvent.TELL_EVENT);
-
+      
+      evt.setAccountType(parseICSAccountType(m, 3));
+      
       evt.setMessage(m.group(5));
-//</template>
+      
+      if ("tells you".equals(m.group(4))) {
+         evt.setEventType(ICSEvent.TELL_EVENT);
+      }
+      else if ("says".equals(m.group(4))) {
+         evt.setEventType(ICSEvent.SAY_EVENT);
+      }
+	    
    }
 
    /* toNative ***************************************************************/
    public String toNative (ICSEvent event) {
+
+      if (event.getEventType() == ICSEvent.UNKNOWN_EVENT)
+         return event.getMessage();
+
       ICSTellEvent evt = (ICSTellEvent) event;
       StringBuffer sb = new StringBuffer(20);
-
+      
       if (evt.isFake()) sb.append(":");
-//<template function=toNative>
-      sb.append(evt.getPlayer());
+      
+      sb.append(evt.getPlayer())
+        .append(evt.getAccountType());
 
-      sb.append(evt.getAccountType());
+      switch (evt.getEventType()) {
+         case ICSEvent.TELL_EVENT:
+            sb.append(" tells you: ");
+            break;
 
-      if (evt.isSay()) 
-         sb.append(" says: ");
-      else
-         sb.append(" tells you: ");
+         case ICSEvent.SAY_EVENT:
+            sb.append(" says: ");
+            break;
+      }
 
       sb.append(evt.getMessage());
-//</template>
+	    
 
       return sb.toString();
    }

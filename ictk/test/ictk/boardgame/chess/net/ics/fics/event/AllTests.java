@@ -35,19 +35,21 @@ public class AllTests {
 
    public static Test suite() {
       TestSuite suite= new TestSuite("FICS event parsers");
+      suite.addTest(new TestSuite(FICSKibitzEventParserTest.class));
+      /*
       suite.addTest(new TestSuite(FICSChannelEventParserTest.class));
       suite.addTest(new TestSuite(FICSGameCreatedEventParserTest.class));
       suite.addTest(new TestSuite(FICSGameNotificationEventParserTest.class));
       suite.addTest(new TestSuite(FICSGameResultEventParserTest.class));
-      suite.addTest(new TestSuite(FICSKibitzEventParserTest.class));
       suite.addTest(new TestSuite(FICSPlayerConnectionEventParserTest.class));
       suite.addTest(new TestSuite(FICSPlayerNotificationEventParserTest.class));
       suite.addTest(new TestSuite(FICSSeekAdEventParserTest.class));
       suite.addTest(new TestSuite(FICSSeekAdReadableEventParserTest.class));
-      //suite.addTest(new TestSuite(FICSSeekClearEventParserTest.class));
+      suite.addTest(new TestSuite(FICSSeekClearEventParserTest.class));
       suite.addTest(new TestSuite(FICSSeekRemoveEventParserTest.class));
       suite.addTest(new TestSuite(FICSShoutEventParserTest.class));
       suite.addTest(new TestSuite(FICSTellEventParserTest.class));
+      */
       return suite;
    }
 }

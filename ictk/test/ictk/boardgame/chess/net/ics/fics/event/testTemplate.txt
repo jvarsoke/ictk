@@ -41,7 +41,7 @@ public class ##ParserTestClass## extends ParserTest {
    }
 
    public void setUp () {
-      parser = new ##ParserClass##();
+      parser = ##ParserClass##.getInstance();
    }
 
    public void tearDown () {

@@ -37,15 +37,16 @@ import junit.framework.*;
 public class ParserTest extends TestCase {
       /** for seeing the native i/o */
    public boolean debug;
-   String[] mesg;
+   public String[] mesg;
    String filename;
-   ICSEventParser parser;
+   public ICSEventParser parser;
+   String dir = "data";
 
    public ParserTest () throws IOException {
       filename = this.getClass().getName();
       filename = filename.substring(filename.lastIndexOf('.') +1, 
                                     filename.length()) + ".data";
-      mesg = processFile(new File(filename));
+      mesg = processFile(new File(dir + "/" + filename));
    }
 
    public void setUp () {
@@ -99,10 +100,24 @@ public class ParserTest extends TestCase {
    /** make sure we can parse all the data without errors
     */
    public void testParseAll () {
+      if (debug) {
+         //Log.addMask(ICSEventParser.DEBUG);
+         //parser.setDebug(true);
+      }
+
       ICSEvent evt = null;
-      for (int i=0; i < mesg.length; i++) {
-          evt = parser.createICSEvent(mesg[i]); 
-          assertTrue(evt != null);
+      try {
+	 for (int i=0; i < mesg.length; i++) {
+	     evt = parser.createICSEvent(mesg[i]); 
+	     if (debug && evt == null) {
+	        System.err.println("Couldn't match: " + mesg[i]);
+	     }
+	     assertTrue(evt != null);
+	 }
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+         parser.setDebug(false);
       }
    }
 
@@ -111,21 +126,32 @@ public class ParserTest extends TestCase {
     *  what we started with.
     */
    public void testNative () {
-      ICSEvent evt = null;
-      String nativeStr = null;
-      for (int i=0; i < mesg.length; i++) {
-          evt = parser.createICSEvent(mesg[i]); 
-          assertTrue(evt != null);
-	  nativeStr = parser.toNative(evt);
-
-          if (debug) {
-	     System.out.println("origin[" +i + "]: " + mesg[i]);
-	     System.out.println("native[" +i + "]: " + nativeStr);
-	  }
-	  assertTrue(nativeStr.equals(mesg[i]));
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
       }
-     
+
+      try { 
+	 ICSEvent evt = null;
+	 String nativeStr = null;
+	 for (int i=0; i < mesg.length; i++) {
+	     evt = parser.createICSEvent(mesg[i]); 
+	     assertTrue(evt != null);
+	     nativeStr = parser.toNative(evt);
+
+             if (debug && !nativeStr.equals(mesg[i])) {
+		System.out.println("origin[" +i + "]: " + mesg[i]);
+		System.out.println("native[" +i + "]: " + nativeStr);
+	     }
+	     assertTrue(nativeStr.equals(mesg[i]));
+	 }
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+         parser.setDebug(false);
+      }
    }
+
    //tests-end/////////////////////////////////////////////////////////////
 
 }

@@ -42,6 +42,7 @@ import java.io.IOException;
 public class FICSKibitzEventParser extends ICSEventParser {
 
    //static/////////////////////////////////////////////////////////////////
+   public static FICSKibitzEventParser singleton;
    public static final Pattern masterPattern;
 
    static {
@@ -49,18 +50,25 @@ public class FICSKibitzEventParser extends ICSEventParser {
          "^:?(" //begin
          + "([\\w]+)"
          + "((?:\\([A-Z*]+\\))*)"
-         + "\\(\\s*([0-9+-]+[EP]?)\\)"
+         + "(?:\\(\\s*([0-9+-]+[EP]?)\\))?"
          + "\\[(\\d+)\\]"
          + "\\s(kibitzes|whispers|says):\\s"
-         + "((.|\\s+\\\\|\\s+:)*)"
+         + "((?:.|\\s+\\\\|\\s+:)*)"
 
          + ")"  //end
          , Pattern.MULTILINE);
+
+      singleton = new FICSKibitzEventParser();
    }
 
    //instance///////////////////////////////////////////////////////////////
-   public FICSKibitzEventParser () {
+   protected FICSKibitzEventParser () {
       super(masterPattern);
+   }
+
+   /* getInstance ***********************************************************/
+   public static ICSEventParser getInstance () {
+       return singleton;
    }
 
    /* createICSEvent ********************************************************/
@@ -74,6 +82,10 @@ public class FICSKibitzEventParser extends ICSEventParser {
    /* assignMatches *********************************************************/
    public void assignMatches (Matcher m, ICSEvent event) {
       ICSKibitzEvent evt = (ICSKibitzEvent) event;
+
+      if (Log.debug && debug)
+         Log.debug(DEBUG, "assigning matches", m);
+
       
       evt.setFake(detectFake(m.group(0)));
       
@@ -81,34 +93,36 @@ public class FICSKibitzEventParser extends ICSEventParser {
       
       evt.setAccountType(parseICSAccountType(m, 3));
       
-      evt.setRating(parseICSRating(m, 5));
+      evt.setRating(parseICSRating(m, 4));
       
       try {
-         evt.setBoardNumber(Integer.parseInt(m.group(6)));
+         evt.setBoardNumber(Integer.parseInt(m.group(5)));
       }
       catch (NumberFormatException e) {
          Log.error(Log.PROG_WARNING,
             "Can't parse boardNumber for: "
-            + m.group(6) 
+            + m.group(5) 
             + " of " + m.group(0));
          evt.setEventType(ICSEvent.UNKNOWN_EVENT);
          evt.setMessage(m.group(0));
+	 if (Log.debug)
+	    Log.debug(ICSEventParser.DEBUG, "regex", m);
          return;
       }
       
-      evt.setMessage(m.group(8));
+      evt.setMessage(m.group(7));
       
-      if ("whispers".equals(m.group(7))) {
+      if ("whispers".equals(m.group(6))) {
          evt.setEventType(ICSEvent.WHISPER_EVENT);
       }
-      else if ("says".equals(m.group(7))) {
+      else if ("says".equals(m.group(6))) {
          evt.setEventType(ICSEvent.BOARD_SAY_EVENT);
       }
 	    
    }
 
    /* toNative ***************************************************************/
-   public static String toNative (ICSEvent event) {
+   public String toNative (ICSEvent event) {
 
       if (event.getEventType() == ICSEvent.UNKNOWN_EVENT)
          return event.getMessage();
@@ -118,13 +132,19 @@ public class FICSKibitzEventParser extends ICSEventParser {
       
       if (evt.isFake()) sb.append(":");
       
+      String str = null;
+
       sb.append(evt.getPlayer())
         .append(evt.getAccountType());
 
-      if (evt.getEventType() != ICSEvent.BOARD_SAY_EVENT)
-         sb.apped("(")
-           .append(evt.getRating())
-           .append(")");
+      if (evt.getEventType() != ICSEvent.BOARD_SAY_EVENT) {
+         sb.append("(");
+	 str = evt.getRating().toString();
+	 for (int i=0; i < (4 - str.length()); i++)
+	   sb.append(" ");
+	 sb.append(str);
+	 sb.append(")");
+      }
 
       sb.append("[")
         .append(evt.getBoardNumber())

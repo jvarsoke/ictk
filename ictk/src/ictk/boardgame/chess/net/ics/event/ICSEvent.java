@@ -34,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class ICSEvent {
+   public static final long   DEBUG = Log.ICSEvent;
    public static final int    
                               UNKNOWN_EVENT                =  0,
 			      BOARD_UPDATE_EVENT           =  1,

@@ -78,7 +78,7 @@ public class ICSEventParserTest extends TestCase {
       m.find();
       //Log.debug(0L, "testAcctType0", m);
       assertTrue(m.group(1).equals("(SR)"));
-      acct = eventParser.parseAccountType(m, 1);
+      acct = eventParser.parseICSAccountType(m, 1);
       assertTrue(acct.is(ICSAccountType.SERVICE_REP));
    }
 
@@ -88,7 +88,7 @@ public class ICSEventParserTest extends TestCase {
       m.find();
       //Log.debug(0L, "testAcctType1", m);
       assertTrue(m.group(1).equals("(*)"));
-      acct = eventParser.parseAccountType(m, 1);
+      acct = eventParser.parseICSAccountType(m, 1);
       assertTrue(acct.is(ICSAccountType.ADMIN));
    }
 
@@ -98,7 +98,7 @@ public class ICSEventParserTest extends TestCase {
       m.find();
       //Log.debug(0L, "testAcctType2", m);
       assertTrue(m.group(1).equals("(*)(SR)"));
-      acct = eventParser.parseAccountType(m, 1);
+      acct = eventParser.parseICSAccountType(m, 1);
       assertTrue(acct.is(ICSAccountType.ADMIN));
       assertTrue(acct.is(ICSAccountType.SERVICE_REP));
    }
@@ -108,7 +108,7 @@ public class ICSEventParserTest extends TestCase {
       m = pacct.matcher("(*)(SR)(CA)(TM)"); 
       m.find();
       //Log.debug(0L, "testAcctType3", m);
-      acct = eventParser.parseAccountType(m, 1);
+      acct = eventParser.parseICSAccountType(m, 1);
       assertTrue(acct.is(ICSAccountType.ADMIN));
       assertTrue(acct.is(ICSAccountType.SERVICE_REP));
       assertTrue(acct.is(ICSAccountType.CHESS_ADVISOR));

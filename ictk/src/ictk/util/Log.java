@@ -50,14 +50,16 @@ public class Log {
                            USER_ERROR    = 5, 
                            USER_WARNING  = 6;
 
-   public static long History       = 1L,
-                      Board         = 2 * History,
-		      Move          = 2 * Board,
-                      MoveNotation  = 2 * Move,
-		      BoardNotation = 2 * MoveNotation,
-		      GameReader    = 2 * BoardNotation,
-		      GameWriter    = 2 * GameReader,
-		      GameInfo      = 2 * GameWriter;
+   public static long History          = 1L,
+                      Board            = 2 * History,
+		      Move             = 2 * Board,
+                      MoveNotation     = 2 * Move,
+		      BoardNotation    = 2 * MoveNotation,
+		      GameReader       = 2 * BoardNotation,
+		      GameWriter       = 2 * GameReader,
+		      GameInfo         = 2 * GameWriter,
+		      ICSEvent         = 2 * GameInfo,
+		      ICSEventParser   = 2 * ICSEvent;
 
       /** do you want fully qualified (package included) class names? */
    public static boolean isFullyQualifiedClass = false;

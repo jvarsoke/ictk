@@ -25,12 +25,21 @@ Legend:
    [fics]   added guest account detection on login
    [fics]   added Timeseal support
             {thanks: Alexander Maryanovsky (Jin)}
-   [fics]   changed FICS.*Events to FICS*.EventParsers to benefit from
+   [fics]   changed FICS.*Events to FICS.*EventParsers to benefit from
             loose coupling of parsers to events.  This will allow server
 	    event translations.
+   [fics]   changed FICSEvents now implement the Singelton design pattern.
    [fics]   added test suites for the parsers
    [fics]   added template files for Parsers and ParserTest to auto generate
             these files.
+   [net]    removed most of the ICS*Event.java and FICS*EventParser.java files.
+   [net]    added XSLT java code generation for ICSEvents and FICSEventParsers
+            Since most event objects are simple and repetitive code they are
+	    now generated using XALAN (by default).
+   [dev]    added code generation target to build file
+            The build file now has a XALAN dependency by default if you wish
+	    to use the code generator.
+            
 
 0.1.3 - 2003-08-17 a bug, events & and a CLI Board
    [chess]  fixed 784950 - wrong disambiguation

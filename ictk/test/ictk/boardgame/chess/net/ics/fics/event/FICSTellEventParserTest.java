@@ -37,11 +37,11 @@ public class FICSTellEventParserTest extends ParserTest {
    ICSTellEvent evt;
 
    public FICSTellEventParserTest () throws IOException {
-//      debug = true;
+      debug = true;
    }
 
    public void setUp () {
-      parser = new FICSTellEventParser();
+      parser = FICSTellEventParser.getInstance();
    }
 
    public void tearDown () {
@@ -51,12 +51,22 @@ public class FICSTellEventParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
-      evt = (ICSTellEvent) parser.createICSEvent(mesg[0]);
-      assertTrue(evt != null);
-      assertTrue(evt.getPlayer().equals("Handle"));
-      assertTrue(evt.getMessage().equals("Hey"));
-      assertFalse(evt.isSay());
+      if (debug)
+         Log.addMask(ICSEventParser.DEBUG);
 
-      assertFalse(evt.getMessage().equals("hey"));
+      try {
+	 parser.setDebug(true);
+	 evt = (ICSTellEvent) parser.createICSEvent(mesg[0]);
+	 assertTrue(evt != null);
+	 assertTrue(evt.getPlayer().equals("Handle"));
+	 assertTrue(evt.getMessage().equals("Hey"));
+	 assertFalse(evt.isFake());
+	 assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
+
+	 assertFalse(evt.getMessage().equals("hey"));
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+      }
    }
 }

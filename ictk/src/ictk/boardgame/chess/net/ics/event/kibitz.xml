@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE icsevtml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- kibitz ............................................................-->
+   <event id="kibitz" 
+          class="Kibitz"
+	  enum="KIBITZ"
+	  extends="ICSMessageEvent">
+
+      <description>
+         This cooresponds to Kibitz, Whisper, and Board Say  messages.
+         The EventType tells which one it is.
+	 this is a really long description and I'm hoping to see the text wrap so I can test the new function I got from the book with all the new features this should look really good.
+      </description>
+
+      <implements idref="board"/>
+
+      <member id="kibitz:player"      typeref="player"/>
+      <member id="kibitz:accountType" typeref="accountType"/>
+      <member id="kibitz:rating"      typeref="rating"/>
+      <member id="kibitz:boardNumber" typeref="boardNumber" inherit="method"/>
+      <member id="kibitz:message"     typeref="message"     inherit="both"/>
+
+      <!--parser-->
+      <parser id="kibitz:parser"
+              name="Kibitz"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="yes">
+
+         <!-- regex -->
+	 <regex>
+	    <regexref ref="regex:fics:player"/>
+	    <regexref ref="regex:fics:accountType"/>
+	    (?:<regexref ref="regex:fics:rating"/>)?
+	    \[(\d+)\]
+	    \s(kibitzes|whispers|says):\s
+	    <regexref ref="regex:fics:message"/>
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches>
+	    <regexgroup num="2" memberref="kibitz:player"/>
+	    <regexgroup num="3" memberref="kibitz:accountType"/>
+	    <regexgroup num="4" memberref="kibitz:rating"/>
+	    <regexgroup num="5" memberref="kibitz:boardNumber"/>
+	    <regexgroup num="7" memberref="kibitz:message"/>
+	    <code format="java">
+      if ("whispers".equals(m.group(6))) {
+         evt.setEventType(ICSEvent.WHISPER_EVENT);
+      }
+      else if ("says".equals(m.group(6))) {
+         evt.setEventType(ICSEvent.BOARD_SAY_EVENT);
+      }
+	    </code>
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="20">
+	    <code format="java">
+      String str = null;
+
+      sb.append(evt.getPlayer())
+        .append(evt.getAccountType());
+
+      if (evt.getEventType() != ICSEvent.BOARD_SAY_EVENT) {
+         sb.append("(");
+	 str = evt.getRating().toString();
+	 for (int i=0; i &lt; (4 - str.length()); i++)
+	   sb.append(" ");
+	 sb.append(str);
+	 sb.append(")");
+      }
+
+      sb.append("[")
+        .append(evt.getBoardNumber())
+        .append("]");
+
+      switch (evt.getEventType()) {
+         case ICSEvent.KIBITZ_EVENT:
+            sb.append(" kibitzes: ");
+            break;
+
+         case ICSEvent.WHISPER_EVENT:
+            sb.append(" whispers: ");
+            break;
+
+         case ICSEvent.BOARD_SAY_EVENT:
+            sb.append(" says: ");
+            break;
+      }
+
+      sb.append(evt.getMessage());
+	    </code>
+
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>

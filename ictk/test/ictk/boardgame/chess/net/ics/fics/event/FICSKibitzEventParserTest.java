@@ -41,7 +41,7 @@ public class FICSKibitzEventParserTest extends ParserTest {
    }
 
    public void setUp () {
-      parser = new FICSKibitzEventParser();
+      parser = FICSKibitzEventParser.getInstance();
    }
 
    public void tearDown () {
@@ -51,7 +51,21 @@ public class FICSKibitzEventParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
-      evt = (ICSKibitzEvent) parser.createICSEvent(mesg[0]);
-      assertTrue(evt != null);
+      if (debug)
+         Log.addMask(ICSEventParser.DEBUG);
+      parser.setDebug(true);
+      try {
+	 evt = (ICSKibitzEvent) parser.createICSEvent(mesg[0]);
+	 assertTrue(evt != null);
+
+	 assertTrue(evt.getPlayer().equals("Handle"));
+	 assertFalse(evt.getAccountType().is(ICSAccountType.UNREGISTERED));
+	 assertTrue(evt.getRating().get() == 1902);
+	 assertTrue(evt.getBoardNumber() == 7);
+	 assertTrue(evt.getMessage().equals("hey"));
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+      }
    }
 }

@@ -1,7 +1,0 @@
-##FICSPlayerNotificationEventParserTest Data file
-##$Id$
-Notification: mrbishop has arrived.
-##
-Notification: mrbishop has departed.
-##
-:Notification: mrbishop has departed.

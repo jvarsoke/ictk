@@ -27,6 +27,8 @@ package ictk.boardgame.chess.net.ics;
 
 import java.util.regex.Matcher;
 
+/** Ratings are the strenght estimates on the server.
+ */
 public class ICSRating {
 
    int rating;
@@ -45,6 +47,11 @@ public class ICSRating {
    public void set (int rate) {
       rating = rate;
    }
+
+   /** gets the numeric rating.  If no number is applicable such as the 
+    *  case for unset ratings then a 0 is returned.
+    */
+   public int get () { return rating; }
 
    public void setNotApplicable (boolean t) {
       isNotApplicable = t;

@@ -57,7 +57,6 @@ public class ICSAccountType {
 			   DEMO                = 17,
 			   NUM_FLAGS	       = 18;
 
-   //FIXME: this could be a long mask instead.  But coding for this was quicker
    protected boolean[] flag;
 
    public ICSAccountType () {
