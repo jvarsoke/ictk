@@ -49,6 +49,7 @@ public class PGNReaderTest extends TestCase {
    ChessReader in;
    Game        game;
    List        games;
+   ChessAnnotation anno;
 
    public PGNReaderTest (String name) {
       super(name);
@@ -66,6 +67,7 @@ public class PGNReaderTest extends TestCase {
       game = null;
       in = null;
       games = null;
+      anno = null;
       Log.removeMask(san.DEBUG);
       Log.removeMask(ChessBoard.DEBUG);
    }
@@ -78,7 +80,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_nonvariation, false);
+      games = loadGames(dataDir + pgn_nonvariation, false, -1);
       assertTrue(games.size() > 0);
       
    }
@@ -91,7 +93,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_variation, false);
+      games = loadGames(dataDir + pgn_variation, false, -1);
       assertTrue(games.size() > 0);
    }
 
@@ -103,7 +105,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false);
+      games = loadGames(dataDir + pgn_annotation, false, -1);
       assertTrue(games.size() > 0);
    }
 
@@ -120,9 +122,9 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      loadGames(dataDir + pgn_debug, false);
+      games = loadGames(dataDir + pgn_debug, false, -1);
+      //assertTrue(games.size() > 0);
    }
-
 
    ///////////////////////////////////////////////////////////////////////////
    public void testAnnotationCommentAfterMove () 
@@ -133,15 +135,14 @@ public class PGNReaderTest extends TestCase {
 		 AmbiguousMoveException,
 		 Exception {
 
-      games = loadGames(dataDir + pgn_annotation, false);
+      games = loadGames(dataDir + pgn_annotation, false, 0);
 
 	 game = (Game) games.get(0);
 	 History history = game.getHistory();
 
 	 history.rewind();
 	 history.next();
-	 ChessAnnotation anno 
-	    = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
 	 assertTrue(anno.getComment().equals("Best by test"));
    }
 
@@ -153,21 +154,19 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false);
+      games = loadGames(dataDir + pgn_annotation, false, 1);
 
-	 game = (Game) games.get(0);
+	 game = (Game) games.get(1);
 	 History history = game.getHistory();
 
 	 history.rewind();
 	 history.next();
 	 history.next();
-	 ChessAnnotation anno 
-	    = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
 	 assertTrue(anno.getSuffix() == (short) 1);
    }
 
    ///////////////////////////////////////////////////////////////////////////
-   /*
    public void testAnnotationCommentBeforeGame () 
           throws FileNotFoundException,
 	  	 IOException, 
@@ -175,17 +174,204 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, true);
+      games = loadGames(dataDir + pgn_annotation, false, 2);
 
-	 game = (Game) games.get(1);
+	 game = (Game) games.get(2);
+	 assertTrue(game != null);
 	 History history = game.getHistory();
 
 	 history.rewind();
-	 ChessAnnotation anno 
-	    = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getPrenotation();
+
+	 assertTrue(anno != null);
 	 assertTrue(anno.getComment().equals("Comment Before Game"));
    }
-   */
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationComment2ndMoveWithCommentAfter1st () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 3);
+
+	 game = (Game) games.get(3);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+         //check post-notation of first move
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("after1"));
+
+         //check pre-notation of second move
+	 history.next();
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getPrenotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("before2"));
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("after2"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotation2CommentsAfter1stOneBefore2nd () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 4);
+
+	 game = (Game) games.get(4);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+         //check post-notation of first move
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("after1 after1a"));
+
+         //check pre-notation of second move
+	 history.next();
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getPrenotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("before2"));
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("after2"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationEndLineComment () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 6);
+
+	 game = (Game) games.get(6);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("Best by test"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotation2EndLineCommentsInARow () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 7);
+
+	 game = (Game) games.get(7);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("Best by test so says Fischer"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationHeadingVariation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 8);
+
+	 game = (Game) games.get(8);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+	 history.next(1);
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getPrenotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("Sicilian"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationHeadingVariationEOL () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 9);
+
+	 game = (Game) games.get(9);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+	 history.next(1);
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getPrenotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment().equals("Sicilian"));
+   }
 
    ///////////////////////////////////////////////////////////////////////////
    public void testBadPGNs () 
@@ -214,11 +400,15 @@ public class PGNReaderTest extends TestCase {
 	 catch (AmbiguousMoveException e) {
 	    fail("wrong error for game 1: " + e);
 	 }
+	 finally {
+	    Log.removeMask(SAN.DEBUG);
+	    Log.removeMask(PGNReader.DEBUG);
+	 }
    }
 
    //Helper///////////////////////////////////////////////////////////////////
    /** loads the games into a list so aspects of the games can be tested */
-   protected List loadGames (String file, boolean debug)
+   protected List loadGames (String file, boolean debug, int gameToDebug)
           throws FileNotFoundException,
 	  	 IOException, 
 	         InvalidGameFormatException,
@@ -227,7 +417,7 @@ public class PGNReaderTest extends TestCase {
 		 Exception {
       List list = new LinkedList();
 
-      if (debug) {
+      if (debug && gameToDebug < 0) {
         Log.addMask(SAN.DEBUG);
         Log.addMask(PGNReader.DEBUG);
       }
@@ -243,7 +433,21 @@ public class PGNReaderTest extends TestCase {
 	    while ((game = in.readGame()) != null) {
 	       game.getHistory().goToEnd();
 	       list.add(game);
+
+               //turn off single game debugging
+	       if (debug && gameToDebug == count) {
+		  Log.removeMask(SAN.DEBUG);
+		  Log.removeMask(PGNReader.DEBUG);
+	       }
+
 	       count++;
+
+               //turn on single game debugging for next read
+	       if (debug && gameToDebug == count) {
+	          System.out.println("turing logs on");
+		  Log.addMask(SAN.DEBUG);
+		  Log.addMask(PGNReader.DEBUG);
+	       }
 	       game = null;
 	    }
       }

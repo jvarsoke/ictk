@@ -42,7 +42,7 @@ public class PGNWriterTest extends TestCase {
    SAN san;
    ChessBoard board;
    ChessResult res;
-   ChessMove   move;
+   ChessMove   move, move2;
    ChessReader in;
    Game game, game2;
    StringWriter sw;
@@ -72,6 +72,7 @@ public class PGNWriterTest extends TestCase {
       Log.removeMask(san.DEBUG);
       Log.removeMask(ChessBoard.DEBUG);
       Log.removeMask(ChessGameInfo.DEBUG);
+      Log.removeMask(PGNWriter.DEBUG);
    }
 
    ///////////////////////////////////////////////////////////////////////////
@@ -132,5 +133,173 @@ public class PGNWriterTest extends TestCase {
 	    assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
 	    assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
 	 }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testZeroGameInfoZeroHistory () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+
+      //Log.addMask(PGNWriter.DEBUG);
+
+      game = new ChessGame();
+      board = (ChessBoard) ((ChessGame) game).getBoard();
+
+      writer = new PGNWriter(sw = new StringWriter()); 
+
+      writer.writeGame(game);
+
+      Log.removeMask(PGNWriter.DEBUG);
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testPrenotation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+
+      //Log.addMask(PGNWriter.DEBUG);
+
+      game = new ChessGame();
+      board = (ChessBoard) ((ChessGame) game).getBoard();
+
+      move = (ChessMove) san.stringToMove(board, "e4");
+
+      game.getHistory().add(move);
+      move.setPrenotation(new ChessAnnotation("before1"));
+
+      writer = new PGNWriter(sw = new StringWriter()); 
+
+      writer.writeGame(game);
+
+      spgnin = new PGNReader(new StringReader(sw.toString()));
+      game2 = spgnin.readGame();
+
+      assertTrue(game.getHistory().equals(game2.getHistory()));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
+
+      game.getHistory().next();
+      game2.getHistory().next();
+      assertTrue(game.getHistory().getCurrentMove().equals(
+         game2.getHistory().getCurrentMove()));
+
+      //the prenotation test
+      move = (ChessMove) game.getHistory().getCurrentMove();
+      move2 = (ChessMove) game2.getHistory().getCurrentMove();
+      assertTrue(move.getPrenotation().equals(move2.getPrenotation()));
+
+      Log.removeMask(PGNWriter.DEBUG);
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationThenPrenotation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+
+      //Log.addMask(PGNWriter.DEBUG);
+
+      game = new ChessGame();
+      board = (ChessBoard) ((ChessGame) game).getBoard();
+
+      move = (ChessMove) san.stringToMove(board, "e4");
+
+      game.getHistory().add(move);
+      move.setAnnotation(new ChessAnnotation("after1"));
+
+      move = (ChessMove) san.stringToMove(board, "e5");
+      game.getHistory().add(move);
+      move.setPrenotation(new ChessAnnotation("before2"));
+
+      writer = new PGNWriter(sw = new StringWriter()); 
+
+      writer.writeGame(game);
+
+      spgnin = new PGNReader(new StringReader(sw.toString()));
+      game2 = spgnin.readGame();
+
+      assertTrue(game.getHistory().equals(game2.getHistory()));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
+
+      game.getHistory().next();
+      game2.getHistory().next();
+      assertTrue(game.getHistory().getCurrentMove().equals(
+         game2.getHistory().getCurrentMove()));
+
+      //the prenotation test
+      move = (ChessMove) game.getHistory().getCurrentMove();
+      move2 = (ChessMove) game2.getHistory().getCurrentMove();
+      assertTrue(move.getAnnotation().equals(move2.getAnnotation()));
+
+      game.getHistory().next();
+      game2.getHistory().next();
+      move = (ChessMove) game.getHistory().getCurrentMove();
+      move2 = (ChessMove) game2.getHistory().getCurrentMove();
+      assertTrue(move.getPrenotation().equals(move2.getPrenotation()));
+
+      Log.removeMask(PGNWriter.DEBUG);
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testPrenotationForVariation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+
+      //Log.addMask(PGNWriter.DEBUG);
+
+      game = new ChessGame();
+      board = (ChessBoard) ((ChessGame) game).getBoard();
+
+      move = (ChessMove) san.stringToMove(board, "e4");
+      game.getHistory().add(move);
+
+      move = (ChessMove) san.stringToMove(board, "e5");
+      game.getHistory().add(move);
+
+      //add the variation
+      game.getHistory().prev();
+      move = (ChessMove) san.stringToMove(board, "c5");
+      game.getHistory().add(move);
+      move.setPrenotation(new ChessAnnotation("Sicilian"));
+
+      writer = new PGNWriter(sw = new StringWriter()); 
+
+      writer.writeGame(game);
+
+      spgnin = new PGNReader(new StringReader(sw.toString()));
+      game2 = spgnin.readGame();
+
+      assertTrue(game.getHistory().equals(game2.getHistory()));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
+
+      game.getHistory().next();
+      game2.getHistory().next();
+
+      //go down variation line
+      game.getHistory().next(1);
+      game2.getHistory().next(1);
+
+      move = (ChessMove) game.getHistory().getCurrentMove();
+      move2 = (ChessMove) game2.getHistory().getCurrentMove();
+      assertTrue(move.getPrenotation().equals(move2.getPrenotation()));
+
+      Log.removeMask(PGNWriter.DEBUG);
    }
 }

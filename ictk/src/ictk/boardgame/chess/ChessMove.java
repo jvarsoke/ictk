@@ -28,6 +28,7 @@ package ictk.boardgame.chess;
 import ictk.util.Log;
 
 import ictk.boardgame.*;
+import ictk.boardgame.io.Annotation;
 
 
 /* ChessMove ****************************************************************/
@@ -960,13 +961,16 @@ public class ChessMove extends Move {
 	   .append("   isStalemate: " + stalemate + "\n")
 	   .append("   isResign: " + resign + "\n")
 	   .append("   isDraw: " + draw + "\n")
-	   .append("   isEndOfGame: " + isEndOfGame() + "\n");
+	   .append("   isEndOfGame: " + isEndOfGame() + "\n")
+	   .append("   prenotation: ").append(getPrenotation())
+	   .append("\n")
+	   .append("   annotation: ").append(getAnnotation())
+	   .append("\n");
 
 	 if (continuation == null || continuation.isTerminal())
 	    sb.append("   #continuations: terminal");
 	 else
-	    sb.append(continuation.dump());
-
+	    sb.append("   ").append(continuation.dump());
 
       return sb.toString();
    }

@@ -39,6 +39,12 @@ public class ChessAnnotation implements Annotation {
       /** suffix is a subset of NAG.  Only ?,!!,??,!?,?! */
    protected short   suffix;
 
+   public ChessAnnotation () {
+   }
+
+   public ChessAnnotation (String comment) {
+      this.comment = comment;
+   }
 
    //Suffix///////////////////////////////////////////////////////////////////
    /** this returns the first nag in the nags list only if it is one of the
@@ -242,4 +248,28 @@ public class ChessAnnotation implements Annotation {
 
       return hash;
    }
+
+   /* toString ***************************************************************/
+   /** only useful for diagnostics.
+    */
+   public String toString () {
+      return dump();
+   }
+
+   /* dump *****************************************************************/
+   /** used for diagnostics only
+    */
+   public String dump () {
+      StringBuffer sb = new StringBuffer();
+
+      sb.append("comment: ")
+        .append(comment)
+	.append(" nags: ");
+      if (nags != null)
+         for (int i=0; i < nags.length; i++) {
+	    sb.append(nags[i]).append(" ");
+	 }
+      return sb.toString();
+   }
+
 }

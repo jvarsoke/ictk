@@ -38,4 +38,7 @@ public interface Annotation {
 
    /** appends to the current comment */
    public void appendComment (String s);
+
+   /** for diagnostic purposes only */
+   public String dump ();
 }

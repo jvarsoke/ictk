@@ -7,7 +7,7 @@
 [Black "?"]
 [Result "*"]
 
-1.e4 {Best by test} e5! *
+1.e4 {Best by test} e5 *
 
 ##exclaimation mark
 [Event "?"]
@@ -33,15 +33,28 @@
 
 ##comment before and after a move (from ChessBase export)
 ##Note: ChessBase8 itself reads in this PGN and merges the two comments.
-#[Event "?"]
-#[Site "?"]
-#[Date "????.??.??"]
-#[Round "?"]
-#[White "?"]
-#[Black "?"]
-#[Result "*"]
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
 
-#1.e4 {after1} {before2} 1...e5 {after2} 2.f4 exf4 *
+1.e4 {after1} {before2} 1...e5 {after2} 2.f4 exf4 *
+
+##2 comments after move 1 and one before move 2
+##should be the same as
+##{after1 after1a} {before2}
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 {after1} {after1a} {before2} 1...e5 {after2} 2.f4 exf4 *
 
 #comment with no spaces between delimeters
 [White "Estrin, Y."] 
@@ -51,5 +64,52 @@
 1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 Bc5 5. Nxf7 
 Bxf2+ 6. Kf1 Qe7 7. Nxh8 d5 8. exd5 Nd4 9. h3 Bg3 
 10. c3 Nf5 {N} 11. d4 Bd7 12. Qe2 Bh2 13. Kf2 Ng3 
-14. Qe1 Nfe4+ 15. Kf3 (15. Ke3 Nxh1 {according to 
-Crafty}) 15... Nd2+ 16. Nxd2 Qf6+ 0-1 
+14. Qe1 Nfe4+ 15. Kf3 Nd2+ 16. Nxd2 Qf6+ 0-1 
+
+##until end of line comment
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 ;Best by test
+1...e5! *
+
+##until end of line comment, multi-line
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 ;Best by test
+;so says Fischer
+1...e5! *
+
+##Annotation before variation
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 e5 ({Sicilian} 1...c5) 2.f4 exf4 *
+
+##EOL Annotation before variation
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 e5 (;Sicilian
+1...c5) 2.f4 exf4 *

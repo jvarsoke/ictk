@@ -40,16 +40,31 @@ In progress
    [test]   fixed 771165 - testCheckmateSmother3: wrong assertions
             Test was passing because of bug 771063.  Test corrected.
 	    {thanks: Jerome Zago for the bug report}
+   [test]   added debug info for PGNWriter
 
    [chess]  fixed 759466 - PGN variation w/o space seperating paren and move.
             For example: (2.Bc4) instead of ( 2.Bc4 )
 	    {thanks: Jerome Zago for the bug report & patch}
    [chess]  fixed 771063 - double-check does not generate correct legal moves.
             {thanks: Jerome Zago and David Spencer for reporting the bug}
-   [chess]  added ChessBoard.isDoubleCheck() and changed isCheck() to be
-            true when double-check is true.
    [chess]  fixed 773597 - annotation w/o space between delimeters caused error
             {thanks: Jerome Zago for the bug report}
+   [chess]  fixed 771199 - annotation before move list not handled correctly
+            Now supports comments before games and before moves.  For there
+	    to be a comment before a move (called a Prenotation) in a PGN
+	    there must be a comment after the previous move -- except
+	    in the case of a variation.
+   [chess]  fixed 774076 - PGNWriter error on writing null GameInfo
+   [chess]  fixed 774085 - PGNWriter error on writing null History
+   [chess]  added ChessBoard.isDoubleCheck() and changed isCheck() to be
+            true when double-check is true.
+   [chess]  added Move.getPrenotation() and family.  These are for 
+            comments/annotations before the move.
+   [chess]  added PGNReader/Writer now handle Pre-Notations.  Prenotations
+            might come as comments before a game or before variations.  They
+	    are also determined when there are N comments in a row;
+	    N-1 will be appended to the Annotation of the former move
+	    and the Nth will become the Prenotation of the latter move.
 
 0.1.0 - 2003-03-25 first public release
    [all]    fixed equals()

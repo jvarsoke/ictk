@@ -168,6 +168,12 @@ public class PGNReader extends ChessReader {
       ChessResult res     = null;
       Stack       forks   = new Stack(); //fork for variations to return to
       ChessAnnotation anno = null;
+                  /* this is for when we have two or more annotations
+	           * in a row.  We either need to apply it to the 
+		   * lastMove (if there are >2 in all) or 
+		   * the next move (if there are exactly 2).
+		   * This is only true for { } annotations. */
+      String       savedComment = null;
       
 
 //NEED: should read all move data into one string (eliminate \n) until \n\n
@@ -186,7 +192,7 @@ public class PGNReader extends ChessReader {
       }
 
       //now we have whole move list in the sb
-      st = new StringTokenizer(sb.toString(), " .(){}\n", true);
+      st = new StringTokenizer(sb.toString(), " .(){};\n", true);
 
       String tok2 = null;
       while (st != null && st.hasMoreTokens()) {
@@ -203,17 +209,41 @@ public class PGNReader extends ChessReader {
 	 else if (tok.startsWith(";")) {   //comment until eol
 	    sb = new StringBuffer();
 	    done = false;
+
 	    while (!done && st.hasMoreTokens()) {
 	       tok2 = st.nextToken();
 	       if (tok2.startsWith("\n")) done = true;
-	       sb.append(tok2);
+	       else sb.append(tok2);
 	    }
-	    if (lastMove != null)
+
+	    if (Log.debug)
+	       Log.debug(DEBUG, "eol comment: {" + sb.toString() + "}");
+
+            //set as annotation of last move
+            //if lastMove != history.getCurrentMove() then we just started
+	    //a variation, and the comment needs to be a prenotation of
+	    //the next move we run across
+	    if (lastMove != null && lastMove == history.getCurrentMove()) {
 	       anno = (ChessAnnotation) lastMove.getAnnotation();
-	       if (anno == null)
+
+	       if (anno == null) {
 	          anno = new ChessAnnotation();
-	       anno.appendComment(sb.toString());
-	       lastMove.setAnnotation(anno);
+		  anno.setComment(sb.toString());
+	          lastMove.setAnnotation(anno);
+		  if (Log.debug)
+		     Log.debug(DEBUG, "eol comment for (" +  lastMove + "): "
+		        + lastMove.getAnnotation().getComment());
+	       }
+	       else
+	          anno.appendComment(" " + sb.toString());
+
+	       anno = null;
+	    }
+
+	    //keep for prenotation of next move
+	    else {
+	       savedComment = sb.toString();
+	    }
 	 }
 
 	 //internal {anno} Annotation
@@ -233,12 +263,40 @@ public class PGNReader extends ChessReader {
 	       else
 	          sb.append(tok2);
 	    }
-	    if (lastMove != null) {
+
+	    if (Log.debug)
+	       Log.debug(DEBUG, "comment: {" + sb.toString() + "}");
+
+            //if lastMove != history.getCurrentMove() then we just started
+	    //a variation, and the comment needs to be a prenotation of
+	    //the next move we run across
+	    if (lastMove != null && lastMove == history.getCurrentMove()) {
 	       anno = (ChessAnnotation) lastMove.getAnnotation();
-	       if (anno == null)
+
+	       //if this is the first annotation we've seen after the move
+	       //then it certainly belongs to the lastMove.
+	       if (anno == null) {
 	          anno = new ChessAnnotation();
-	       anno.appendComment(sb.toString());
-	       lastMove.setAnnotation(anno);
+	          anno.setComment(sb.toString());
+		  lastMove.setAnnotation(anno);
+	          anno = null;
+	       }
+
+	       //If the lastMove already has an annotation then
+	       //this comment might belong to the next move.
+	       //If there is more than one comment between
+	       //moves. N-1 are appended to the lastMove.
+	       else {
+	          if (savedComment != null)
+		     lastMove.getAnnotation().appendComment(" "
+		        + savedComment);
+		  savedComment = sb.toString();
+	       }
+	    }
+	    //if there's no lastMove this must be the game comment.
+	    //It should be attached as a preNotation to the first move.
+	    else {
+	       savedComment = sb.toString();
 	    }
 	 }
 
@@ -257,8 +315,22 @@ public class PGNReader extends ChessReader {
 	       move = (ChessMove) notation.stringToMove(board, tok);
 	       if (move != null) {
 		  history.add(move);
+
+		  //if there is a comment in the hopper
+		  //we need to apply it to this move's
+		  //pre-notation member.
+		  if (savedComment != null) {
+		     anno = new ChessAnnotation();
+		     anno.setComment(savedComment);
+		     move.setPrenotation(anno);
+		     Log.debug(DEBUG, "prenotation set: " 
+		        + move.getPrenotation().getComment());
+		     savedComment = null;
+		  }
+
 		  lastMove = move;
-		  count++; //FIXME: not sure what this is for
+
+		  count++; //just to see if we found any moves in the history
 	       }
 	       else {
 	          if (Log.debug)

@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.ArrayList;
 
+import ictk.util.Log;
+
 import ictk.boardgame.Game;
 import ictk.boardgame.GameInfo;
 import ictk.boardgame.History;
@@ -55,6 +57,7 @@ import ictk.boardgame.io.GameWriter;
  */
 public class PGNWriter extends ChessWriter {
    protected ChessMoveNotation notation = new SAN();
+   public static final long DEBUG = Log.GameWriter;
      
      /** used for PGN output to indicate the next move needs a number infront*/
    private boolean needNumber = false; 
@@ -70,7 +73,16 @@ public class PGNWriter extends ChessWriter {
    public void writeGame (Game game) 
           throws IOException {
       ChessGame g = (ChessGame) game;
-      if (g == null) throw new NullPointerException ("can't write null game");
+
+      if (g == null) {
+         if (Log.debug)
+	    Log.debug(DEBUG, "can't write a null game");
+         throw new NullPointerException ("can't write null game");
+      }
+
+      if (Log.debug)
+         Log.debug(DEBUG, "Writing game");
+
       g.getHistory().rewind();
       writeGameInfo(g.getGameInfo());
       if (!g.getBoard().isInitialPositionDefault())
@@ -89,6 +101,10 @@ public class PGNWriter extends ChessWriter {
       String event, site, date, round, white, black, result;
 
       event = site = date = round = white = black = result = null;
+
+      if (Log.debug)
+         if (gi == null)
+	    Log.debug(DEBUG, "gameInfo is null, so writing default header");
 
       if (gi != null) {
          event = gi.getEvent();
@@ -126,7 +142,9 @@ public class PGNWriter extends ChessWriter {
       sb.append("[Site \"").append(site).append("\"]\n");
       sb.append("[Date \"").append(date).append("\"]\n");
       sb.append("[Round \"").append(round).append("\"]\n");
-      if (gi.getSubRound() != null && !gi.getSubRound().equals(""))
+      if (gi != null
+         && gi.getSubRound() != null 
+	 && !gi.getSubRound().equals(""))
          sb.append("[SubRound \"").append(gi.getSubRound()).append("\"]\n");
       sb.append("[White \"").append(white).append("\"]\n");
       sb.append("[Black \"").append(black).append("\"]\n");
@@ -160,6 +178,8 @@ public class PGNWriter extends ChessWriter {
 	 }
       }
 
+      if (Log.debug)
+         Log.debug(DEBUG, "writing gameInfo block to stream");
       print(sb); //no extra \n (might add FEN)
    }
 
@@ -167,11 +187,24 @@ public class PGNWriter extends ChessWriter {
    /* writeHistory () ****************************************************/
    public void writeHistory (History history) 
           throws IOException {
+      if (Log.debug)
+         Log.debug(DEBUG, "writing history in 80 col default mode");
       writeHistory(history, 80);
    }
 
    /* writeHistory ********************************************************/
-   /** write the history list.
+   /** write the history list. 
+    *  <br>
+    *  <p>Prenotations: Might not be recognized by all readers.<br>
+    *  If there are Prenotation on moves that is not the head of a variation, 
+    *  or the game, or are not following a move with an Annotation, the 
+    *  Prenotation will probably be interpreted by the next reader as an 
+    *  Annotation of the previous move. <i>(there is a way around this
+    *  by making empty annotations, but it's unclear how much
+    *  adding Prenotations to PGN will make the output incompadible with
+    *  other readers)</i>.
+    *  <br>
+    *  
     *  @param cols the column limition (80 is default)
     */
    public void writeHistory (History history, int cols) 
@@ -180,21 +213,33 @@ public class PGNWriter extends ChessWriter {
       Move currMove = null,
            lastMove = null,
 	   walker = null;
+      ChessResult result = null;
       int  num  = history.getInitialMoveNumber(); 
 
-         if (history == null)
+         if (history == null) {
+	     if (Log.debug)
+	        Log.debug(DEBUG, "can't write a null history");
              throw new NullPointerException ("can't write null history");
+	 }
 
          sb = new StringBuffer();
 
 	 //walkMoveTree((ChessMove) history.getFirst(), num, sb);
 
+         if (Log.debug)
+	    Log.debug(DEBUG, "walking the History move tree");
+
 	 walkMoveTreeBreadthFirst(history.getFirstAll(), num, sb);
-	 ChessResult result = (ChessResult) history.getFinalMove(true).getResult();
-	    if (result == null || result.isUndecided())
-	       sb.append(" *");
-	    //else  nothing to do, already printed
-	       //sb.append(" ").append(notation.resultToString(result));
+
+         walker = history.getFinalMove(true);
+
+	 if (walker != null)
+	    result = (ChessResult) walker.getResult();
+
+	 if (result == null || result.isUndecided())
+	    sb.append(" *");
+	 //else  nothing to do, already printed
+	    //sb.append(" ").append(notation.resultToString(result));
 
 	 formattedOutput(sb.toString(), cols);
 
@@ -216,6 +261,11 @@ public class PGNWriter extends ChessWriter {
       ChessMove m = null;
       boolean isBlackMove = true;
 
+         if (Log.debug)
+	    Log.debug(DEBUG, "continuations(" + cont.size() + ")"
+	       + ((cont.isTerminal()) ? " is " : " is not ") 
+	       + "terminal");
+
 	 if (cont != null && !cont.isTerminal()) {
 
             //figure out if we're on a black move or white
@@ -236,6 +286,15 @@ public class PGNWriter extends ChessWriter {
 	       if (i > 0) 
 	          sb.append("( ");
 
+	       //add prenotation in "{anno}"
+	       if (m.getPrenotation() != null
+	          && (m.getPrenotation().getComment() 
+		       != null)) {
+		  sb.append(" {")
+		    .append(m.getPrenotation().getComment())
+		    .append("} ");
+	       }
+
 	       if (!isBlackMove)
 		  sb.append(num).append(".");
 
@@ -249,10 +308,10 @@ public class PGNWriter extends ChessWriter {
 
 	       //add annotation in "{anno}"
 	       if (m.getAnnotation() != null
-	          && ((ChessAnnotation)m.getAnnotation()).getComment() 
-		       != null) {
+	          && (m.getAnnotation().getComment() 
+		       != null)) {
 		  sb.append(" {")
-		    .append(((ChessAnnotation)m.getAnnotation()).getComment())
+		    .append(m.getAnnotation().getComment())
 		    .append("}");
 	          needNumber = true;
 	       }
@@ -274,8 +333,15 @@ public class PGNWriter extends ChessWriter {
 	    }
 
 	 }
+	 //if this is a terminal node and the line ends with
+	 //a result then we need to print that result for
+	 //this variation.
 	 else {
-	    ChessResult result = (ChessResult) cont.getDepartureMove().getResult();
+	    ChessResult result = null;
+
+	    if (cont != null && cont.getDepartureMove() != null)
+	       result = (ChessResult) cont.getDepartureMove().getResult();
+
 	    if (result != null && !result.isUndecided())
 	       sb.append(" ").append(notation.resultToString(result));
 	 }

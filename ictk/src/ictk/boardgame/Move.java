@@ -77,8 +77,10 @@ public abstract class Move {
       /**the next move by default. Is set each descent down the list.*/
    protected Move    prev;      //the previous move in the history of the game
 
-     /** annotation of the move. */
-   protected Annotation annotation;
+     /** comment before the move. */
+   protected Annotation prenotation,
+     /** comment after the move */
+                        annotation;
 
    public Move () {
       continuation = new ContinuationArrayList(this);
@@ -192,6 +194,22 @@ public abstract class Move {
       return verified;
    }
 
+   /* getPrenotation ***************************************************/
+   /** returns an object full of comments that are supposed to be read
+    *  before the move these comments are attached to.
+    *
+    *  @return the Annotation objects is an abstract base class so
+    *          casting is necessary.
+    */
+   public Annotation getPrenotation () {
+      return prenotation;
+   }
+
+   /* setPrenotation ****************************************************/
+   /** by default the prenotation object is null. 
+    */
+   public void setPrenotation (Annotation anno) { prenotation = anno; }
+
    /* getAnnotation ****************************************************/
    /** returns an object full of comments on the move or the board
     *  position.  
@@ -225,7 +243,13 @@ public abstract class Move {
 
          sb.append("prev: ").append(prev.toString())
 	   .append("\n")
-	   .append("continuation#:").append(continuation.dump());
+	   .append("continuation#:").append(continuation.dump())
+	   .append("\n")
+	   .append("prenotation: ").append(prenotation)
+	   .append("\n")
+	   .append("annotation: ").append(annotation)
+	   .append("\n")
+	   ;
       return sb.toString();
    }
 }
