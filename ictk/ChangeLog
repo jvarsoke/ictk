@@ -119,6 +119,7 @@ Legend:
    [chess]  fixed 774085 - PGNWriter error on writing null History
    [chess]  fixed 774510 - EnPassant did not escape check.
             {thanks: Jerome Zago for the bug report}
+   [chess]  fixed extra space pre-appended to O-O in SAN
    [chess]  added ChessBoard.isDoubleCheck() and changed isCheck() to be
             true when double-check is true.
    [chess]  added Move.getPrenotation() and family.  These are for 
