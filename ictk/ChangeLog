@@ -39,6 +39,7 @@ Legend:
 	    are now cleared when the capture flag is set on a piece.  Also
 	    ChessBoard.isDestUniqueForClass() now does consider captured 
 	    pieces.
+	    {thanks: Jermone Zago for the bug report}
 
 0.1.2 - 2003-08-04 bug fixes (mostly)
    [dev]    source distribution no longer comes with javadoc, since it can
