@@ -49,12 +49,16 @@ Legend:
             This is an only email CC chess coorispondence program's output
 	    format.  There are several options to control how the output looks.
 
-   [chess]  added  Board controllers like History and ChessMove now 
+   [chess]  added Board controllers like History and ChessMove now 
             trigger Board to send updateBoard() to all BoardListeners.
 	    When History does a long series of moves (such as in rewind()
 	    or fastForward()) a TRAVERSAL_BEGIN event is sent first to notify
 	    the Listener that it might not want to update the board until
 	    the TRAVERSAL_END is called.
+
+   [sample] added CLIPGNViewer
+            This is a simple Command-Line Interface (CLI) PGN viewer.  It
+	    demonstrates how to use a BoardDisplay.
 
 
 0.1.2 - 2003-08-04 bug fixes (mostly)
