@@ -37,11 +37,12 @@ public class FICSSeekAdEventParserTest extends ParserTest {
    ICSSeekAdEvent evt;
 
    public FICSSeekAdEventParserTest () throws IOException {
-//      debug = true;
+      super("ictk.boardgame.chess.net.ics.fics.event");
    }
 
    public void setUp () {
-      parser = new FICSSeekAdEventParser();
+      parser = FICSSeekAdEventParser.getInstance();
+      //debug = true;
    }
 
    public void tearDown () {
@@ -51,7 +52,55 @@ public class FICSSeekAdEventParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
-      evt = (ICSSeekAdEvent) parser.createICSEvent(mesg[0]);
-      assertTrue(evt != null);
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+
+         evt = (ICSSeekAdEvent) parser.createICSEvent(mesg[0]);
+	 assertTrue(evt != null);
+
+	 //begin test 
+
+	 //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //inherited///////////////////////////////////////////////////////////
+   public void testParseAll () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testParseAll();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testNative () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testNative();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
    }
 }

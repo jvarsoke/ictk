@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE icsevtml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- channel............................................................-->
+   <event id="seekAd" 
+          class="SeekAd"
+	  enum="SEEK_AD"
+	  >
+
+      <description>
+         A seek ad is an expressed intrest to play a game.
+      </description>
+      <statics format="java">
+   public static final int COLOR_UNSPECIFIED = 0,
+                           COLOR_WHITE       = 1,
+                           COLOR_BLACK       = 2;
+      </statics>
+
+      <member id="seekAd:number"      typeref="int"
+              varname="number"
+	      functname="AdNumber"
+              />
+      <member id="seekAd:player"      typeref="player"/>
+      <member id="seekAd:accountType" typeref="accountType"/>
+      <member id="seekAd:rating"      typeref="rating"/>
+      <member id="seekAd:variant"     typeref="variant"/>
+      <member id="seekAd:restrictedFormula"     typeref="boolean"
+              varname="isRestrictedByFormula"
+	      functname="RestrictedByFormula"
+              />
+      <member id="seekAd:meetsFormula" typeref="boolean"
+              varname="meetsFormula"
+	      functname="meetsFormula"
+	      exactfunctname="yes"
+              />
+      <member id="seekAd:color"       typeref="int"
+              varname="color"
+	      functname="Color"
+              />
+      <member id="seekAd:rated"       typeref="boolean"
+              varname="rated"
+	      functname="Rated"
+              />
+      <member id="seekAd:notified"    typeref="boolean"
+              varname="notified"
+	      functname="Notification"
+              />
+      <member id="seekAd:manual"      typeref="boolean"
+              varname="manual"
+	      functname="Manual"
+              />
+      <member id="seekAd:time"        typeref="int"
+              varname="time"
+	      functname="InitialTime"
+              />
+      <member id="seekAd:incr"        typeref="int"
+              varname="incr"
+	      functname="Increment"
+              />
+      <member id="seekAd:rangeLow"    typeref="int"
+              varname="rangeLow"
+	      functname="RatingRangeLow"
+              />
+      <member id="seekAd:rangeHigh"   typeref="int"
+              varname="rangeHigh"
+	      functname="RatingRangeHigh"
+              />
+
+      <!--pin parser-->
+      <parser id="seekAd:parser"
+              name="SeekAd"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="no">
+
+         <!-- regex -->
+	 <!--
+<s> 56 w=Hasdrubal ti=00 rt=1805E t=3 i=0 r=r tp=wild/fr c=? rr=0-9999 a=t f=f
+         -->
+	 <regex>
+	    &lt;s(n)?>  <!-- 'n' means does not meet formula -->
+	    \s
+	    (\d+)	<!-- ad number -->
+	    \s
+	    w=<regexref ref="regex:fics:player"/>
+	    \s
+	    ti=(\d+)       <!-- titles -->
+	    \s
+	    rt=(\d+[\sPE]) <!-- rating (not normal format) -->
+	    \s
+	    t=(\d+)        <!-- initial time -->
+	    \s
+	    i=(\d+)        <!-- increment -->
+	    \s
+	    r=([ur])       <!-- rated? -->
+	    \s
+	    tp=([\S]+)     <!-- variant -->
+	    \s
+	    c=([BW\?])     <!-- color request -->
+	    \s
+	    rr=(\d+)       <!-- low range -->
+	    -(\d+)        <!-- high range -->
+	    \s
+	    a=([tf])       <!-- automatic / manual -->
+	    \s
+	    f=([tf])       <!-- formula -->
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="3" memberref="seekAd:number"/>
+	    <regexgroup num="4" memberref="seekAd:player"/>
+	    <regexgroup num="6" memberref="seekAd:rating"/>
+	    <regexgroup num="7" memberref="seekAd:time"/>
+	    <regexgroup num="8" memberref="seekAd:incr"/>
+	    <regexgroup num="10" memberref="seekAd:variant"/>
+	    <regexgroup num="12" memberref="seekAd:rangeLow"/>
+	    <regexgroup num="13" memberref="seekAd:rangeHigh"/>
+      //meets our formula?
+      if (m.group(2) == null)
+         evt.meetsFormula(true);
+      else if (m.group(2).charAt(0) == 'n')
+            evt.meetsFormula(false);
+         else
+            Log.error(Log.PROG_WARNING,
+               "Received unknown character in &lt;s[n]?> area: "
+               + m.group(2) + " of " + m.group(0));
+
+      //rated?
+      evt.setRated(m.group(9).charAt(0) == 'r');
+
+      //colors
+      switch (m.group(11).charAt(0)) {
+         case '?':
+            evt.setColor(ICSSeekAdEvent.COLOR_UNSPECIFIED); break;
+         case 'W':
+            evt.setColor(ICSSeekAdEvent.COLOR_WHITE); break;
+         case 'B':
+            evt.setColor(ICSSeekAdEvent.COLOR_BLACK); break;
+         default:
+            Log.error(Log.PROG_WARNING,
+               "Received unknown character in c=[WB\\?] area: "
+               + m.group(11) + " of " + m.group(0));
+      }
+
+      //automatic/manual
+      evt.setManual(m.group(14).charAt(0) == 'f');
+
+      //restricted by formula
+      evt.setRestrictedByFormula(m.group(15).charAt(0) == 't');
+
+     //numbers
+      int acct = 0;
+      try {
+         acct = Integer.parseInt(m.group(5),16);
+      }
+      catch (NumberFormatException e) {
+         Log.error(Log.PROG_WARNING,
+            "Can't parser number "
+            + m.group(5) + " of " + m.group(0));
+         evt.setEventType(ICSEvent.UNKNOWN_EVENT);
+         evt.setMessage(m.group(0));
+         return;
+      }
+
+      ICSAccountType accttype = new ICSAccountType();
+      //FIXME: needs to parse the mask in "acct"
+      evt.setAccountType(accttype);
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="80">
+	    <code format="java">
+      sb.append("&lt;s");
+      if (!evt.meetsFormula())
+         sb.append("n");
+      sb.append("> ")
+        .append(evt.getAdNumber())
+        .append(" w=")
+        .append(evt.getPlayer())
+        .append(" ti=")
+        //FIXME: account types need to be converted into title mask
+        .append("00")
+        .append(" rt=")
+        .append(evt.getRating())
+        .append(" t=")
+        .append(evt.getInitialTime())
+        .append(" i=")
+        .append(evt.getIncrement())
+        .append(" r=")
+        .append(((evt.isRated()) ? 'r' : 'u'))
+        .append(" tp=")
+        .append(evt.getVariant())
+        .append(" c=");
+      switch(evt.getColor()) {
+         case ICSSeekAdEvent.COLOR_UNSPECIFIED:
+            sb.append("?"); break;
+         case ICSSeekAdEvent.COLOR_WHITE:
+            sb.append("W"); break;
+         case ICSSeekAdEvent.COLOR_BLACK:
+            sb.append("B"); break;
+      }
+      sb.append(" rr=")
+        .append(evt.getRatingRangeLow())
+        .append("-")
+        .append(evt.getRatingRangeHigh())
+        .append(" a=")
+        .append(((evt.isManual()) ? 'f' : 't'))
+        .append(" f=")
+        .append(((evt.isRestrictedByFormula()) ? 't' : 'f'));
+	    </code>
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>

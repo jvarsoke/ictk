@@ -63,6 +63,7 @@
 	  typeref	IDREF		#REQUIRED
 	  varname	NMTOKEN		#IMPLIED
 	  functname	NMTOKEN		#IMPLIED
+	  exactfunctname (no | yes)	"no"
 	  inherit	(both | member | method | none)	"none"
 	  >
 

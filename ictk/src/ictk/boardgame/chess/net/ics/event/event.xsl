@@ -219,10 +219,11 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
 
    <xsl:if test="not(@inherit='method') and not(@inherit='both')">
    <xsl:text>   public </xsl:text>
-   <xsl:value-of select="$type"/>
+   <xsl:value-of select="$type"/><xsl:text> </xsl:text>
    <xsl:choose>
-      <xsl:when test="$type='boolean'"> is</xsl:when>
-      <xsl:otherwise> get</xsl:otherwise>
+      <xsl:when test="@exactfunctname='yes'"></xsl:when>
+      <xsl:when test="$type='boolean'">is</xsl:when>
+      <xsl:otherwise>get</xsl:otherwise>
    </xsl:choose>
    <xsl:value-of select="$functname"/>
    <xsl:text> () {
@@ -259,7 +260,11 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
    <xsl:variable name="type" select="id(@typeref)/@type"/>
 
    <xsl:if test="not(@inherit='method') and not(@inherit='both')">
-   <xsl:text>   public void set</xsl:text>
+   <xsl:text>   public void </xsl:text>
+   <xsl:choose>
+      <xsl:when test="@exactfunctname='yes'"></xsl:when>
+      <xsl:otherwise>set</xsl:otherwise>
+   </xsl:choose>
    <xsl:value-of select="$functname"/>
    <xsl:text> (</xsl:text>
    <xsl:value-of select="$type"/>
