@@ -49,19 +49,69 @@ import ictk.boardgame.Move;
 import ictk.boardgame.ContinuationList;
 import ictk.boardgame.chess.*;
 
-import ictk.boardgame.io.GameReader;
 import ictk.boardgame.io.GameWriter;
+import ictk.boardgame.io.MoveNotation;
 
 /* PGNWriter *****************************************************************/
 /** PGNWriter writes Portable Game Notation chess files
  */
 public class PGNWriter extends ChessWriter {
-   protected ChessMoveNotation notation = new SAN();
-   public static final long DEBUG = Log.GameWriter;
-     
-     /** used for PGN output to indicate the next move needs a number infront*/
-   private boolean needNumber = false; 
 
+   public static final long DEBUG = Log.GameWriter;
+
+      /** do not output symbolic nor numeric NAGs */
+   public static final int NO_GLYPH                   = 0,
+      /** output symbolic NAGs (!, ?, += etc) when possible.
+       ** Otherwise use numeric ($123) */
+                           SYMBOLIC_AND_NUMERIC_GLYPH = 1,
+      /** only output numeric NAGs ($1, $123 etc) */
+                           NUMERIC_GLYPH              = 2,
+      /** only output symbolic NAGs.  If there is not symbolic
+       ** notation for the NAG, then ommit it. */
+                           SYMBOLIC_ONLY_GLYPH        = 3,
+      /** only output suffix NAGs -- those that come immediately
+       ** after a move (!, ?, !?, ?!. !!, ?? only). */
+                           SUFFIX_ONLY_GLYPH          = 4;
+
+      /** for indicating what type of output is sent to the formatter */
+   protected static final int _NOTHING          = 0,
+                              _MOVE_W           = 1,
+                              _MOVE_B           = 2,
+                              _VARIATION_BEGIN  = 3,
+			      _VARIATION_END    = 4,
+			      _COMMENT          = 5,
+			      _GLYPH            = 6,
+			      _RESULT           = 7,
+                              _MISC             = 8;
+
+      /** output held for formatting */
+   protected StringBuffer buffer = null;
+     
+      /** maximum column for output */
+   protected int     colWidth         = 80,
+      /** what type of symbol style should be outputted. */
+		     glyphStyle       = SYMBOLIC_AND_NUMERIC_GLYPH;
+      /** export comments { }?  This is independent of NAGs */
+   protected boolean exportComments   = true,
+      /** export variations? */
+                     exportVariations = true,
+      /** indent comments */
+		     indentComments   = false,
+      /** indent variations */
+		     indentVariations = false,
+      /** only print one move (2 ply) per line */
+		     oneMovePerLine   = false;
+
+      /** used for PGN output to indicate the next move needs a number infront*/
+   private boolean needNumber     = false; 
+      /** used for the formatter to keep track of how deep we are for indent*/
+   private int     variationsDeep = 0;
+   private String  indentStr      = "    ";
+
+      /** the type of notation to use for output */
+   protected ChessMoveNotation notation = new SAN();
+
+   //constructor///////////////////////////////////////////////////////////////
    public PGNWriter (OutputStream _out) {
       super(_out);
    }
@@ -70,6 +120,96 @@ public class PGNWriter extends ChessWriter {
       super(_out);
    }
 
+   //options//////////////////////////////////////////////////////////////////
+
+   public void setMoveNotation (MoveNotation notation) { 
+      this.notation = (ChessMoveNotation) notation; 
+   }
+
+   public MoveNotation getMoveNotation () { return notation; }
+
+   /* setColumnWidth ********************************************************/
+   /** sets the width of the output for the move list.  Setting this 
+    *  to a rediculously small value is not advised.<br>
+    *  DEFAULT: 80
+    */
+   public void setColumnWidth (int col) { colWidth = col; }
+
+   /* getColumnWidth ********************************************************/
+   /** returns the current column width.
+    */
+   public int getColumnWidth () { return colWidth; }
+
+   /* setExportComments *****************************************************/
+   /** turns on or off whether prenotation and annotation comments are 
+    *  output.  This does not affect whether NAGs are output.<br>
+    *  DEFAULT: true
+    */ 
+   public void setExportComments (boolean t) { exportComments = t; }
+
+
+   /* isExportComments ******************************************************/
+   /** returns true if prenotationa and annotations are allowed in the
+    *  output stream.
+    */
+   public boolean isExportComments () { return exportComments; }
+
+   /* setExportVariations ***************************************************/
+   /** turns on or off whether variations are in the output stream.
+    *  <br>
+    *  DEFAULT: true
+    */
+   public void setExportVariations (boolean t) { exportVariations = t; }
+
+   /* isExportVariations ***************************************************/
+   /** returns true if variations are allowed in the output stream.
+    */
+   public boolean isExportVariations () { return exportVariations; }
+
+   /* setIndentComments *****************************************************/
+   /** indent the main-line comments.  This only affects comments on 
+    *  the main-line.  Variation comments are not affected.
+    *  <br>
+    *  DEFAULT: false
+    */
+   public void setIndentComments (boolean t) { indentComments = t; }
+   public boolean isIndentComments () { return indentComments; }
+
+   /* setIndentVariations ***************************************************/
+   /** indent the main-line variatins.  This only affects variations off of 
+    *  the main-line.  Variation comments are not affected.
+    *  <br>
+    *  DEFAULT: false
+    */
+   public void setIndentVariations (boolean t) { indentVariations = t; }
+   public boolean isIndentVariations () { return indentVariations; }
+
+   /* setOneMovePerLine *****************************************************/
+   /* sets the output to emulate column notation style often found in 
+    *  books and newspaper articles.
+    *  <br>
+    *  DEFAULT: false
+    */
+    /*
+   public void setOneMovePerLine (boolean t) { oneMovePerLine = t; }
+   public boolean isOneMovePerLine () { return oneMovePerLine; }
+   */
+
+   /* setAnnotationGlyphStyle ***********************************************/
+   /** sets the annotation glyph style. This determins how NAGs and other
+    *  symbolic annotations such as !, ?, !?, +=, -/+ etc wll be 
+    *  presented.
+    *  <br>
+    *  DEFAULT: SYMBOLIC_AND_NUMERIC_GLYPH
+    */
+   public void setAnnotationGlyphStyle (int style) { glyphStyle = style; }
+
+   /* getAnnotationGlyphStyle ***********************************************/
+   /** returns the currect Glyph Style setting.
+    */
+   public int getAnnotationGlyphStyle () { return glyphStyle; }
+
+   //writing//////////////////////////////////////////////////////////////////
    public void writeGame (Game game) 
           throws IOException {
       ChessGame g = (ChessGame) game;
@@ -89,7 +229,6 @@ public class PGNWriter extends ChessWriter {
          writeBoard(g.getBoard());
       println();
       writeHistory(g.getHistory());
-      //pgn has no board
    }
 
 
@@ -183,15 +322,6 @@ public class PGNWriter extends ChessWriter {
       print(sb); //no extra \n (might add FEN)
    }
 
-
-   /* writeHistory () ****************************************************/
-   public void writeHistory (History history) 
-          throws IOException {
-      if (Log.debug)
-         Log.debug(DEBUG, "writing history in 80 col default mode");
-      writeHistory(history, 80);
-   }
-
    /* writeHistory ********************************************************/
    /** write the history list. 
     *  <br>
@@ -204,12 +334,10 @@ public class PGNWriter extends ChessWriter {
     *  adding Prenotations to PGN will make the output incompadible with
     *  other readers)</i>.
     *  <br>
-    *  
-    *  @param cols the column limition (80 is default)
     */
-   public void writeHistory (History history, int cols) 
+   /* it's synchronized because buffer and variationsDeep are by instance */
+   public synchronized void writeHistory (History history) 
           throws IOException {
-      StringBuffer sb = null;
       Move currMove = null,
            lastMove = null,
 	   walker = null;
@@ -222,12 +350,12 @@ public class PGNWriter extends ChessWriter {
              throw new NullPointerException ("can't write null history");
 	 }
 
-         sb = new StringBuffer();
+         buffer = new StringBuffer(colWidth);
 
          if (Log.debug)
 	    Log.debug(DEBUG, "walking the History move tree");
 
-	 walkMoveTreeBreadthFirst(history.getFirstAll(), num, sb);
+	 walkMoveTreeBreadthFirst(history.getFirstAll(), num);
 
          walker = history.getFinalMove(true);
 
@@ -235,11 +363,13 @@ public class PGNWriter extends ChessWriter {
 	    result = (ChessResult) walker.getResult();
 
 	 if (result == null || result.isUndecided())
-	    sb.append(" *");
+	    formatOutput("*", _RESULT);
 	 //else  nothing to do, already printed
 	    //sb.append(" ").append(notation.resultToString(result));
 
-	 formattedOutput(sb.toString(), cols);
+         //empty buffer
+         if (buffer.length() != 0)
+            print(buffer.toString());
 
       println();  // \n pgn formatting
    }
@@ -249,16 +379,18 @@ public class PGNWriter extends ChessWriter {
     *  the last node first.  The String representations of the moves will
     *  be added to the StirngBuffer object.
     *
-    *  @param cont - all move at this branch level
-    *  @param num  - current move number count
-    *  @param sb   - the string to add all the moves to
+    *  @param cont all moves at this branch level
+    *  @param num  current move number count
     */
    protected void walkMoveTreeBreadthFirst (ContinuationList cont, 
-                                            int num,
-					    StringBuffer sb) {
+                                            int num) {
       ChessMove m = null;
       boolean isBlackMove = true;
-      String strtmp = null;
+      short[] nags = null;
+
+      //11...cxd4=Q+!! (longest)
+      StringBuffer sbtmp = new StringBuffer(12);
+
       ChessAnnotation anno = null;
 
          if (Log.debug)
@@ -279,71 +411,108 @@ public class PGNWriter extends ChessWriter {
 		  + " and was not isTerminal().";
 
             //loop through all variations on the next move
-	    for (int i=0; i<cont.size(); i++) {
+	    for (int i=0; (i==0 || exportVariations) && i<cont.size(); i++) {
 	       m = (ChessMove) cont.get(i);
-	       sb.append(" ");
 
-	       if (i > 0) 
-	          sb.append("( ");
-
-	       //add prenotation in "{anno}"
-	       if (m.getPrenotation() != null
-	          && (m.getPrenotation().getComment() 
-		       != null)) {
-		  sb.append(" {")
-		    .append(m.getPrenotation().getComment())
-		    .append("} ");
+	       if (i > 0) {
+		  variationsDeep++;
+	          formatOutput("(", _VARIATION_BEGIN);
 	       }
 
+	       //add prenotation in "{anno}"
+	       if (exportComments
+	          && m.getPrenotation() != null
+	          && (m.getPrenotation().getComment() 
+		       != null)) {
+		  formatOutput(" {" 
+			       + m.getPrenotation().getComment()
+		               + "} ",
+			       _COMMENT);
+	       }
+
+               //add numbers
 	       if (!isBlackMove)
-		  sb.append(num).append(".");
+		  sbtmp.append(num).append(".");
 
 	       if ((i > 0 || needNumber) && isBlackMove)
-		  sb.append(num).append("...");
+	          sbtmp.append(num).append("...");
 
 	       needNumber = false;
 
 	       //add move
-	       sb.append(notation.moveToString(m));
+	       sbtmp.append(notation.moveToString(m));
 
                anno = (ChessAnnotation) m.getAnnotation();
-	       //add NAG and annotation in "{anno}"
-	       if (anno != null) {
 
-                  //NAG
-	          if (anno.getNAGs() != null
-		      && anno.getNAGs().length > 0) {
-		     strtmp = anno.getNAGString();
+	       //add suffix
+	       if (anno != null 
+		   && glyphStyle != NO_GLYPH 
+		   && glyphStyle != NUMERIC_GLYPH
+		   && anno.getSuffix() != 0) {
+		  sbtmp.append(NAG.numberToString(anno.getSuffix()));
+	       }
 
-                     //if no suffix then need a space
-		     if (anno.getSuffix() == 0) {
-		        sb.append(" ");
-			needNumber = true;
+	       //send move chunk to output
+	       formatOutput(sbtmp.toString(), 
+	                    ((isBlackMove) ? _MOVE_B : _MOVE_W));
+
+               //empty move buffer
+	       sbtmp.delete(0, sbtmp.length());
+
+	       //add NAG
+	       if (anno != null
+	           && glyphStyle != NO_GLYPH
+		   && glyphStyle != SUFFIX_ONLY_GLYPH
+	           && ((nags = anno.getNAGs()) != null)) {
+
+                  //loop through all nags and send to output
+		  for (int j=((NAG.isSuffix(nags[0]) 
+		              && glyphStyle != NUMERIC_GLYPH) ? 1 : 0);
+		       j < nags.length; j++) {
+
+		     needNumber = true;
+
+		     switch (glyphStyle) {
+
+		        case NUMERIC_GLYPH:
+			   formatOutput(NAG.numberToString(nags[j], true),
+					_GLYPH);
+			   break;
+
+			case SYMBOLIC_ONLY_GLYPH:
+			   if (NAG.isSymbol(nags[j]))
+			      formatOutput(NAG.numberToString(nags[j]),
+					   _GLYPH);
+			   break;
+
+			case SYMBOLIC_AND_NUMERIC_GLYPH:
+			   formatOutput(NAG.numberToString(nags[j]),
+					_GLYPH);
+			   break;
 		     }
-		     //need number if more than one NAG but 1st is suffix
-		     else if (anno.getNAGs().length > 1)
-		        needNumber = true;
-
-		     sb.append(strtmp);
-		  }
-
-		  //comment
-	          if (anno.getComment() != null) {
-		     sb.append(" {")
-		       .append(anno.getComment())
-		       .append("}");
-	             needNumber = true;
 		  }
 	       }
 
+	       //comment
+	       if (exportComments
+	           && anno != null
+	           && anno.getComment() != null) {
+		   formatOutput("{"
+				+ anno.getComment()
+				+ "}",
+				_COMMENT);
+	           needNumber = true;
+	       }
+
                //decend for all variations (non-mainline)
-	       if (m != null && i > 0) {
+	       if (m != null && exportVariations && i > 0) {
 	          if (Log.debug)
 		     Log.debug(DEBUG, m + " descending variation");
 	          walkMoveTreeBreadthFirst(m.getContinuationList(), 
-		     num + ((isBlackMove) ? 1 : 0), sb);
+		     num + ((isBlackMove) ? 1 : 0));
 
-		  sb.append(" ) ");
+                  formatOutput(")", _VARIATION_END);
+		  variationsDeep--;
 		  needNumber = true;
 	       }
 	    }
@@ -354,9 +523,10 @@ public class PGNWriter extends ChessWriter {
 	       if (Log.debug)
 		  Log.debug(DEBUG, m + " descending mainline");
 	       walkMoveTreeBreadthFirst(m.getContinuationList(), 
-		  num + ((isBlackMove) ? 1 : 0), sb);
+		  num + ((isBlackMove) ? 1 : 0));
 	    }
 	 }
+
 	 //if this is a terminal node and the line ends with
 	 //a result then we need to print that result for
 	 //this variation.
@@ -367,41 +537,140 @@ public class PGNWriter extends ChessWriter {
 	       result = (ChessResult) cont.getDepartureMove().getResult();
 
 	    if (result != null && !result.isUndecided())
-	       sb.append(" ").append(notation.resultToString(result));
+	       formatOutput(notation.resultToString(result), _RESULT);
 	 }
    }
 
-   /* formmattedOutput **************************************************/
-   /** formats the move list into maxlen col lines
+   /* formatOutput ********************************************************/
+   /** formats output to colWidth length before putting it to the output
+    *  stream.  Data is held in the StringBuffer until colWidth is reached
+    *  in which case the data is put on the output stream.  If String
+    *  puts the StringBuffer over colWidth then the data in the String
+    *  will be tolkenized and split into pieces.  If the StringBuffer
+    *  does not reach colWidth then data is added to the buffer for
+    *  later.
+    *
+    *  @param str data that has yet to be put on the buffer
+    *  @param type the type of token
     */
-   protected void formattedOutput (String moves, int maxlen) {
-      StringTokenizer st = new StringTokenizer(moves, " ", false);
+   protected void formatOutput (String str, int type) {
+      boolean spacer = buffer.length() != 0;
+      int length = buffer.length() 
+                   + str.length() 
+                   + ((spacer) ? 1 : 0);
 
-      int col = 0;
-      String tok = null;
-      int count = 0;
-      while (st.hasMoreTokens()) {
-         tok = st.nextToken();
-	 //rest won't fit on line (-1 for space char)
-	 if (maxlen > 0 && col + tok.length() >= maxlen-1) {
-	    println();
-	    col = 0;
-	 }
+      if (Log.debug)
+         Log.debug(DEBUG, 
+	    "[" + length + "/" + colWidth + "] "
+	    + "buffer(" + buffer.length() 
+	    + ") + \"" + str + "\"(" + str.length() + ")"
+	    );
 
-	 //space between tokens
-         //if (col != 0 && count++ != 0) 
-         if (col != 0) {
-	    print(" ");
-	    col++;
-	 }
-	 print(tok);
-	 col += tok.length();
+      //if starting a variation with indent
+      if (indentVariations 
+          && type == _VARIATION_BEGIN 
+	  && variationsDeep == 1) {
+         println(buffer.toString());
+	 buffer.delete(0, buffer.length());
+	 buffer.append(this.indentStr).append(str);
       }
 
-      println();  // end of move list
+      //ending a variation with indents
+      else if (indentVariations 
+               && type == _VARIATION_END
+	       && variationsDeep == 1) {
+         print(buffer.toString());
+	 print(" ");
+	 print(str);
+	 buffer.delete(0, buffer.length());
+      }
+
+      else if (indentComments && type == _COMMENT && variationsDeep == 0) {
+         println(buffer.toString());
+	 buffer.delete(0, buffer.length());
+
+	 if (indentStr.length() + str.length() > colWidth)
+	    formatLongComment(str);
+	 else
+	    println(indentStr + str);
+      }
+
+      //buffer not yet full
+      else if (length <= colWidth) {
+         if (spacer)
+            buffer.append(" ");
+         buffer.append(str);
+	 if (Log.debug)
+	    Log.debug(DEBUG, "appending: " + str);
+      }
+
+      //buffer doth spillith over
+      else {
+         if (type != _COMMENT) {
+	    println(buffer.toString());
+	    if (Log.debug)
+	       Log.debug(DEBUG, "writing: " + buffer.toString());
+	    buffer.delete(0, buffer.length());
+
+	    if (indentVariations && variationsDeep != 1)
+	       buffer.append(this.indentStr);
+
+	    buffer.append(str);
+         }
+	 //if it's a comment
+	 else 
+	    formatLongComment(str);
+      }
    }
 
-//FIXME: shouldn't write current board, but original board
+   /* formatLongComment ******************************************************/
+   protected void formatLongComment (String str) {
+      int len = buffer.length();
+      String tok = null;
+      StringTokenizer st = new StringTokenizer (str, " ", false);
+
+      while (st.hasMoreTokens()) {
+	 tok = st.nextToken();
+
+	 //less, so add
+	 if (len + 1 + tok.length() <= colWidth) {
+
+	    if (buffer.length() == 0) {
+	       if (indentComments && variationsDeep == 0)
+	          buffer.append(indentStr);
+	    } 
+	    else
+	       buffer.append(" ");
+
+	    buffer.append(tok);
+	    len = buffer.length();
+	 }
+
+	 //more so write and append
+	 else {
+	    if (Log.debug)
+	       Log.debug(DEBUG, "writing: " + buffer.toString());
+
+	    println(buffer.toString());
+
+	    buffer.delete(0, buffer.length());
+
+	    if (indentComments && variationsDeep == 0)
+	       buffer.append(indentStr);
+
+	    buffer.append(tok);
+	    len = buffer.length();
+	 }
+      }
+
+      if (indentComments && variationsDeep == 0 && buffer.length() > 0) {
+         println(buffer.toString());
+	 buffer.delete(0, buffer.length());
+      }
+
+   }
+
+   /* writeBoard *************************************************************/
    /** writeBoard(Board) writes the current board
     */
    public void writeBoard (Board board)

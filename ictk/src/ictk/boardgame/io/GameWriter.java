@@ -47,6 +47,30 @@ public abstract class GameWriter extends PrintWriter {
       super(_out);
    }
 
+   /** set the move notation style you wish the output to be in.
+    */
+   public abstract void setMoveNotation (MoveNotation mn);
+
+   /** returns the currect move notation style.
+    */
+   public abstract MoveNotation getMoveNotation ();
+
+   /** should variations be presented in the Writer's output or not.
+    */
+   public abstract void setExportVariations (boolean t);
+
+   /** is variation data presented in the Writer's output or not.
+    */
+   public abstract boolean isExportVariations ();
+
+   /** are comments presented in the Writer's output or not.
+    */
+   public abstract void setExportComments (boolean t);
+
+   /** will comments be presented in the output.
+    */
+   public abstract boolean isExportComments ();
+
    /** write the full game (GameInfo, History & Board) to the 
     *  output buffer.
     */

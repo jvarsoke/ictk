@@ -129,6 +129,12 @@ Legend:
 	    are also determined when there are N comments in a row;
 	    N-1 will be appended to the Annotation of the former move
 	    and the Nth will become the Prenotation of the latter move.
+   [chess]  added 778422 - PGNWriter options
+            several options have been added to PGNWriter.  These include
+	    the ability to affect how the NAGs and symbolic notations are
+	    presented in the output, turning on or off Variation and Comment
+	    output, and the ability to intent the 1st variation off the mainline
+	    and comments on the main line.
 
 0.1.0 - 2003-03-25 first public release
    [all]    fixed equals()
