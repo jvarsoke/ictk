@@ -41,8 +41,7 @@
 
       <member id="channel:player"      typeref="player"/>
       <member id="channel:accountType" typeref="accountType"/>
-      <member id="channel:channel"     
-              typeref="int"
+      <member id="channel:channel"     typeref="int"
 	      varname="channel"
 	      functname="Channel"
 	      />
@@ -115,6 +114,7 @@
       <!--shout parser-->
       <parser id="shout:parser"
               name="Shout"
+	      enum="SHOUT"
               protocol="FICS"
               extends="ICSEventParser"
 	      detectFake="yes">

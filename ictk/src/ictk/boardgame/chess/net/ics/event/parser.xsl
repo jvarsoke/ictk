@@ -255,11 +255,12 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
 	 if (Log.debug)
 	    Log.debug(ICSEventParser.DEBUG, "regex", m);
          return;
-      }
+      }<!-- -->
       </xsl:when>
+
       <!-- String -->
       <xsl:when test="$type='String'">
-      evt.set<xsl:value-of select="$functname"/>(m.group(<xsl:value-of select="$regexgroup"/>));
+      evt.set<xsl:value-of select="$functname"/>(m.group(<xsl:value-of select="$regexgroup"/>));<!-- -->
       </xsl:when>
 
       <!-- AccountType | Rating -->
@@ -268,7 +269,12 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
       <xsl:text>(parse</xsl:text>
       <xsl:value-of select="$type"/>
       <xsl:text>(m, </xsl:text>
-      <xsl:value-of select="$regexgroup"/>));
+      <xsl:value-of select="$regexgroup"/>));<!-- -->
+      </xsl:when>
+
+      <xsl:when test="$type='ICSResult'">
+      evt.setResult(new ICSResult(m.group(<xsl:value-of 
+      select="$regexgroup"/>)));<!-- -->
       </xsl:when>
 
       <!-- unknown -->

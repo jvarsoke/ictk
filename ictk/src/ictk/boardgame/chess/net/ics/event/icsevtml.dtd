@@ -70,6 +70,7 @@
 <!ATTLIST parser
 	  id		ID		#REQUIRED
 	  name		NMTOKEN		#REQUIRED
+	  enum          NMTOKEN		#IMPLIED
 	  protocol	(FICS | ICC)	#REQUIRED
 	  extends	NMTOKEN		"ICSEventParser"
 	  detectFake	(yes | no)	"yes"

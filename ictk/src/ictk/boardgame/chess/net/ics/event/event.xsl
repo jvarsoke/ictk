@@ -271,13 +271,19 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
 </xsl:if>
 </xsl:template>
 
+<!-- readableSwitch -->
 <xsl:template match="parser" mode="readableSwitch">
-   <xsl:variable name="uc_parser_name">
-      <xsl:call-template name="str:toUpper">
-         <xsl:with-param name="input" select="@name"/>
-      </xsl:call-template>
+   <xsl:variable name="enum">
+      <xsl:choose>
+	 <xsl:when test="@enum">
+	    <xsl:value-of select="@enum"/>
+	 </xsl:when>
+	 <xsl:otherwise>
+	    <xsl:value-of select="../@enum"/>
+	 </xsl:otherwise>
+      </xsl:choose>
    </xsl:variable>
-         case ICSEvent.<xsl:value-of select="$uc_parser_name"/>_EVENT:
+         case ICSEvent.<xsl:value-of select="$enum"/>_EVENT:
             str = <xsl:value-of select="concat(@protocol,@name,'EventParser')"
 	       />.getInstance().toNative(this);
 	    break;

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE ictkml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- tell event ........................................................-->
+   <event id="gameResult" 
+          class="GameResult"
+	  enum="GAME_RESULT">
+
+      <description>
+         These are game result notifications.  Typically they are seen as part
+	 of setting <i>gin 1</i> on the server.
+      </description>
+
+      <implements idref="board"/>
+
+      <member id="gameResult:boardNumber"      typeref="boardNumber"
+              inherit="method"
+	      />
+      <member id="gameResult:whitePlayer"      typeref="player"
+              varname="white"
+	      functname="WhitePlayer"
+	      />
+      <member id="gameResult:blackPlayer"      typeref="player"
+              varname="black"
+	      functname="BlackPlayer"
+	      />
+      <member id="gameResult:result"           typeref="result"/>
+
+      <!--parser-->
+      <parser id="gameResult:parser"
+              name="GameResult"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="yes">
+
+         <!-- regex -->
+	 <regex>
+            \{Game\s
+            (\d+)                               <!-- board number -->
+            \s\(
+	    <regexref ref="regex:fics:player"/> <!--white-->
+            \svs\.\s
+	    <regexref ref="regex:fics:player"/> <!--black-->
+            \)\s
+	    ([^}]+)                             <!--description-->
+	    \}\s
+	    (\S+)                               <!--result-->
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="gameResult:boardNumber"/>
+	    <regexgroup num="3" memberref="gameResult:whitePlayer"/>
+	    <regexgroup num="4" memberref="gameResult:blackPlayer"/>
+	    <regexgroup num="6" memberref="gameResult:result"/>
+      evt.getResult().setDescription(m.group(5));
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="40">
+	    <code format="java">
+      sb.append("{Game ")
+        .append(evt.getBoardNumber())
+        .append(" (")
+        .append(evt.getWhitePlayer())
+        .append(" vs. ")
+        .append(evt.getBlackPlayer())
+        .append(") ")
+        .append(evt.getResult().getDescription())
+        .append("} ")
+        .append(evt.getResult());
+	    </code>
+
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>

@@ -29,11 +29,21 @@
    </interface>
 
    <!-- membertypes........................................................ -->
+
+   <!-- int -->
    <membertype id="int"
                type="int"
 	       varname="number"
 	       functname="Number">
    </membertype>
+
+   <!-- boolean -->
+   <membertype id="boolean"
+               type="boolean"
+	       varname="truth"
+	       functname="Truth">
+   </membertype>
+
    <!-- player -->
    <membertype id="player"
 	       type="String"
@@ -67,11 +77,20 @@
 	       functname="BoardNumber">
    </membertype>
 
+   <!-- message -->
    <membertype id="message"
 	       type="String"
                varname="mesg"
 	       functname="Message">
       <regex id="regex:fics:message">((?:.|\s+\\|\s+:)*)</regex>
+   </membertype>
+
+   <!-- result -->
+   <membertype id="result" 
+	       type="ICSResult"
+	       varname="result"
+	       functname="Result">
+      <regex id="regex:fics:result">(\S+)</regex>
    </membertype>
 
 </ictkml>

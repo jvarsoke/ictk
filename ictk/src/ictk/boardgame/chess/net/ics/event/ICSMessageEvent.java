@@ -29,6 +29,8 @@ import ictk.boardgame.chess.net.ics.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/** A communication event, such as a personal tell from one user to another.
+ */
 public abstract class ICSMessageEvent extends ICSEvent {
    String player;
 
