@@ -67,9 +67,9 @@ public class ChannelListenerExample implements ICSEventListener {
 	    System.out.print("[help]");
 
 	    if (chEvt.getAccountType().is(ICSAccountType.ADMIN))
-	       System.out.print(BOLD_YELLOW);
-	    else if (chEvt.getAccountType().is(ICSAccountType.SERVICE_REP))
 	       System.out.print(BOLD_RED);
+	    else if (chEvt.getAccountType().is(ICSAccountType.SERVICE_REP))
+	       System.out.print(BOLD_YELLOW);
 	    else
 	       System.out.print(PLAIN);
 
