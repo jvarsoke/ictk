@@ -1,3 +1,27 @@
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
 <project name="ictk" default="compile">
    <description>
       -=[ ictk ]=- Internet Chess ToolKit
@@ -6,6 +30,8 @@
 
    <!-- global properties -->
    <property name="version"           value="0.1.1"/>
+   <property name="cvs.tag"           value="ictk-v0_1_1-Release"/>
+   <property name="build.file.id"     value="$Id$"/>
 
    <property name="source.dir"        value="src"/>
    <property name="test.dir"          value="test"/>
@@ -15,7 +41,6 @@
    <property name="output.jar"        value="${release.file}.jar"/>
 
    <!-- for latest CVS version use -Dcvs.tag=HEAD on the command line -->
-   <property name="cvs.tag"           value="ictk-v0_1_1-Release"/>
    <property name="cvs.anon"
              value=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/ictk"/>
    <property name="cvs.devel"
@@ -25,7 +50,7 @@
    <property name="staging.dir"       value="release/${cvs.tag}"/>
 
    <!-- these are jar files distributed with ictk -->
-   <property name="lib.dir" value="lib"/>
+   <property name="lib.dir"           value="lib"/>
 
    <!-- environment properties  -->
    <!-- might need to change this if your platform isn't supported by Ant -->
@@ -79,10 +104,11 @@
    <!-- display version information -->
    <target name="version"
            description="display version information">
-      <echo message="   ictk: ictk-${version}"/>
-      <echo message="cvs tag: ${cvs.tag}"/>
-      <echo message="    Ant: ${ant.version}"/>
-      <echo message="   Java: ${ant.java.version}"/>
+      <echo message="      ictk: ictk-${version}"/>
+      <echo message="   cvs tag: ${cvs.tag}"/>
+      <echo message="build file: ${build.file.id}"/>
+      <echo message="       Ant: ${ant.version}"/>
+      <echo message="      Java: ${ant.java.version}"/>
    </target>
 
    <!-- initialization and error checking .................................-->
