@@ -102,7 +102,7 @@ import java.util.regex.*;
 import java.io.IOException;
 
 /**
-<xsl:apply-templates select="../description" mode="text:comment-wrap">
+<xsl:apply-templates select="description" mode="text:comment-wrap">
    <xsl:with-param name="width" select="70"/>
    <xsl:with-param name="style" select="'C'"/>
    <xsl:with-param name="indent" select="1"/>
@@ -202,8 +202,7 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
 
 <!-- assignMatches - put the regex matches into appropriate variables-->
 <xsl:template match="assignMatches">
-   <xsl:apply-templates select="regexgroup" mode="assignMatches"/>
-   <xsl:apply-templates select="code"/>
+   <xsl:apply-templates select="regexgroup | text()" mode="assignMatches"/>
 </xsl:template>
 
 <xsl:template match="regexgroup" mode="assignMatches">

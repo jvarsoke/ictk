@@ -58,18 +58,16 @@
 	 </regex>
 
          <!-- assignMatches -->
-	 <assignMatches>
+	 <assignMatches format="java">
 	    <regexgroup num="2" memberref="kibitz:player"/>
 	    <regexgroup num="3" memberref="kibitz:accountType"/>
 	    <regexgroup num="5" memberref="kibitz:message"/>
-	    <code format="java">
       if ("tells you".equals(m.group(4))) {
          evt.setEventType(ICSEvent.TELL_EVENT);
       }
       else if ("says".equals(m.group(4))) {
          evt.setEventType(ICSEvent.SAY_EVENT);
       }
-	    </code>
 	 </assignMatches>
 
          <!-- toNative -->

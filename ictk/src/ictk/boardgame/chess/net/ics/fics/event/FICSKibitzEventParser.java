@@ -33,11 +33,7 @@ import java.util.regex.*;
 import java.io.IOException;
 
 /**
- * This cooresponds to Kibitz, Whisper, and Board Say messages. The   
- * EventType tells which one it is. this is a really long description 
- * and I'm hoping to see the text wrap so I can test the new function 
- * I got from the book with all the new features this should look     
- * really good.                                                       
+
  */
 public class FICSKibitzEventParser extends ICSEventParser {
 
@@ -112,13 +108,18 @@ public class FICSKibitzEventParser extends ICSEventParser {
       
       evt.setMessage(m.group(7));
       
+	    
+	    
+	    
+	    
+	    
       if ("whispers".equals(m.group(6))) {
          evt.setEventType(ICSEvent.WHISPER_EVENT);
       }
       else if ("says".equals(m.group(6))) {
          evt.setEventType(ICSEvent.BOARD_SAY_EVENT);
       }
-	    
+	 
    }
 
    /* toNative ***************************************************************/

@@ -48,7 +48,18 @@
 	      />
       <member id="channel:message"     typeref="message"     inherit="both"/>
 
-      <!--parser-->
+      <statics format="java">
+      /** if the channel event is a shout then the channel number
+       ** indicates what type of shout */
+   public static final int SHOUT_CHANNEL  = 1,
+      /** emotes are typically: -->Handle scratches head */
+			   EMOTE_CHANNEL  = 2,
+			   CSHOUT_CHANNEL = 3,
+			   SSHOUT_CHANNEL = 4,
+			   TSHOUT_CHANNEL = 5;
+      </statics>
+
+      <!--channel parser-->
       <parser id="channel:parser"
               name="Channel"
               protocol="FICS"
@@ -68,17 +79,15 @@
 	 </regex>
 
          <!-- assignMatches -->
-	 <assignMatches>
+	 <assignMatches format="java">
 	    <regexgroup num="2" memberref="channel:player"/>
 	    <regexgroup num="3" memberref="channel:accountType"/>
 	    <regexgroup num="5" memberref="channel:channel"/>
 	    <regexgroup num="6" memberref="channel:message"/>
-	    <code format="java">
       if (m.group(4) != null)
          if ("T".equals(m.group(4))) {
             evt.setEventType(ICSEvent.TOURNAMENT_CHANNEL_EVENT);
       }
-	    </code>
 	 </assignMatches>
 
          <!-- toNative -->
@@ -100,6 +109,115 @@
       sb.append(evt.getMessage());
 	    </code>
 
+	 </toNative>
+      </parser>
+
+      <!--shout parser-->
+      <parser id="shout:parser"
+              name="Shout"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="yes">
+
+         <!-- regex -->
+	 <regex>
+	    (
+	    (-->\s)       <!-- emotes -->
+	    <regexref ref="regex:fics:player"/>
+	    <regexref ref="regex:fics:accountType"/>
+	    <regexref ref="regex:fics:message"/>
+	    )
+	    |             <!-- or non-emote -->
+	    (
+	    <regexref ref="regex:fics:player"/>
+	    <regexref ref="regex:fics:accountType"/>
+	    \s+
+	    (?:([sct])-)? <!-- shout types -->
+	    shouts:\s
+	    )
+	    <regexref ref="regex:fics:message"/>
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+      //emote
+      if (m.group(3) != null) {
+            evt.setChannel(ICSChannelEvent.EMOTE_CHANNEL);
+	    <regexgroup num="4" memberref="channel:player"/>
+	    <regexgroup num="5" memberref="channel:accountType"/>
+	    <regexgroup num="6" memberref="channel:message"/>
+      }
+      else {
+	    <regexgroup num="8" memberref="channel:player"/>
+	    <regexgroup num="9" memberref="channel:accountType"/>
+	    <regexgroup num="11" memberref="channel:message"/>
+         if (m.group(10) != null) {
+           switch (m.group(10).charAt(0)) {
+               case 's': 
+	          evt.setChannel(ICSChannelEvent.SSHOUT_CHANNEL); 
+		  break;
+               case 'c': 
+	          evt.setChannel(ICSChannelEvent.CSHOUT_CHANNEL); 
+		  break;
+               case 't': 
+	          evt.setChannel(ICSChannelEvent.TSHOUT_CHANNEL); 
+		  break;
+               default:
+                  Log.error(Log.PROG_WARNING,
+                     "Received unknown shout type: '"
+                     + m.group(10).charAt(0) + "' from " + m.group(0));
+                  evt.setEventType(ICSEvent.UNKNOWN_EVENT);
+                  evt.setMessage(m.group(0)); //the whole message
+                  return;
+            }
+	 }
+	 else {
+	    evt.setChannel(ICSChannelEvent.SHOUT_CHANNEL);
+	 }
+      }
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="80">
+	    <code format="java">
+      if (evt.getChannel() == ICSChannelEvent.EMOTE_CHANNEL) {
+         sb.append("--> ")
+           .append(evt.getPlayer())
+           .append(evt.getAccountType());
+      }
+
+      else {
+         sb.append(evt.getPlayer())
+           .append(evt.getAccountType())
+           .append(" ");
+
+         switch (evt.getChannel()) {
+            case ICSChannelEvent.SHOUT_CHANNEL:
+               break;
+
+            case ICSChannelEvent.SSHOUT_CHANNEL:
+               sb.append("s-");
+               break;
+
+            case ICSChannelEvent.CSHOUT_CHANNEL:
+               sb.append("c-");
+               break;
+
+            case ICSChannelEvent.TSHOUT_CHANNEL:
+               sb.append("t-");
+               break;
+
+            default:
+               throw new IllegalStateException(
+               "Tried to get a toNative() with the ShoutParser when the "
+               + "channel is not a shout -- should use the Channel Parser for"
+               + " channel(" + evt.getChannel() + ")");
+         }
+         sb.append("shouts: ");
+      }
+
+      sb.append(evt.getMessage());
+	    </code>
 	 </toNative>
       </parser>
    </event>

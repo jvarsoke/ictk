@@ -33,7 +33,7 @@ import java.util.regex.*;
 import java.io.IOException;
 
 /**
- * Direct tells to the user through "tell" or "say".                  
+
  */
 public class FICSTellEventParser extends ICSEventParser {
 
@@ -89,13 +89,16 @@ public class FICSTellEventParser extends ICSEventParser {
       
       evt.setMessage(m.group(5));
       
+	    
+	    
+	    
       if ("tells you".equals(m.group(4))) {
          evt.setEventType(ICSEvent.TELL_EVENT);
       }
       else if ("says".equals(m.group(4))) {
          evt.setEventType(ICSEvent.SAY_EVENT);
       }
-	    
+	 
    }
 
    /* toNative ***************************************************************/

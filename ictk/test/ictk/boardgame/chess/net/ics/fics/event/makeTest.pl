@@ -42,8 +42,11 @@ else {
 
 $javaFile = $parserTestClass . ".java";
 
-if (-x $javaFile) {
-   print "Writing: $javaFile already exists\n";
+if (-e $javaFile) {
+   print "Exists: $javaFile\n";
+}
+else {
+   print "Writing: $javaFile\n";
 
    open (TEMPLATE, $template) or die "can't open $template";
    open (JAVAFILE, ">$javaFile") or die "can't open $javaFile";
@@ -61,18 +64,15 @@ if (-x $javaFile) {
       close (JAVAFILE);
    }
 }
-else {
-   print "Exists: $javaFile\n";
-}
 
 $dataFile = "data/" . $parserTestClass . ".data";
-if (-x $dataFile) {
+if (-e $dataFile) {
+   print "Exists: $dataFile\n";
+}
+else {
    print "Writing: $dataFile\n";
    open (DATAFILE, ">$dataFile") or die "can't create $dataFile";
    print DATAFILE "##$parserTestClass Data file\n";
    print DATAFILE "##\$" . "Id:" . "\$\n";
    close (DATAFILE);
-}
-else {
-   print "Exists: $dataFile\n";
 }

@@ -24,6 +24,7 @@
  */
 
 package ictk.boardgame.chess.net.ics.fics.event;
+
 import ictk.boardgame.chess.net.ics.event.*;
 import ictk.boardgame.chess.net.ics.*;
 import ictk.util.Log;
@@ -31,38 +32,48 @@ import ictk.util.Log;
 import java.util.regex.*;
 import java.io.IOException;
 
+/**
 
+ */
 public class FICSShoutEventParser extends ICSEventParser {
+
    //static/////////////////////////////////////////////////////////////////
+   public static FICSShoutEventParser singleton;
    public static final Pattern masterPattern;
 
    static {
       masterPattern  = Pattern.compile(
-	 "^:?("
-//<template function=regex>
-	 + "("
-	 + "(-->\\s)"                //emotes
-	 + REGEX_handle
-	 + REGEX_acct_type
-	 + REGEX_mesg
-	 + ")"
-	 + "|"
-	 + "("
-	 + REGEX_handle
-	 + REGEX_acct_type
-	 + "\\s+"
-	 + "([sct]-)?"              //shout types
-	 + "shouts:\\s"
-	 + ")"  //shout
-	 + REGEX_mesg
-//</template>
-	 + ")"  //whole thing
+         "^:?(" //begin
+         + "("
+         + "(-->\\s)"
+         + "([\\w]+)"
+         + "((?:\\([A-Z*]+\\))*)"
+         + "((?:.|\\s+\\\\|\\s+:)*)"
+         + ")"
+         + "|"
+         + "("
+         + "([\\w]+)"
+         + "((?:\\([A-Z*]+\\))*)"
+         + "\\s+"
+         + "(?:([sct])-)?"
+         + "shouts:\\s"
+         + ")"
+         + "((?:.|\\s+\\\\|\\s+:)*)"
+
+         + ")"  //end
          , Pattern.MULTILINE);
+
+      singleton = new FICSShoutEventParser();
    }
 
    //instance///////////////////////////////////////////////////////////////
-   public FICSShoutEventParser () {
+   protected FICSShoutEventParser () {
       super(masterPattern);
+   }
+
+   /* getInstance ***********************************************************/
+   public static ICSEventParser getInstance () {
+       return singleton;
    }
 
    /* createICSEvent ********************************************************/
@@ -77,45 +88,60 @@ public class FICSShoutEventParser extends ICSEventParser {
    public void assignMatches (Matcher m, ICSEvent event) {
       ICSChannelEvent evt = (ICSChannelEvent) event;
 
+      if (Log.debug && debug)
+         Log.debug(DEBUG, "assigning matches", m);
+
+      
       evt.setFake(detectFake(m.group(0)));
-//<template function=assignMatches>
-      //Shout Emote
+      
+      //emote
       if (m.group(3) != null) {
-         evt.setEmote(true);
-	 evt.setChannel(ICSChannelEvent.SHOUT_CHANNEL);
-
-         evt.setPlayer(m.group(4));
-
-	 evt.setAccountType(parseAccountType(m, 5));
-
-         evt.setMessage(m.group(6));
+            evt.setChannel(ICSChannelEvent.EMOTE_CHANNEL);
+	    
+      evt.setPlayer(m.group(4));
+      
+	    
+      evt.setAccountType(parseICSAccountType(m, 5));
+      
+	    
+      evt.setMessage(m.group(6));
+      
       }
-
-      //non-Emote Shout
       else {
-         evt.setPlayer(m.group(9));
-         evt.setMessage(m.group(12));
-
-	 evt.setAccountType(parseAccountType(m, 10));
-
-         if (m.group(11) != null) {
-            switch (m.group(11).charAt(0)) {
-               case 's': evt.setChannel(ICSChannelEvent.SSHOUT_CHANNEL); break;
-               case 'c': evt.setChannel(ICSChannelEvent.CSHOUT_CHANNEL); break;
-               case 't': evt.setChannel(ICSChannelEvent.TSHOUT_CHANNEL); break;
+	    
+      evt.setPlayer(m.group(8));
+      
+	    
+      evt.setAccountType(parseICSAccountType(m, 9));
+      
+	    
+      evt.setMessage(m.group(11));
+      
+         if (m.group(10) != null) {
+           switch (m.group(10).charAt(0)) {
+               case 's': 
+	          evt.setChannel(ICSChannelEvent.SSHOUT_CHANNEL); 
+		  break;
+               case 'c': 
+	          evt.setChannel(ICSChannelEvent.CSHOUT_CHANNEL); 
+		  break;
+               case 't': 
+	          evt.setChannel(ICSChannelEvent.TSHOUT_CHANNEL); 
+		  break;
                default:
-	          Log.error(Log.PROG_WARNING,
-		     "Received unknown shout type: '"
-                     + m.group(11).charAt(0) + "' from " + m.group(0));
+                  Log.error(Log.PROG_WARNING,
+                     "Received unknown shout type: '"
+                     + m.group(10).charAt(0) + "' from " + m.group(0));
                   evt.setEventType(ICSEvent.UNKNOWN_EVENT);
                   evt.setMessage(m.group(0)); //the whole message
-		  return;
+                  return;
             }
-         }
-         else
-            evt.setChannel(ICSChannelEvent.SHOUT_CHANNEL);
+	 }
+	 else {
+	    evt.setChannel(ICSChannelEvent.SHOUT_CHANNEL);
+	 }
       }
-//</template>
+	 
    }
 
    /* toNative ***************************************************************/
@@ -125,52 +151,48 @@ public class FICSShoutEventParser extends ICSEventParser {
          return event.getMessage();
 
       ICSChannelEvent evt = (ICSChannelEvent) event;
-      StringBuffer sb = new StringBuffer(20);
-
+      StringBuffer sb = new StringBuffer(80);
+      
       if (evt.isFake()) sb.append(":");
-//<template function=toNative>
-      if (evt.isEmote() 
-          && evt.getChannel() == ICSChannelEvent.SHOUT_CHANNEL) {
-	 sb.append("--> ")
-	   .append(evt.getPlayer())
-	   .append(evt.getAccountType());
+      
+      if (evt.getChannel() == ICSChannelEvent.EMOTE_CHANNEL) {
+         sb.append("--> ")
+           .append(evt.getPlayer())
+           .append(evt.getAccountType());
       }
 
       else {
-	 sb.append(evt.getPlayer())
-	   .append(evt.getAccountType())
-	   .append(" ");
+         sb.append(evt.getPlayer())
+           .append(evt.getAccountType())
+           .append(" ");
 
-	 switch (evt.getChannel()) {
-	    case ICSChannelEvent.SHOUT_CHANNEL:
-	       break;
+         switch (evt.getChannel()) {
+            case ICSChannelEvent.SHOUT_CHANNEL:
+               break;
 
-	    case ICSChannelEvent.SSHOUT_CHANNEL:
-	       sb.append("s-");
-	       break;
+            case ICSChannelEvent.SSHOUT_CHANNEL:
+               sb.append("s-");
+               break;
 
-	    case ICSChannelEvent.CSHOUT_CHANNEL:
-	       sb.append("c-");
-	       break;
+            case ICSChannelEvent.CSHOUT_CHANNEL:
+               sb.append("c-");
+               break;
 
-	    case ICSChannelEvent.TSHOUT_CHANNEL:
-	       sb.append("t-");
-	       break;
+            case ICSChannelEvent.TSHOUT_CHANNEL:
+               sb.append("t-");
+               break;
 
-	    default:
-	       throw new IllegalStateException(
-	       "Tried to get a toNative() with the ShoutParser when the "
-	       + "channel is not a shout -- should use the Channel Parser for"
-	       + " channel(" + evt.getChannel());
-	 }
+            default:
+               throw new IllegalStateException(
+               "Tried to get a toNative() with the ShoutParser when the "
+               + "channel is not a shout -- should use the Channel Parser for"
+               + " channel(" + evt.getChannel() + ")");
+         }
          sb.append("shouts: ");
-
-	 if (evt.isEmote())
-	    sb.append("<-- ");
       }
 
       sb.append(evt.getMessage());
-//</template>
+	    
 
       return sb.toString();
    }

@@ -99,8 +99,11 @@ import java.io.IOException;
 public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-templates select="@extends"/>
    <xsl:call-template name="implements-declaration"/> {
 
+
    //static initializer/////////////////////////////////////////////////////
    protected static final int <xsl:value-of select="@enum"/>_EVENT =  ICSEvent.<xsl:value-of select="@enum"/>_EVENT;
+
+   <xsl:apply-templates select="statics"/>
 
    //instance vars//////////////////////////////////////////////////////////
 <xsl:apply-templates select="member" mode="variable-declaration"/>
@@ -148,6 +151,12 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
       <xsl:apply-templates select="code"/>
    </xsl:for-each>
 
+</xsl:template>
+
+<xsl:template match="statics">
+   <xsl:if test="@format='java'">
+      <xsl:value-of select="."/>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template match="code">

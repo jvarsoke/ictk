@@ -29,6 +29,7 @@
 	  >
 
 <!ELEMENT event (description?, 
+                 statics*,
 		 implements*,
 		 member*,
 		 parser+)>
@@ -44,6 +45,13 @@
 	  xml:space	(default | preserve)	'preserve'
 	  >
 
+<!ELEMENT statics (#PCDATA)*>
+<!ATTLIST statics 
+	  format	NOTATION (java)	#REQUIRED
+	  xml:space	(default | preserve)	'preserve'
+	  >
+
+
 <!ELEMENT implements EMPTY>
 <!ATTLIST implements
 	  idref		IDREF		#REQUIRED
@@ -58,7 +66,7 @@
 	  inherit	(both | member | method | none)	"none"
 	  >
 
-<!ELEMENT parser (regex+, assignMatches, toNative)>
+<!ELEMENT parser (description?, regex+, assignMatches, toNative)>
 <!ATTLIST parser
 	  id		ID		#REQUIRED
 	  name		NMTOKEN		#REQUIRED
@@ -84,7 +92,10 @@
 	  >
 <!NOTATION java		SYSTEM "http://java.sun.com"> <!-- ? -->
 
-<!ELEMENT assignMatches (attr*, code*)>
+<!ELEMENT assignMatches (#PCDATA | attr)*>
+<!ATTLIST assignMatches
+	  format	NOTATION (java) #REQUIRED
+	  >
 
 <!ELEMENT toNative (code+)>
 <!ATTLIST toNative
