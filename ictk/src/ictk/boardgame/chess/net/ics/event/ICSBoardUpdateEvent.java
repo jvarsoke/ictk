@@ -76,15 +76,12 @@ public class ICSBoardUpdateEvent extends ICSEvent
 
 
    //getters setters//////////////////////////////////////////////////////////
-   public ICSBoardUpdateEvent (ICSProtocolHandler server, int eventType) {
-      super(server, eventType);
+   public ICSBoardUpdateEvent () {
+      super(ICSEvent.BOARD_UPDATE_EVENT);
       board = new char[8][8];
    }
 
-   public ICSBoardUpdateEvent (ICSProtocolHandler server) {
-      this(server, BOARD_UPDATE_EVENT);
-   }
-
+   //accessors////////////////////////////////////////////////////////////////
    public char[][] getBoardArray () { return board; }
 
    public boolean isBlackToMove () { return isBlackMove; }
@@ -92,7 +89,7 @@ public class ICSBoardUpdateEvent extends ICSEvent
    public String getWhitePlayer () { return white; }
    public String getBlackPlayer () { return black; }
    public int getMoveNumber () { return moveNumber; }
-   public int getEnPassantFileIndex () { return enpassantFile; }
+   public int getEnPassantFile () { return enpassantFile; }
    public int getPlySinceLastIrreversableMove () { return irreversable; }
    public int getBoardNumber () { return boardNumber; } 
    public int getRelation () { return relation; }
@@ -100,19 +97,25 @@ public class ICSBoardUpdateEvent extends ICSEvent
    public int getIncrement () { return incr; }
    public int getWhiteMaterial () { return whiteMaterial; }
    public int getBlackMaterial () { return blackMaterial; }
-   public int getTimeOnWhiteClock () { return whiteClock; }
-   public int getTimeOnBlackClock () { return blackClock; }
+   public int getWhiteClock () { return whiteClock; }
+   public int getBlackClock () { return blackClock; }
    public int getLag () { return timesealDelta; }
    public String getSAN () { return sanMove; }
    public boolean isBlackMove () { return isBlackMove; }
+   public boolean isWhiteCastleableKingside () { return canWhiteCastleOO; }
+   public boolean isWhiteCastleableQueenside () { return canWhiteCastleOOO; }
+   public boolean isBlackCastleableKingside () { return canBlackCastleOO; }
+   public boolean isBlackCastleableQueenside () { return canBlackCastleOOO; }
 
    public int getMoveTime () { return moveTime; }
+   public String getVerboseMove () { return verboseMove; }
+
+   public boolean isFlipBoard () { return flipBoard; }
+   public boolean isClockMoving () { return clockMoving; }
 
    public String getMoveTimeAsString () { 
       return getClockAsString(moveTime, true); 
    }
-
-   public void setBoardNumber (int board) { boardNumber = board; }
 
    public String getBlackClockAsString () { 
       return getClockAsString(blackClock, false);
@@ -121,6 +124,42 @@ public class ICSBoardUpdateEvent extends ICSEvent
    public String getWhiteClockAsString () { 
       return getClockAsString(whiteClock, false);
    }
+
+   //mutators/////////////////////////////////////////////////////////////////
+   public void setBoardArray (char[][] b) { board = b; }
+   public void setBoardNumber (int board) { boardNumber = board; }
+
+   public void setBlackMove (boolean t) { isBlackMove = t; }
+
+   public void setWhitePlayer (String player) { white = player; }
+   public void setBlackPlayer (String player) { black = player; }
+   public void setMoveNumber (int num) { moveNumber = num; }
+   public void setEnPassantFile (int ep) { enpassantFile = ep; }
+   public void setPlySinceLastIrreversableMove (int ply) { irreversable = ply; }
+   public void setRelation (int pov) { relation = pov; }
+   public void setInitialTime (int seconds) { itime = seconds; }
+   public void setIncrement (int seconds) { incr = seconds; }
+   public void setWhiteMaterial (int value) { whiteMaterial = value; }
+   public void setBlackMaterial (int value) { blackMaterial = value; }
+   public void setWhiteClock (int ms) { whiteClock = ms; }
+   public void setBlackClock (int ms) { blackClock = ms; }
+   public void setLag (int ms) { timesealDelta = ms; }
+   public void setSAN (String san) { sanMove = san; }
+   public void setWhiteCastleableKingside (boolean t) { canWhiteCastleOO = t; }
+   public void setWhiteCastleableQueenside (boolean t) { 
+      canWhiteCastleOOO = t; 
+   }
+   public void setBlackCastleableKingside (boolean t) { canBlackCastleOO = t; }
+   public void setBlackCastleableQueenside (boolean t) { 
+      canBlackCastleOOO = t; 
+   }
+   public void setVerboseMove (String move) { verboseMove = move; }
+   public void setFlipBoard (boolean t) { flipBoard = t; }
+   public void setClockMoving (boolean t) { clockMoving = t; }
+
+   public void setMoveTime (int ms) { moveTime = ms; }
+
+   ///////////////////////////////////////////////////////////////////////////
 
    protected String getClockAsString (int clock, boolean move) {
       StringBuffer sb = new StringBuffer(7);

@@ -1,0 +1,11 @@
+##FICSBoardUpdateStyle12EventParserTest Data file
+##$Id$
+##
+##with milliseconds
+<12> r-bq-rk- pp-nppbp -----np- --pp---- ---P---- --PBPN-- PP-N-PPP R-BQR-K- B -1 0 0 0 0 2 2 bbbb Simpan -2 3 0 39 39 177810 171259 8 R/f1-e1 (0:00.023) Re1 0 0 0
+##old style from docs
+##without milliseconds
+<12> r-bq-rk- pp-nppbp -----np- --pp---- ---P---- --PBPN-- PP-N-PPP R-BQR-K- B -1 0 0 0 0 2 2 bbbb Simpan -2 3 0 39 39 177810 171259 8 R/f1-e1 (0:06) Re1 0 0 0
+##old style from docs
+##might still be supported by other ICSs
+#<12> rnbqkb-r pppppppp -----n-- -------- ----P--- -------- PPPPKPPP RNBQ-BNR B -1 0 0 1 1 0 7 Newton Einstein 1 2 12 39 39 119 122 2 K/e1-e2 (0:06) Ke2 0 1 123

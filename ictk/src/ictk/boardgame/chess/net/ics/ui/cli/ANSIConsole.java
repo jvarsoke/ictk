@@ -122,11 +122,11 @@ public class ANSIConsole implements ICSEventListener {
 	  case ICSEvent.QTELL_EVENT:
 	     prefix = ESC + BOLD_RED;
 	     break;
+	     */
 
 	  case ICSEvent.BOARD_UPDATE_EVENT:
 	     prefix = ESC + YELLOW;
 	     break;
-	     */
 
 	  default:
        }
