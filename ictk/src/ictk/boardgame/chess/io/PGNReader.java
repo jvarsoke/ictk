@@ -186,7 +186,7 @@ public class PGNReader extends ChessReader {
       }
 
       //now we have whole move list in the sb
-      st = new StringTokenizer(sb.toString(), " .\n", true);
+      st = new StringTokenizer(sb.toString(), " .()\n", true);
 
       String tok2 = null;
       while (st != null && st.hasMoreTokens()) {
@@ -233,12 +233,13 @@ public class PGNReader extends ChessReader {
 	       else
 	          sb.append(tok2);
 	    }
-	    if (lastMove != null)
+	    if (lastMove != null) {
 	       anno = (ChessAnnotation) lastMove.getAnnotation();
 	       if (anno == null)
 	          anno = new ChessAnnotation();
 	       anno.appendComment(sb.toString());
 	       lastMove.setAnnotation(anno);
+	    }
 	 }
 
          //move number or Result
@@ -298,12 +299,13 @@ public class PGNReader extends ChessReader {
          //NAG
 	 else if (tok.charAt(0) == '$') {
 	    try {
-	       if (lastMove != null)
+	       if (lastMove != null) {
 		  anno = (ChessAnnotation) lastMove.getAnnotation();
 		  if (anno == null)
 		     anno = new ChessAnnotation();
 		  anno.addNAG(Short.parseShort(tok.substring(1, tok.length())));
 		  lastMove.setAnnotation(anno);
+	       }
 	    }
 	    catch (NumberFormatException e) {
 	       //just move along
