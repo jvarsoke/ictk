@@ -13,13 +13,12 @@
    <property name="release.file"      value="ictk-${version}"/>
    <property name="output.jar"        value="${release.file}.jar"/>
 
+   <!-- for latest CVS version use -Dcvs.tag=HEAD on the command line -->
+   <property name="cvs.tag"           value="ictk-v0_1_1-Release"/>
+   <property name="cvs.anon"          
+             value=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/ictk"/>
    <property name="release.dir"       value="release"/>
    <property name="staging.dir"       value="release/${cvs.tag}"/>
-   <property name="cvs.anon"          value=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/ictk"/>
-   <!--
-   <property name="cvs.tag"           value="ictk-v0_1_1-Release"/>
-   -->
-   <property name="cvs.tag"           value="HEAD"/>
 
    <!-- 3rd party jar locations -->
    <!-- these are jar files distributed with ictk -->
@@ -216,19 +215,71 @@
 
    <!-- distro -->
    <target name="dist" depends="bin,src"
-           description="create both the binary and source release files.">
+           description="create both the binary and source release files">
 
    </target>
 
+   <!-- binary distribution files -->
+   <target name="bin" depends="jar,docs"
+           description="create the binary release file">
+      <property name="bin.include"
+           value="
+	   AUTHORS,COPYING,ChangeLog,HACKING,NEWS,README,TODO,
+	   docs/**,
+	   ${output.jar}
+	   "
+	   />
+
+      <zip destfile="${release.file}.zip"
+           basedir="."
+	   includes="${bin.include}"
+	   update="true"
+	   />
+      <tar destfile="${release.file}.tar.gz"
+           basedir="."
+	   includes="${bin.include}"
+	   compression="gzip"
+	   />
+   </target>
+
+   <!-- source distribution files -->
+   <target name="src" depends="compile_test,docs"
+           description="create the source release file">
+
+      <property name="src.include"
+           value="
+	   AUTHORS,COPYING,ChangeLog,HACKING,NEWS,README,TODO,
+	   build.xml,
+	   docs/**,
+	   src/**,
+	   test/**,
+	   lib/**
+	   "
+	   />
+
+      <zip destfile="${release.file}-src.zip"
+           basedir="."
+	   includes="${src.include}"
+	   update="true"
+	   />
+      <tar destfile="${release.file}-src.tar.gz"
+           basedir="."
+	   includes="${src.include}"
+	   compression="gzip"
+	   />
+   </target>
+
+
+   <!-- ..................................................................-->
 
    <!-- cvs -->
    <target name="cvs"
-           description="gets the ${cvs.tag} release from CVS and put it in ${release.dir}/${cvs.tag}.  Setting the property cvs.tag can get you different versions from the CVS.">
+           description="gets a 'cvs.tag' version of ICTK from the anonymous cvs"
+      >
 
       <cvspass cvsroot="${cvs.anon}"
                password=""
 	       /> 
-<!--for testing only build.xml-->
       <cvs  command="export"
             dest="${staging.dir}.tmp"
 	    cvsRoot="${cvs.anon}"
@@ -256,52 +307,6 @@
 	     type="file"
 	     includes="**"
 	     />
-   </target>
-
-   <!-- binary distribution files -->
-   <target name="bin" depends="jar,docs"
-           description="create the binary release file">
-      <property name="bin.include">
-	   AUTHORS,COPYING,ChangeLog,HACKING,NEWS,README,TODO,
-	   docs/**,
-	   ${output.jar}
-      </property>
-
-      <zip destfile="${release.dir}/${release.file}.zip"
-           basedir="."
-	   includes="${bin.include}"
-	   update="true"
-	   />
-      <tar destfile="${release.dir}/${release.file}.tar.gz"
-           basedir="."
-	   includes="${bin.include}"
-	   compression="gzip"
-	   />
-   </target>
-
-   <!-- source distribution files -->
-   <target name="src" depends="compile_test,docs"
-           description="create the source release file">
-
-      <property name="src.include">
-	   AUTHORS,COPYING,ChangeLog,HACKING,NEWS,README,TODO,
-	   build.xml,
-	   docs/**,
-	   src/**,
-	   test/**,
-	   lib/**
-      </property>
-
-      <zip destfile="${release.dir}/${release.file}-src.zip"
-           basedir="."
-	   includes="${src.include}"
-	   update="true"
-	   />
-      <tar destfile="${release.dir}/${release.file}-src.tar.gz"
-           basedir="."
-	   includes="${src.include}"
-	   compression="gzip"
-	   />
    </target>
 
    <!-- ..................................................................-->
