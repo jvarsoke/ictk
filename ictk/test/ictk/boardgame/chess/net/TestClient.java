@@ -37,6 +37,9 @@ package ictk.boardgame.chess.net;
  */
 public class TestClient extends javax.swing.JFrame implements java.awt.event.ActionListener {
 
+   static java.lang.String handle;
+   static java.lang.String passwd;
+
    ictk.boardgame.chess.net.ics.fics.FICSProtocolHandler fics;
    
    /** Creates new form TestClient */
@@ -92,6 +95,8 @@ public class TestClient extends javax.swing.JFrame implements java.awt.event.Act
        if (!fics.isConnected())
           try {
 	     System.out.println("Client: attempting to connect");
+	     fics.setHandle(handle);
+	     fics.setPassword(passwd);
              fics.connect();
 	  }
 	  catch (java.net.UnknownHostException e) {
@@ -124,6 +129,12 @@ public class TestClient extends javax.swing.JFrame implements java.awt.event.Act
     * @param args the command line arguments
     */
     public static void main(String args[]) {
+       if (args.length < 2) {
+          System.err.println("must supply username and password");
+	  System.exit(1);
+       }
+       handle = args[0];
+       passwd = args[1];
        new TestClient().show();
     }
 

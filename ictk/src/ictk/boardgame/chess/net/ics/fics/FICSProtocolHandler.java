@@ -89,10 +89,11 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    final protected ICSEvent[] eventFactories;
 
       /** moniker the chess player is using */
-   String handle = "";
-   String passwd = "";
+   String handle = null;
+   String passwd = null;
    String host   = "64.71.131.140";
    int    port   = 5000;
+
       /** Telnet connection to server */
    boolean loggedIn = false;
    boolean seenLogin = false;
@@ -177,7 +178,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    }
 
 
-   //
+   //constructors/////////////////////////////////////////////////////////////
    public FICSProtocolHandler () {
       int i = 0;
       eventFactories = new ICSEvent[16];
@@ -207,6 +208,28 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       this.port = port;
    }
 
+   //methods/////////////////////////////////////////////////////////////////
+   public void setHandle (String handle) {
+      this.handle = handle;
+   }
+
+   public String getHandle () { 
+      return handle; 
+   }
+
+   public void setPassword (String password) {
+      this.passwd = password;
+   }
+
+   public void setHost (String host) {
+      this.host = host;
+   }
+
+   public void setPort (int port) {
+      this.port = port;
+   }
+
+
    public boolean isConnected () {
       if (socket == null)
          return false;
@@ -215,6 +238,11 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
    public void connect () 
       throws UnknownHostException, IOException {
+
+      if (handle == null || passwd == null)
+         throw new IllegalStateException(
+	    "Both handle and password must be set before login");
+
       socket = new Socket(host, port);
       //socket.setSoTimeout(SOCKET_TIMEOUT);
       in = new InputStreamReader(socket.getInputStream());
@@ -481,8 +509,6 @@ which supports blocking and non-blocking io operations on channels.
    }
 
 
-   public void setHandle (String h) { handle = h; }
-   public String getHandle () { return handle; }
 
 
    /* parse () **************************************************************/
