@@ -1522,9 +1522,12 @@ public class ChessBoard implements Board {
         .append("isBlackMove: ")
 	.append(isBlackMove)
 	.append("\n")
-        .append("enpassant file: ")
-        .append(san.fileToChar(enpassantFile))
-	.append("\n")
+        .append("enpassant file: ");
+      if (enpassantFile > 0)
+        sb.append(san.fileToChar(enpassantFile));
+      else
+        sb.append("-");
+      sb.append("\n")
 	.append("lastMove: ")
 	.append(lastMove)
 	.append("\n")
