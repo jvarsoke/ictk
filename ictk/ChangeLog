@@ -31,7 +31,7 @@ Legend:
    [fics]   added template files for Parsers and ParserTest to auto generate
             these files.
 
-0.1.2 - *IN PROGRESS*
+0.1.2 - 2003-08-04 bug fixes (mostly)
    [dev]    source distribution no longer comes with javadoc, since it can
             be easily created through the build tool.
    [dev]    build.xml now uses the JUnit task instead of calling AllTests

@@ -6,6 +6,12 @@ These are general features, improvements and changes made to
 the suite of classes in ictk.  If you want a more specific
 account of what was changed look at the ChangeLog file.
 
+0.1.2 - 2003-08-04 Bug fix release (mostly)
+   o Format options to PGNWriter's output
+   o Sample code
+   o History now allows non-unique continuations
+   o Bug fixes for PGNReader for reading NAGs and Results
+
 0.1.1 - 2003-07-20 Bug fix release
    o Added ability add annotations before a move
    o Ant build file has new targets "cvs" and "dist"
