@@ -32,7 +32,7 @@ Legend:
    [fics]   added template files for Parsers and ParserTest to auto generate
             these files.
 
-0.1.3 - *IN PROGRESS*
+0.1.3 - 2003-08-17 a bug, events & and a CLI Board
    [chess]  fixed 784950 - wrong disambiguation
             This ultra rare bug was produced when a captured piece, of the
 	    same class, had the same destination in its uncleared leagal moves

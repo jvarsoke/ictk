@@ -31,8 +31,8 @@
    <property environment="env"/> 
 
    <!-- global properties -->
-   <property name="version"           value="0.1.2"/>
-   <property name="cvs.tag"           value="ictk-v0_1_2-Release"/>
+   <property name="version"           value="0.1.3"/>
+   <property name="cvs.tag"           value="ictk-v0_1_3-Release"/>
    <property name="build.file.id"     value="$Id$"/>
    <!-- if you want 'protected' docs, you should set this variable 
 	on the command line -->
