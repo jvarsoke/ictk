@@ -33,15 +33,15 @@ import java.io.IOException;
 
 import junit.framework.*;
 
-public class FICSShoutEventParserTest extends ParserTest {
+public class FICSChannelParserTest extends ParserTest {
    ICSChannelEvent evt;
 
-   public FICSShoutEventParserTest () throws IOException {
+   public FICSChannelParserTest () throws IOException {
       super("ictk.boardgame.chess.net.ics.fics.event");
    }
 
    public void setUp () {
-      parser = FICSShoutEventParser.getInstance();
+      parser = FICSChannelParser.getInstance();
       //debug = true;
    }
 
@@ -62,9 +62,83 @@ public class FICSShoutEventParserTest extends ParserTest {
          evt = (ICSChannelEvent) parser.createICSEvent(mesg[0]);
 	 assertTrue(evt != null);
 
-	 //begin test 
-
+         //begin test
+	 assertTrue("Gorgonian".equals(evt.getPlayer()));
+	 assertTrue(evt.getChannel() == 50);
+	 assertTrue("da".equals(evt.getMessage()));
 	 //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testMessage1 () {
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+
+         evt = (ICSChannelEvent) parser.createICSEvent(mesg[1]);
+	 assertTrue(evt != null);
+
+         //begin test
+	 assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
+         //end test
+
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testMessage3 () {
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+
+         evt = (ICSChannelEvent) parser.createICSEvent(mesg[3]);
+	 assertTrue(evt != null);
+
+         //begin test
+	 assertTrue(evt.getAccountType().is(ICSAccountType.ADMIN));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.SERVICE_REP));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.TOURNAMENT_MANAGER));
+	 assertTrue(evt.getChannel() == 49);
+         //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testMessage4Tournament () {
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+
+         evt = (ICSChannelEvent) parser.createICSEvent(mesg[4]);
+	 assertTrue(evt != null);
+
+         //begin test
+	 assertTrue(evt.getEventType() == ICSEvent.TOURNAMENT_CHANNEL_EVENT);
+	 assertTrue(evt.getChannel() == 50);
+         //end test
       }
       finally {
          Log.removeMask(ICSEventParser.DEBUG);

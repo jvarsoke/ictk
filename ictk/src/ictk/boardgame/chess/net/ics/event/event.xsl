@@ -295,7 +295,7 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
       </xsl:choose>
    </xsl:variable>
          case ICSEvent.<xsl:value-of select="$enum"/>_EVENT:
-            str = <xsl:value-of select="concat(@protocol,@name,'EventParser')"
+            str = <xsl:value-of select="concat(@protocol,@name,'Parser')"
 	       />.getInstance().toNative(this);
 	    break;
 </xsl:template>

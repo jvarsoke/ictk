@@ -30,9 +30,9 @@ import java.io.IOException;
 import java.util.Calendar;
 
 public class ICSMoveListEvent extends ICSEvent 
-                                               implements ICSBoardEvent{
+                              implements ICSBoardEvent{
    //static///////////////////////////////////////////////////////////////
-   public static final int MOVE_LIST_EVENT = ICSEvent.MOVE_LIST_EVENT;
+   protected static final int MOVE_LIST_EVENT = ICSEvent.MOVE_LIST_EVENT;
 
    //instance/////////////////////////////////////////////////////////////
    protected int boardNumber, initTime, incrTime;
@@ -45,8 +45,8 @@ public class ICSMoveListEvent extends ICSEvent
    protected ICSMove[] moves;
 
    //constructors/////////////////////////////////////////////////////////
-   public ICSMoveListEvent (ICSProtocolHandler server) {
-      super(server, MOVE_LIST_EVENT);
+   public ICSMoveListEvent () {
+      super(MOVE_LIST_EVENT);
    }
 
    //mutators and accessors///////////////////////////////////////////////

@@ -33,15 +33,15 @@ import java.io.IOException;
 
 import junit.framework.*;
 
-public class FICSSeekAdEventParserTest extends ParserTest {
-   ICSSeekAdEvent evt;
+public class FICSGameCreatedParserTest extends ParserTest {
+   ICSGameCreatedEvent evt;
 
-   public FICSSeekAdEventParserTest () throws IOException {
+   public FICSGameCreatedParserTest () throws IOException {
       super("ictk.boardgame.chess.net.ics.fics.event");
    }
 
    public void setUp () {
-      parser = FICSSeekAdEventParser.getInstance();
+      parser = FICSGameCreatedParser.getInstance();
       //debug = true;
    }
 
@@ -59,7 +59,7 @@ public class FICSSeekAdEventParserTest extends ParserTest {
       }
       try {
 
-         evt = (ICSSeekAdEvent) parser.createICSEvent(mesg[0]);
+         evt = (ICSGameCreatedEvent) parser.createICSEvent(mesg[0]);
 	 assertTrue(evt != null);
 
 	 //begin test 

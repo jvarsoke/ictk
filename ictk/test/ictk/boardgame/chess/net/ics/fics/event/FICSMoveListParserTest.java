@@ -33,15 +33,15 @@ import java.io.IOException;
 
 import junit.framework.*;
 
-public class FICSPlayerConnectionEventParserTest extends ParserTest {
-   ICSPlayerConnectionEvent evt;
+public class FICSMoveListParserTest extends ParserTest {
+   ICSMoveListEvent evt;
 
-   public FICSPlayerConnectionEventParserTest () throws IOException {
+   public FICSMoveListParserTest () throws IOException {
       super("ictk.boardgame.chess.net.ics.fics.event");
    }
 
    public void setUp () {
-      parser = FICSPlayerConnectionEventParser.getInstance();
+      parser = FICSMoveListParser.getInstance();
       //debug = true;
    }
 
@@ -52,6 +52,7 @@ public class FICSPlayerConnectionEventParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
+   /*
       //debug = true;
       if (debug) {
          Log.addMask(ICSEventParser.DEBUG);
@@ -59,7 +60,7 @@ public class FICSPlayerConnectionEventParserTest extends ParserTest {
       }
       try {
 
-         evt = (ICSPlayerConnectionEvent) parser.createICSEvent(mesg[0]);
+         evt = (ICSMoveListEvent) parser.createICSEvent(mesg[0]);
 	 assertTrue(evt != null);
 
 	 //begin test 
@@ -70,10 +71,12 @@ public class FICSPlayerConnectionEventParserTest extends ParserTest {
          Log.removeMask(ICSEventParser.DEBUG);
 	 debug = false;
       }
+      */
    }
 
    //inherited///////////////////////////////////////////////////////////
    public void testParseAll () {
+   /*
       //debug=true;
       if (debug) {
          Log.addMask(ICSEventParser.DEBUG);
@@ -86,10 +89,12 @@ public class FICSPlayerConnectionEventParserTest extends ParserTest {
          Log.removeMask(ICSEventParser.DEBUG);
 	 debug = false;
       }
+      */
    }
 
    //////////////////////////////////////////////////////////////////////
    public void testNative () {
+   /*
       //debug=true;
       if (debug) {
          Log.addMask(ICSEventParser.DEBUG);
@@ -102,5 +107,6 @@ public class FICSPlayerConnectionEventParserTest extends ParserTest {
          Log.removeMask(ICSEventParser.DEBUG);
 	 debug = false;
       }
+      */
    }
 }

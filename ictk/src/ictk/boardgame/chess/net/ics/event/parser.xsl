@@ -50,7 +50,7 @@
 <xsl:template match="parser">
    <xsl:variable name="classname" select="concat(@protocol, 
                                                 @name, 
-					        'EventParser')"
+					        'Parser')"
 						/>
    <xsl:variable name="lc_protocol">
        <xsl:call-template name="str:toLower">

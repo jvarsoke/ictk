@@ -33,16 +33,15 @@ import java.io.IOException;
 
 import junit.framework.*;
 
-public class FICSKibitzEventParserTest extends ParserTest {
-   ICSKibitzEvent evt;
+public class FICSTellParserTest extends ParserTest {
+   ICSTellEvent evt;
 
-   public FICSKibitzEventParserTest () throws IOException {
+   public FICSTellParserTest () throws IOException {
       super("ictk.boardgame.chess.net.ics.fics.event");
-//      debug = true;
    }
 
    public void setUp () {
-      parser = FICSKibitzEventParser.getInstance();
+      parser = FICSTellParser.getInstance();
       //debug = true;
    }
 
@@ -53,20 +52,50 @@ public class FICSKibitzEventParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
+      //debug = true;
       if (debug)
          Log.addMask(ICSEventParser.DEBUG);
-      parser.setDebug(true);
+
       try {
-	 evt = (ICSKibitzEvent) parser.createICSEvent(mesg[0]);
+	 parser.setDebug(true);
+	 evt = (ICSTellEvent) parser.createICSEvent(mesg[0]);
 	 assertTrue(evt != null);
 
-         //begin test
+	 //begin test
 	 assertTrue(evt.getPlayer().equals("Handle"));
-	 assertFalse(evt.getAccountType().is(ICSAccountType.UNREGISTERED));
-	 assertTrue(evt.getRating().get() == 1902);
-	 assertTrue(evt.getBoardNumber() == 7);
-	 assertTrue(evt.getMessage().equals("hey"));
-         //end test
+	 assertTrue(evt.getMessage().equals("Hey"));
+	 assertFalse(evt.isFake());
+	 assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
+
+	 assertFalse(evt.getMessage().equals("hey"));
+	 //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testMessage1 () {
+      //debug = true;
+      if (debug)
+         Log.addMask(ICSEventParser.DEBUG);
+
+      try {
+	 parser.setDebug(true);
+	 evt = (ICSTellEvent) parser.createICSEvent(mesg[1]);
+	 assertTrue(evt != null);
+
+	 //begin test
+	 assertTrue(evt.getPlayer().equals("Handle"));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.COMPUTER));
+	 assertTrue(evt.getMessage().equals("Hey"));
+	 assertFalse(evt.isFake());
+	 assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
+
+	 assertFalse(evt.getMessage().equals("hey"));
+	 //end test
       }
       finally {
          Log.removeMask(ICSEventParser.DEBUG);
@@ -106,3 +135,4 @@ public class FICSKibitzEventParserTest extends ParserTest {
       }
    }
 }
+

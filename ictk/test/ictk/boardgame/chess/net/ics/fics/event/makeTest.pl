@@ -35,7 +35,7 @@ if (@ARGV < 2) {
 }
 else {
    ($parserClass, $eventClass) = @ARGV;
-   $parserClass = "FICS" . $parserClass . "EventParser";
+   $parserClass = "FICS" . $parserClass . "Parser";
    $parserTestClass = $parserClass . "Test";
    $eventClass = "ICS" . $eventClass . "Event";
 }

@@ -33,15 +33,15 @@ import java.io.IOException;
 
 import junit.framework.*;
 
-public class FICSTellEventParserTest extends ParserTest {
-   ICSTellEvent evt;
+public class FICSPlayerNotificationParserTest extends ParserTest {
+   ICSPlayerConnectionEvent evt;
 
-   public FICSTellEventParserTest () throws IOException {
+   public FICSPlayerNotificationParserTest () throws IOException {
       super("ictk.boardgame.chess.net.ics.fics.event");
    }
 
    public void setUp () {
-      parser = FICSTellEventParser.getInstance();
+      parser = FICSPlayerNotificationParser.getInstance();
       //debug = true;
    }
 
@@ -53,48 +53,17 @@ public class FICSTellEventParserTest extends ParserTest {
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
       //debug = true;
-      if (debug)
+      if (debug) {
          Log.addMask(ICSEventParser.DEBUG);
-
+         parser.setDebug(true);
+      }
       try {
-	 parser.setDebug(true);
-	 evt = (ICSTellEvent) parser.createICSEvent(mesg[0]);
+
+         evt = (ICSPlayerConnectionEvent) parser.createICSEvent(mesg[0]);
 	 assertTrue(evt != null);
 
-	 //begin test
-	 assertTrue(evt.getPlayer().equals("Handle"));
-	 assertTrue(evt.getMessage().equals("Hey"));
-	 assertFalse(evt.isFake());
-	 assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
+	 //begin test 
 
-	 assertFalse(evt.getMessage().equals("hey"));
-	 //end test
-      }
-      finally {
-         Log.removeMask(ICSEventParser.DEBUG);
-	 debug = false;
-      }
-   }
-
-   //////////////////////////////////////////////////////////////////////
-   public void testMessage1 () {
-      //debug = true;
-      if (debug)
-         Log.addMask(ICSEventParser.DEBUG);
-
-      try {
-	 parser.setDebug(true);
-	 evt = (ICSTellEvent) parser.createICSEvent(mesg[1]);
-	 assertTrue(evt != null);
-
-	 //begin test
-	 assertTrue(evt.getPlayer().equals("Handle"));
-	 assertTrue(evt.getAccountType().is(ICSAccountType.COMPUTER));
-	 assertTrue(evt.getMessage().equals("Hey"));
-	 assertFalse(evt.isFake());
-	 assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
-
-	 assertFalse(evt.getMessage().equals("hey"));
 	 //end test
       }
       finally {
@@ -135,4 +104,3 @@ public class FICSTellEventParserTest extends ParserTest {
       }
    }
 }
-

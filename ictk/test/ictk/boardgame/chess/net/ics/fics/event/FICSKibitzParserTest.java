@@ -33,15 +33,16 @@ import java.io.IOException;
 
 import junit.framework.*;
 
-public class FICSBoardUpdateStyle12EventParserTest extends ParserTest {
-   ICSBoardUpdateEvent evt;
+public class FICSKibitzParserTest extends ParserTest {
+   ICSKibitzEvent evt;
 
-   public FICSBoardUpdateStyle12EventParserTest () throws IOException {
+   public FICSKibitzParserTest () throws IOException {
       super("ictk.boardgame.chess.net.ics.fics.event");
+//      debug = true;
    }
 
    public void setUp () {
-      parser = FICSBoardUpdateStyle12EventParser.getInstance();
+      parser = FICSKibitzParser.getInstance();
       //debug = true;
    }
 
@@ -52,19 +53,20 @@ public class FICSBoardUpdateStyle12EventParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
-      //debug = true;
-      if (debug) {
+      if (debug)
          Log.addMask(ICSEventParser.DEBUG);
-         parser.setDebug(true);
-      }
+      parser.setDebug(true);
       try {
-
-         evt = (ICSBoardUpdateEvent) parser.createICSEvent(mesg[0]);
+	 evt = (ICSKibitzEvent) parser.createICSEvent(mesg[0]);
 	 assertTrue(evt != null);
 
-	 //begin test 
-
-	 //end test
+         //begin test
+	 assertTrue(evt.getPlayer().equals("Handle"));
+	 assertFalse(evt.getAccountType().is(ICSAccountType.UNREGISTERED));
+	 assertTrue(evt.getRating().get() == 1902);
+	 assertTrue(evt.getBoardNumber() == 7);
+	 assertTrue(evt.getMessage().equals("hey"));
+         //end test
       }
       finally {
          Log.removeMask(ICSEventParser.DEBUG);
