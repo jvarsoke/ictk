@@ -40,7 +40,17 @@
       </patternset>
    </fileset>
 
+   <!-- compile path for library -->
    <path id="compile.class.path">
+      <fileset dir="${3rdparty.libs.dir}">
+         <include name="*.jar"/>
+      </fileset>
+      <dirset dir="${build.dir}">
+      </dirset>
+   </path>
+
+   <!-- compile path for test suite -->
+   <path id="compile_test.class.path">
       <fileset dir="${junit.home}">
          <include name="*.jar"/>
       </fileset>
@@ -54,27 +64,27 @@
    <!-- tasks -->
 
    <!-- initialization and error checking .................................-->
-   <target name="init" depends="check_env,error_env" if="env_is_good">
+   <target name="init">
       <!-- Generate time stamp -->
       <tstamp/>
    </target>
 
    <!-- check to make sure the environment variable could be read -->
-   <target name="check_env">
-      <condition property="env_is_good">
+   <target name="check_junit">
+      <condition property="junit_is_good">
          <and>
             <isset property="env.JUNIT_HOME"/>
          </and>
       </condition>
    </target>
 
-   <target name="error_env" depends="check_env" unless="env_is_good">
-      <echo message="Error: Ant couldn't read your environment variables."/>
-      <echo message="If you're in a UNIX make sure your variables are"/>
-      <echo message="correctly exported.  If you're on a platform that Ant"/>
+   <target name="error_junit" depends="check_junit" unless="junit_is_good">
+      <echo message="Error: Ant couldn't read your JUNIT environment variable."/>
+      <echo message="If you're in a UNIX make sure the JUNIT_HOME variables"/>
+      <echo message="is correctly exported.  If you're on a platform that Ant"/>
       <echo message="doesn't yet know how to glean environment variables"/>
-      <echo message="from you'll need to set them manually.  Check in "/>
-      <echo message="the ENV configuration section of the build file."/>
+      <echo message="from you'll need to set it manually.  Check in "/>
+      <echo message="the environment properties section of this build file."/>
    </target>
 
    <!-- ..................................................................-->
@@ -112,7 +122,9 @@
    </target>
 
    <!--test targets -->
-   <target name="compile_test" depends="compile"
+   <target name="compile_test" 
+           depends="check_junit,error_junit,compile" 
+	   if="junit_is_good"
            description="compiling the regression testing source">
       <mkdir dir="${build.dir}"/>
       <javac 
@@ -121,7 +133,7 @@
          destdir="${build.dir}"
 	 debug="yes"
 	 optimize="no"
-	 classpathref="compile.class.path">
+	 classpathref="compile_test.class.path">
 	 <patternset refid="test.sources"/>
       </javac>
    </target>
@@ -132,7 +144,7 @@
            description="performing JUnit test battery">
       <java
          classname="ictk.AllTests"
-	 classpathref="compile.class.path">
+	 classpathref="compile_test.class.path">
 	 <sysproperty 
 	    key="ictk.boardgame.chess.io.dataDir" 
 	    value="test/ictk/boardgame/chess/io/"
