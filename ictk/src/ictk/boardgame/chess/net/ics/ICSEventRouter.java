@@ -27,9 +27,27 @@ package ictk.boardgame.chess.net.ics;
 import ictk.boardgame.chess.net.ics.event.*;
 
 public class ICSEventRouter {
-
+      /** the default router receives all events that aren't sent elsewhere*/
    ICSEventListener defaultRoute;
+      /** subscribers to ICSEvents */
+   protected ICSEventListener[][] subscribers;
 
+      /** subscribers to individual channels.
+       ** the key is the channel number,
+       ** the value is a ICSEventListener[] */
+   protected HashMap chSubscribers,
+      /** subscribers to individual boards.
+       ** the key is the board number.
+       ** the value is a 3 element array of 
+       ** ICSEventListener arrays.  The 3 elements
+       ** indicate types of events the listener wants*/
+                     boardSubscribers;
+
+   public ICSEventRouter () {
+      subscribers = new ICSEventListener[ICSEvent.NUM_EVENTS][];
+      chSubscribers = new HashMap();
+      boardSubscribers = new HashMap();
+   }
 
    public void setDefaultRoute (ICSEventListener eh) {
       defaultRoute = eh;
@@ -40,6 +58,33 @@ public class ICSEventRouter {
    }
 
    public void dispatch (ICSEvent evt) {
-      defaultRoute.icsEventDispatched(evt);
+      if (subscribers[evt.getEventType()] != null) {
+      }
+      else {
+         defaultRoute.icsEventDispatched(evt);
+      }
+   }
+
+   /* addEventListener ******************************************************/
+   public void addEventListener (ICSEventListener eh,
+                                 int icsEventNumber) {
+   }
+
+   /* addBoardListener ******************************************************/
+   /** adding this type of listener will subscribe the listener to
+    *  the following types of events for this board number:<br>
+    *  type 1: board updates and moves, resignations<br>
+    *  type 2: tackbacks, draw offers, adjourn and pause requests<br>
+    *  type 3: kibitzes, whispers, and board says<br>
+    *  NOTE: all types must be registered independently
+    */
+   public void addBoardListener (ICSEventListener eh,
+                                 int boardNumber
+				 int type) {
+   }
+
+   /* addChannelListener ***************************************************/
+   public void addChannelListener (ICSEventListener eh,
+                                   int channelNumber) {
    }
 }
