@@ -226,8 +226,9 @@ public class PGNReader extends ChessReader {
 	    if (lastMove != null && lastMove == history.getCurrentMove()) {
 	       anno = (ChessAnnotation) lastMove.getAnnotation();
 
-	       if (anno == null) {
-	          anno = new ChessAnnotation();
+	       if (anno == null || anno.getComment() == null) {
+	          if (anno == null)
+	             anno = new ChessAnnotation();
 		  anno.setComment(sb.toString());
 	          lastMove.setAnnotation(anno);
 		  if (Log.debug)
@@ -275,8 +276,9 @@ public class PGNReader extends ChessReader {
 
 	       //if this is the first annotation we've seen after the move
 	       //then it certainly belongs to the lastMove.
-	       if (anno == null) {
-	          anno = new ChessAnnotation();
+	       if (anno == null || anno.getComment() == null) {
+	          if (anno == null) 
+		     anno = new ChessAnnotation();
 	          anno.setComment(sb.toString());
 		  lastMove.setAnnotation(anno);
 	          anno = null;
@@ -390,6 +392,21 @@ public class PGNReader extends ChessReader {
 	    //a variation
 	    history.prev();  
 	    forks.push(history.getCurrentMove());
+
+            //if we still have a comment that has no home it must go
+	    //with the last move outside the variation, not the prenotation
+	    //of the first move in the variation.
+	    if (savedComment != null) {
+	       anno = (ChessAnnotation) lastMove.getAnnotation();
+	       if (anno == null || anno.getComment() == null) {
+	          if (anno == null) 
+		     anno = new ChessAnnotation();
+	          anno.setComment(savedComment);
+	       }
+	       else
+	          anno.appendComment(" " + savedComment);
+	       savedComment = null;
+	    }
 	 }
 
          //end of a variation
@@ -397,6 +414,21 @@ public class PGNReader extends ChessReader {
 	    ChessMove fork = (ChessMove) forks.pop();
 	    history.goTo(fork);
 	    history.next();
+
+            //if we still have a comment that has no home it must go
+	    //with the last move in the variation and not the
+	    //prenotation of the first move outside the variation
+	    if (savedComment != null) {
+	       anno = (ChessAnnotation) lastMove.getAnnotation();
+	       if (anno == null || anno.getComment() == null) {
+	          if (anno == null) 
+		     anno = new ChessAnnotation();
+	          anno.setComment(savedComment);
+	       }
+	       else
+	          anno.appendComment(" " + savedComment);
+	       savedComment = null;
+	    }
 	 }
 
          //undecided result of game

@@ -374,6 +374,114 @@ public class PGNReaderTest extends TestCase {
    }
 
    ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationBeforeVariation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 10);
+
+	 game = (Game) games.get(10);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment() != null);
+	 assertTrue(anno.getComment().equals("post"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationAfterNAGBeforeVariation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 11);
+
+	 game = (Game) games.get(11);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment() != null);
+	 assertTrue(anno.getComment().equals("post"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testDoubleAnnotationBeforeVariation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 12);
+
+	 game = (Game) games.get(12);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment() != null);
+	 assertTrue(anno.getComment().equals("post repost"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testDoubleAnnotationBeforeVariationEnd () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 13);
+
+	 game = (Game) games.get(13);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+	 history.next(1);
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getComment() != null);
+	 assertTrue(anno.getComment().equals("post repost"));
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
    public void testBadPGNs () 
           throws FileNotFoundException,
 	         InvalidGameFormatException,

@@ -113,3 +113,34 @@ Bxf2+ 6. Kf1 Qe7 7. Nxh8 d5 8. exd5 Nd4 9. h3 Bg3
 
 1.e4 e5 (;Sicilian
 1...c5) 2.f4 exf4 *
+
+##post-notation before variation
+[White "A"] 
+[Black "B"] 
+[Result "*"] 
+
+1.e4 e5 {post} (1...c6) *
+
+##post-notation after NAG, before variation
+##bug: 776369
+[White "A"] 
+[Black "B"] 
+[Result "*"] 
+
+1.e4 e5 $1 {post} (1...c6) *
+
+##double annotation before variation
+##bug: 776408
+[White "A"] 
+[Black "B"] 
+[Result "*"] 
+
+1.e4 e5 {post} {repost} (1...c6) *
+
+##double annotation before end of variation
+##bug: 776408
+[White "A"] 
+[Black "B"] 
+[Result "*"] 
+
+1.e4 e5 (1...c6 {post} {repost}) 2.Nf3 *

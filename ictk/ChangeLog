@@ -33,11 +33,16 @@ Legend:
 0.1.2 - *IN PROGRESS*
    [dev]    source distribution no longer comes with javadoc, since it can
             be easily created through the build tool.
+
    [docs]   default distribution docs will not be for "public" members only.
             To create docs with different access use the build tool against
 	    the source with -Ddocs.access=<access_type> on the command line.
+
    [chess]  fixed 775816 - SAN reader wasn't respecting full dis-ambiguation.
             {thanks: Jerome Zago for the bug report}
+   [chess]  fixed 776369 - NAG followed by comment set as prenotation
+            {thanks: Jerome Zago for the bug report}
+   [chess]  fixed 776408 - double annotation do not respect variation bounds
 
 0.1.1 - 2003-07-20 bug fixes
    [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.
