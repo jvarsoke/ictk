@@ -6,11 +6,9 @@ ChangeLog
 Legend:
    [all]    applies to all
    [dev]    applies to some development tool
-
+   [test]   applies to the test suite
    [chess]  applies to chess model or io
-
    [gui]    applies to gui components
-
    [net]    applies to internet communication features
    [fics]   applies to support for the www.freechess.org server
    [icc]    applies to support for the www.chessclub.com server
@@ -29,6 +27,27 @@ In progress
    [fics]   added test suites for the parsers
    [fics]   added template files for Parsers and ParserTest to auto generate
             these files.
+
+0.1.1 - *IN PROGRESS* bug fixes
+   [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.
+            The old build.xml file required the user to change the default
+	    home directory and possibly the junit.home variable.  The fix
+	    includes using Ant's ability to detect environment variables on
+	    most platforms.  An error is printed if Ant can't find that info
+	    so users can manually set it.
+	    {thanks: Jerome Zago for the bug report & suggestions}
+
+   [test]   fixed 771165 - testCheckmateSmother3: wrong assertions
+            Test was passing because of bug 771063.  Test corrected.
+	    {thanks: Jerome Zago for the bug report}
+
+   [chess]  fixed 759466 - PGN variation w/o space seperating paren and move.
+            For example: (2.Bc4) instead of ( 2.Bc4 )
+	    {thanks: Jerome Zago for the bug report & patch}
+   [chess]  fixed 771063 - double-check does not generate correct legal moves.
+            {thanks: Jerome Zago and David Spencer for reporting the bug}
+   [chess]  added ChessBoard.isDoubleCheck() and changed isCheck() to be
+            true when double-check is true.
 
 0.1.0 - 2003-03-25 first public release
    [all]    fixed equals()
