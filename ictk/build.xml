@@ -15,8 +15,11 @@
 
    <!-- for latest CVS version use -Dcvs.tag=HEAD on the command line -->
    <property name="cvs.tag"           value="ictk-v0_1_1-Release"/>
-   <property name="cvs.anon"          
+   <property name="cvs.anon"
              value=":pserver:anonymous@cvs.sourceforge.net:/cvsroot/ictk"/>
+   <property name="cvs.devel"
+             value=":ext:${cvs.login}@cvs.sourceforge.net:/cvsroot/ictk"/>
+   <property name="cvs.passwd"        value=""/>
    <property name="release.dir"       value="release"/>
    <property name="staging.dir"       value="release/${cvs.tag}"/>
 
@@ -274,15 +277,12 @@
 
    <!-- cvs -->
    <target name="cvs"
-           description="gets a 'cvs.tag' version of ICTK from the anonymous cvs"
-      >
+           depends="cvs_root_developer,cvs_root_anonymous"
+           description="gets a 'cvs.tag' version of ICTK from the CVS">
 
-      <cvspass cvsroot="${cvs.anon}"
-               password=""
-	       /> 
       <cvs  command="export"
             dest="${staging.dir}.tmp"
-	    cvsRoot="${cvs.anon}"
+	    cvsRoot="${cvs.root}"
 	    package="ictk"
 	    tag="${cvs.tag}"
 	    />
@@ -292,6 +292,41 @@
       </move>
       <delete dir="${staging.dir}.tmp"/>
    </target>
+
+   <!-- if a username is set then log into the developers' cvs -->
+   <target name="check_cvs_root">
+      <condition property="cvs_developer">
+         <and>
+	    <isset property="cvs.login"/>
+	 </and>
+      </condition>
+   </target>
+
+   <!-- use developer's CVS (which is often more current) -->
+   <target name="cvs_root_developer" 
+           depends="check_cvs_root" 
+	   if="cvs_developer">
+      <property name="cvs.root" value="${cvs.devel}"/>
+
+      <echo message="Using developers' CVS"/>
+      <echo message="CVSROOT=${cvs.root}"/>
+   </target>
+
+   <!-- use anonymous CVS (which sometimes isn't as current) -->
+   <target name="cvs_root_anonymous" 
+           depends="check_cvs_root" 
+	   unless="cvs_developer">
+      <property name="cvs.root" value="${cvs.anon}"/>
+
+      <echo message="Using anonymous CVS"/>
+      <echo message="CVSROOT=${cvs.root}"/>
+
+      <cvspass cvsroot="${cvs.root}"
+               password="${cvs.passwd}"
+	       /> 
+   </target>
+
+   <!-- ..................................................................-->
 
    <!-- permissions -->
    <target name="permissions"
