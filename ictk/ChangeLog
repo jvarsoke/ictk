@@ -8,6 +8,7 @@ Legend:
    [dev]    applies to some development tool
    [test]   applies to the test suite
    [docs]   applies to documentation
+   [sample] applies to sample code
 
    [chess]  applies to chess model or io
    [gui]    applies to gui components
@@ -40,6 +41,11 @@ Legend:
    [docs]   default distribution docs will not be for "public" members only.
             To create docs with different access use the build tool against
 	    the source with -Ddocs.access=<access_type> on the command line.
+
+   [sample] added 711183 - sample code
+            SimpleChessGameExample demonstrates how to add moves to a 
+	    game in the code.  SimplePGNDemo reads in a PGN, writes it out,
+	    show the last FEN, and provides some stats on the mainline.
 
    [chess]  fixed 775816 - SAN reader wasn't respecting full dis-ambiguation.
             {thanks: Jerome Zago for the bug report}
