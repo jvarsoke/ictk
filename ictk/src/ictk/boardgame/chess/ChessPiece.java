@@ -116,12 +116,9 @@ public abstract class ChessPiece extends Piece {
    /** sets the piece captured or not.
     */
    public void setCaptured (boolean t) {
-      if (t) captured = true;
-      else {
-	 captured = false;
-	 legalDests.clear();
-	 guardSquares.clear();
-      }
+      legalDests.clear();
+      guardSquares.clear();
+      captured = t;
    }
 
    public ChessPiece getPinnedBy () { return pinnedBy; }

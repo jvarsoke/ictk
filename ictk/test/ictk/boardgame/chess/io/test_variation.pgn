@@ -114,3 +114,18 @@ Bxe7 Nxe7 19. Qxd4 Qxd4 20. cxd4 Nd5 21. Rac1
 Bb8 22. Ne5 Bxe5 23. Bxd5 Bf6 24. Bc6 Rfd8 25. f3
 Be6 26. d5 (26. Bd5 ) 26...Bxd5 1/2-1/2
 
+
+##test correct disambiguation
+##for some reason move 21...exd4 was written 21...5xd4
+##bug: 784950
+##game 9
+[White "A"]
+[Black "B"]
+[Result "1-0"]
+
+1. g3 d5 2. Bg2 Nf6 3. d3 c6 4. Nd2 e5 5. e4 Bc5 6.
+Ngf3 dxe4 7. dxe4 Bg4 8. O-O Nbd7 9. Nc4 O-O 10.
+h3 Bh5 11. Qd3 Qc7 12. Bg5 Rfe8 13. a4 h6 14. Bd2
+Rad8 15. Qe2 b5 16. Ba5 Nb6 17. Ncd2 b4 18. c3
+bxc3 19. Bxc3 Bd4 20. a5 Nbd5 21. Bxd4 (21. Qc4
+Bxc3 22. bxc3 Ne7) 21... exd4 22. Rfc1 1-0

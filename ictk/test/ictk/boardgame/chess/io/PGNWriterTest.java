@@ -31,7 +31,9 @@ import ictk.boardgame.*;
 import ictk.boardgame.io.*;
 import ictk.boardgame.chess.*;
 
+
 import java.io.*;
+import java.util.List;
 
 public class PGNWriterTest extends TestCase {
    public String dataDir = "./";
@@ -51,6 +53,7 @@ public class PGNWriterTest extends TestCase {
    StringReader sr;
    PGNReader spgnin;
    ChessAnnotation anno;
+   List list;
 
    public PGNWriterTest (String name) {
       super(name);
@@ -81,6 +84,42 @@ public class PGNWriterTest extends TestCase {
       Log.removeMask(ChessGameInfo.DEBUG);
       Log.removeMask(PGNWriter.DEBUG);
    }
+
+   ///////////////////////////////////////////////////////////////////////////
+   /** bug: 784950 - wrong disambiguation on pawn capture.
+    *  This is a tricky bug, and specific to the PGN used for testing it.
+    *  It turned out that ChessBoard thought the move was ambigious because
+    *  it was looking at captured pieces as well as uncaptured pieces to 
+    *  determine if the move was ambigious.
+    */ 
+   public void testWrongDisambiguationBug () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      //Log.addMask(SAN.DEBUG);
+      //Log.addMask(PGNReader.DEBUG);
+      //Log.addMask(ChessGameInfo.DEBUG);
+      try {
+         list = PGNReaderTest.loadGames(dataDir + pgn_variation, false, 9);
+	 game = (ChessGame) list.get(9);
+
+	 writer = new PGNWriter(sw = new StringWriter());
+	 writer.writeGame(game);
+
+	 String pgn = sw.toString();
+	 assertTrue(pgn.indexOf("5xd4") < 0);
+      }
+      finally {
+          Log.removeMask(SAN.DEBUG);
+          Log.removeMask(PGNReader.DEBUG);
+          Log.removeMask(ChessGameInfo.DEBUG);
+          Log.removeMask(PGNWriter.DEBUG);
+      }
+   }
+
 
    ///////////////////////////////////////////////////////////////////////////
    /* this tests to make sure variations are not nested unnecessiarily.

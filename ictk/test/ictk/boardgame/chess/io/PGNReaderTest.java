@@ -648,13 +648,15 @@ public class PGNReaderTest extends TestCase {
    //Helper///////////////////////////////////////////////////////////////////
 
    /** loads the games into a list so aspects of the games can be tested */
-   protected List loadGames (String file, boolean debug, int gameToDebug)
+   protected static List loadGames (String file, boolean debug, int gameToDebug)
           throws FileNotFoundException,
 	  	 IOException, 
 	         InvalidGameFormatException,
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
+      Game game = null;
+      PGNReader in = null;
       List list = new LinkedList();
 
       if (debug && gameToDebug < 0) {

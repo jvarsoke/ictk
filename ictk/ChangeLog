@@ -31,6 +31,15 @@ Legend:
    [fics]   added template files for Parsers and ParserTest to auto generate
             these files.
 
+0.1.3 - *IN PROGRESS*
+   [chess]  fixed 784950 - wrong disambiguation
+            This ultra rare bug was produced when a captured piece, of the
+	    same class, had the same destination in its uncleared leagal moves
+	    list as the piece uniqueness was tested for.  Leagal dests
+	    are now cleared when the capture flag is set on a piece.  Also
+	    ChessBoard.isDestUniqueForClass() now does consider captured 
+	    pieces.
+
 0.1.2 - 2003-08-04 bug fixes (mostly)
    [dev]    source distribution no longer comes with javadoc, since it can
             be easily created through the build tool.

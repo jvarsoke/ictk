@@ -591,7 +591,9 @@ public class ChessBoard implements Board {
       for (int i=0; i < movingTeam.size(); i++) {
          piece = (ChessPiece) movingTeam.get(i);
 
-	 if (piece != p && piece.getIndex() == p.getIndex()) {
+	 if (piece != p 
+	     && !piece.isCaptured() 
+	     && piece.getIndex() == p.getIndex()) {
 	    dests = piece.getLegalDests();
 
 	    if (dests.contains(dest)) {
@@ -607,6 +609,7 @@ public class ChessBoard implements Board {
 	    }
 	 }
       }
+
       return unique;
    }
 
