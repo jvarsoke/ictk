@@ -40,13 +40,21 @@ public class ParserTest extends TestCase {
    public String[] mesg;
    String filename;
    public ICSEventParser parser;
-   String dir = "data";
+   String dataDir = "./data";
 
-   public ParserTest () throws IOException {
+   public ParserTest (String packageName) throws IOException {
+
+      String sysprop = packageName + ".dataDir";
       filename = this.getClass().getName();
+
+      if (System.getProperty(sysprop) != null)
+         dataDir = System.getProperty(sysprop);
+
+
       filename = filename.substring(filename.lastIndexOf('.') +1, 
                                     filename.length()) + ".data";
-      mesg = processFile(new File(dir + "/" + filename));
+      filename = dataDir + "/" + filename;
+      mesg = processFile(new File(filename));
    }
 
    public void setUp () {

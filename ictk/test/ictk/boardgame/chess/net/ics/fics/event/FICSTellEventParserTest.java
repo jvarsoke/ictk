@@ -37,7 +37,8 @@ public class FICSTellEventParserTest extends ParserTest {
    ICSTellEvent evt;
 
    public FICSTellEventParserTest () throws IOException {
-      debug = true;
+      super("ictk.boardgame.chess.net.ics.fics.event");
+      //debug = true;
    }
 
    public void setUp () {

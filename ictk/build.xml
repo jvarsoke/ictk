@@ -86,7 +86,6 @@
       <patternset id="non.test.sources">
          <include name="**/*.java"/>
 	 <exclude name="**/junk/**"/>
-	 <exclude name="**/net/**"/>
       </patternset>
    </fileset>
 
@@ -95,17 +94,14 @@
       <patternset id="test.sources">
          <include name="**/*.java"/>
 	 <exclude name="**/junk/**"/>
-	 <exclude name="**/net/**"/>
       </patternset>
    </fileset>
 
    <!-- compile path for library -->
    <path id="compile.class.path">
-      <!--
       <fileset dir="${lib.dir}">
          <include name="*.jar"/>
       </fileset>
-      -->
       <dirset dir="${build.dir}">
       </dirset>
    </path>
@@ -115,11 +111,9 @@
       <fileset dir="${junit.home}">
          <include name="*.jar"/>
       </fileset>
-      <!--
       <fileset dir="${lib.dir}">
          <include name="*.jar"/>
       </fileset>
-      -->
       <dirset dir="${build.dir}">
       </dirset>
    </path>
@@ -144,28 +138,12 @@
       <tstamp/>
    </target>
 
-   <!-- check to make sure the environment variable could be read -->
-   <target name="check_junit">
-      <condition property="junit_is_good">
-         <and>
-            <isset property="env.JUNIT_HOME"/>
-         </and>
-      </condition>
-   </target>
-
-   <target name="error_junit" depends="check_junit" unless="junit_is_good">
-      <echo message="Error: Ant couldn't read your JUNIT environment variable."/>
-      <echo message="If you're in a UNIX make sure the JUNIT_HOME variables"/>
-      <echo message="is correctly exported.  If you're on a platform that Ant"/>
-      <echo message="doesn't yet know how to glean environment variables"/>
-      <echo message="from you'll need to set it manually.  Check in "/>
-      <echo message="the environment properties section of this build file."/>
-   </target>
-
    <!-- ..................................................................-->
 
-   <!-- code generation -->
-   <target name="generate" depends="init"
+   <!-- code generation targets -->
+   <target name="generate"
+           depends="check_xalan,error_xalan" 
+	   if="xalan_is_good"
            description="generates source code from XML files">
       <xslt 
          basedir="${xslt.ics.event.dir}"
@@ -201,6 +179,7 @@
          destdir="${build.dir}"
 	 debug="yes"
 	 optimize="no"
+	 excludes="**/_*.java"
 	 classpathref="compile.class.path">
 	 <patternset refid="non.test.sources"/>
       </javac>
@@ -216,6 +195,7 @@
          destdir="${build.dir}"
 	 debug="no"
 	 optimize="yes"
+	 excludes="**/_*.java"
 	 classpathref="compile.class.path">
 	 <patternset refid="non.test.sources"/>
       </javac>
@@ -224,6 +204,7 @@
    <!-- ..................................................................-->
 
    <!--test targets -->
+
    <target name="compile_test" 
            depends="check_junit,error_junit,compile" 
 	   if="junit_is_good"
@@ -235,21 +216,24 @@
          destdir="${build.dir}"
 	 debug="yes"
 	 optimize="no"
-	 classpathref="compile_test.class.path">
+	 verbose="no"
+	 classpathref="compile_test.class.path"
+	 excludes="**/_*.java">
 	 <patternset refid="test.sources"/>
       </javac>
    </target>
 
-
-   <!-- the JUnit tests ..................................................-->
+   <!-- junit test battery -->
    <target name="test" depends="compile_test"
            description="performs the JUnit test battery">
 
 <!-- only used for the formatter
       <mkdir dir="${junit.results.dir}"/>
 -->
+
       <junit fork="no"
              haltonerror="yes"
+	     haltonfailure="yes"
 	     printsummary="${junit.print.results}"
 	     >
 
@@ -259,6 +243,11 @@
 	    key="ictk.boardgame.chess.io.dataDir" 
 	    value="test/ictk/boardgame/chess/io/"
 	 />
+	 <sysproperty 
+	    key="ictk.boardgame.chess.net.ics.fics.event.dataDir" 
+	    value="test/ictk/boardgame/chess/net/ics/fics/event/data"
+	 />
+
 
 <!--
 	 <formatter type="plain"
@@ -272,7 +261,12 @@
 	    <fileset dir="${test.dir}">
 	       <include name="**/*Test.java"/>
 	       <exclude name="**/AllTests.java"/>
-	       <exclude name="**/net/**"/>
+	       <exclude name="**/junk/**"/>
+	       <exclude name="**/TestClient.java"/>
+	       <exclude name="**/TestTimeseal.java"/>
+	       <exclude name="**/ParserTest.java"/>
+	      <!-- <exclude name="**/net/**"/>
+	      -->
             </fileset>
 	 </batchtest>
       </junit>
@@ -280,7 +274,7 @@
 
    <!-- ..................................................................-->
 
-   <!--jar targets -->
+   <!-- jar targets -->
    <target name="jar" depends="compile"
            description="builds the jar file">
       <jar 
@@ -474,4 +468,44 @@
       <delete dir="${docs.dir}" />
       <delete file="${output.jar}" />
    </target>
+
+   <!-- ..................................................................-->
+   <!-- Utility targets -->
+   
+   <!-- check to make sure the environment variable could be read -->
+   <target name="check_junit">
+      <condition property="junit_is_good">
+         <and>
+            <isset property="env.JUNIT_HOME"/>
+         </and>
+      </condition>
+   </target>
+
+   <target name="error_junit" depends="check_junit" unless="junit_is_good">
+      <echo message="Error: Ant couldn't read your JUnit environment variable."/>
+      <echo message="If you're in a UNIX make sure the JUNIT_HOME variable"/>
+      <echo message="is correctly exported.  If you're on a platform that Ant"/>
+      <echo message="doesn't yet know how to glean environment variables"/>
+      <echo message="from you'll need to set it manually.  Check in "/>
+      <echo message="the environment properties section of this build file."/>
+   </target>
+
+   <!-- check to make sure the XALAN environment variable could be read -->
+   <target name="check_xalan">
+      <condition property="xalan_is_good">
+         <and>
+            <isset property="env.XALAN_HOME"/>
+         </and>
+      </condition>
+   </target>
+
+   <target name="error_xalan" depends="check_xalan" unless="xalan_is_good">
+      <echo message="Error: Ant couldn't read your Xalan environment variable."/>
+      <echo message="If you're in a UNIX make sure the XALAN_HOME variable"/>
+      <echo message="is correctly exported.  If you're on a platform that Ant"/>
+      <echo message="doesn't yet know how to glean environment variables"/>
+      <echo message="from you'll need to set it manually.  Check in "/>
+      <echo message="the environment properties section of this build file."/>
+   </target>
+
 </project>

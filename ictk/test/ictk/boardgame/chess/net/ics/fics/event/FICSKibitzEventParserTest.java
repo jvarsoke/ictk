@@ -37,6 +37,7 @@ public class FICSKibitzEventParserTest extends ParserTest {
    ICSKibitzEvent evt;
 
    public FICSKibitzEventParserTest () throws IOException {
+      super("ictk.boardgame.chess.net.ics.fics.event");
 //      debug = true;
    }
 

@@ -62,6 +62,7 @@ public class ANSIConsole implements ICSEventListener {
       String prefix = null;
 
        switch (evt.getEventType()) {
+       /*
           case ICSEvent.CHANNEL_EVENT:
 	     switch (((ICSChannelEvent) evt).getChannel()) {
 	        case 1:  prefix = ESC + CYAN; break;
@@ -77,6 +78,7 @@ public class ANSIConsole implements ICSEventListener {
 		default: prefix = ESC + BOLD_CYAN;
 	     }
 	     break;
+	     */
 
 	  case ICSEvent.TELL_EVENT:
 	  case ICSEvent.SAY_EVENT:
@@ -92,6 +94,7 @@ public class ANSIConsole implements ICSEventListener {
 	     prefix = ESC + MAGENTA;
 	     break;
 
+/*
 	  case ICSEvent.SEEK_AD_EVENT:
 	  case ICSEvent.SEEK_REMOVE_EVENT:
 	  case ICSEvent.SEEK_CLEAR_EVENT:
@@ -114,6 +117,7 @@ public class ANSIConsole implements ICSEventListener {
 	  case ICSEvent.BOARD_UPDATE_EVENT:
 	     prefix = ESC + YELLOW;
 	     break;
+	     */
 
 	  default:
        }
