@@ -176,6 +176,7 @@ public class ChessMoveTest extends TestCase {
       assertTrue(board.plyCount50 == 0);
    }
 
+   //////////////////////////////////////////////////////////////////////
    public void testA2A4 () throws IllegalMoveException {
       //Log.addMask(ChessMove.DEBUG);
       //Log.addMask(ChessBoard.DEBUG);
@@ -198,6 +199,7 @@ public class ChessMoveTest extends TestCase {
       assertTrue(board.plyCount50 == 0);
    }
 
+   //////////////////////////////////////////////////////////////////////
    public void testNf3 () throws IllegalMoveException {
       //Log.addMask(ChessMove.DEBUG);
       //Log.addMask(ChessBoard.DEBUG);
@@ -220,6 +222,7 @@ public class ChessMoveTest extends TestCase {
       assertTrue(board.plyCount50 == 1);
    }
 
+   //////////////////////////////////////////////////////////////////////
    public void testPawnPromotion () throws IllegalMoveException {
       //Log.addMask(ChessMove.DEBUG);
       //Log.addMask(ChessBoard.DEBUG);
@@ -255,6 +258,7 @@ public class ChessMoveTest extends TestCase {
       assertTrue(piece instanceof Knight);
    }
 
+   //////////////////////////////////////////////////////////////////////
    public void testPawnPromotionAutoQueen () throws IllegalMoveException {
       //Log.addMask(ChessMove.DEBUG);
       //Log.addMask(ChessBoard.DEBUG);
@@ -290,6 +294,7 @@ public class ChessMoveTest extends TestCase {
       assertTrue(piece instanceof Queen);
    }
 
+   //////////////////////////////////////////////////////////////////////
    public void testPawnPromotionBad () throws IllegalMoveException {
       //Log.addMask(ChessMove.DEBUG);
       //Log.addMask(ChessBoard.DEBUG);
@@ -311,5 +316,50 @@ public class ChessMoveTest extends TestCase {
 	 fail("Can't promote to King in standard chess rules");
       }
       catch (IllegalMoveException e) {}
+   }
+
+   //Odd Errors Found////////////////////////////////////////////////////
+   /** David Spencer found a bug in this position.
+    *  The bug was in the */
+   public void testPromotionCaptureWithDoubleCheck () throws IllegalMoveException {
+      
+      //Log.addMask(ChessMove.DEBUG);
+      //Log.addMask(ChessBoard.DEBUG);
+      Piece piece = null;
+      char[][] position={
+                         {' ','P',' ',' ','p',' ',' ',' '},
+                         {' ','P','K',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ','n'},
+                         {' ',' ','R',' ',' ',' ','P','k'},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ','r',' ',' ',' ','p',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '}};
+
+      char[][] position2={
+                         {' ','P',' ',' ','p',' ',' ',' '},
+                         {' ','P','K',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ','Q'},
+                         {' ',' ','R',' ',' ',' ',' ','k'},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ','r',' ',' ',' ','p',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '}};
+
+
+      board.setPosition(position);
+
+      move = new ChessMove(board, 4, 7, 3, 8, Queen.INDEX); //dxc8=Q++
+      board.playMove(move);
+      board2 = new ChessBoard(position2);
+      board2.setBlackMove(true);
+      assertTrue(board.equals(board2));
+      assertTrue(board.plyCount50 == 0);
+      piece = board.getSquare('c','8').getOccupant();
+      assertTrue(piece instanceof Queen);
+      assertTrue(board.getLegalMoveCount() == 2); //take Q and e7
+      assertTrue(!board.isCheckmate());
+      assertTrue(board.isCheck());
+      assertTrue(board.isDoubleCheck());
    }
 }

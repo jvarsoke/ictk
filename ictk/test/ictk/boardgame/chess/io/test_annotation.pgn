@@ -7,3 +7,13 @@
 [Result "*"]
 
 1.e4 {Best by test} e5! *
+
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+{Comment Before Game} 1.e4 {Best by test} e5! *

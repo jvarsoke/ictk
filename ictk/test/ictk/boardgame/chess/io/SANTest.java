@@ -130,12 +130,91 @@ public class SANTest extends TestCase {
                          {' ',' ',' ',' ',' ',' ','P',' '},
                          {' ',' ',' ',' ',' ',' ',' ',' '},
                          {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {'K',' ',' ',' ',' ',' ','k',' '}};
+
+      board = new ChessBoard(position);
+      move = (ChessMove) san.stringToMove(board, "e8=Q");
+      assertTrue (move != null);
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testPromotionWithCheck () 
+          throws IllegalMoveException,
+                 AmbiguousChessMoveException {
+      //Log.addMask(SAN.DEBUG);
+      char[][] position={{' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ','P',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
                          {'K',' ',' ',' ',' ',' ',' ','k'}};
 
       board = new ChessBoard(position);
       move = (ChessMove) san.stringToMove(board, "e8=Q+");
       assertTrue (move != null);
    }
+
+
+   //////////////////////////////////////////////////////////////////////
+   public void testPromotionWithCapture () 
+          throws IllegalMoveException,
+                 AmbiguousChessMoveException {
+      //Log.addMask(SAN.DEBUG);
+      char[][] position={{' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ','n'},
+                         {' ',' ',' ',' ',' ',' ','P',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {'K',' ',' ',' ',' ',' ','k',' '}};
+
+      board = new ChessBoard(position);
+      move = (ChessMove) san.stringToMove(board, "exd8=Q");
+      assertTrue (move != null);
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testPromotionWithCaptureAndCheck () 
+          throws IllegalMoveException,
+                 AmbiguousChessMoveException {
+      //Log.addMask(SAN.DEBUG);
+      char[][] position={{' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ','n'},
+                         {' ',' ',' ',' ',' ',' ','P',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {'K',' ',' ',' ',' ',' ',' ','k'}};
+
+      board = new ChessBoard(position);
+      move = (ChessMove) san.stringToMove(board, "exd8=Q+");
+      assertTrue (move != null);
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testPromotionWithCaptureAndDoubleCheck () 
+          throws IllegalMoveException,
+                 AmbiguousChessMoveException {
+      //Log.addMask(SAN.DEBUG);
+      char[][] position={{' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ','n'},
+                         {'R',' ',' ',' ',' ',' ','P','k'},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {'K',' ',' ',' ',' ',' ',' ',' '}};
+
+      board = new ChessBoard(position);
+      move = (ChessMove) san.stringToMove(board, "exd8=Q++");
+      assertTrue (move != null);
+   }
+
+
 
    //////////////////////////////////////////////////////////////////////
    public void testNAG () 

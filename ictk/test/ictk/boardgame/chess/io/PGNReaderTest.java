@@ -32,19 +32,23 @@ import ictk.boardgame.io.*;
 import ictk.boardgame.chess.*;
 
 import java.io.*;
+import java.util.List;
+import java.util.LinkedList;
 
 public class PGNReaderTest extends TestCase {
    public static String dataDir = "./";
-   String bulk_nonvariation = "test_nonvariation.pgn",
-          bulk_variation = "test_variation.pgn",
-          bulk_annotation = "test_annotation.pgn",
-	  bulk_bad = "test_bad.pgn";
-   SAN san;
-   ChessBoard board;
+   String pgn_nonvariation = "test_nonvariation.pgn",
+          pgn_variation    = "test_variation.pgn",
+          pgn_annotation   = "test_annotation.pgn",
+	  pgn_bad          = "test_bad.pgn",
+	  pgn_debug        = "test_debug.pgn";
+   SAN         san;
+   ChessBoard  board;
    ChessResult res;
    ChessMove   move;
    ChessReader in;
-   Game game;
+   Game        game;
+   List        games;
 
    public PGNReaderTest (String name) {
       super(name);
@@ -61,6 +65,7 @@ public class PGNReaderTest extends TestCase {
       move = null;
       game = null;
       in = null;
+      games = null;
       Log.removeMask(san.DEBUG);
       Log.removeMask(ChessBoard.DEBUG);
    }
@@ -73,17 +78,9 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      //Log.addMask(SAN.DEBUG);
-      //Log.addMask(PGNReader.DEBUG);
-      int count = 0;
-
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + bulk_nonvariation)));
-
-	 while ((game = in.readGame()) != null) {
-	    game.getHistory().goToEnd();
-	 }
+      games = loadGames(dataDir + pgn_nonvariation, false);
+      assertTrue(games.size() > 0);
+      
    }
 
    ///////////////////////////////////////////////////////////////////////////
@@ -94,17 +91,8 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      //Log.addMask(SAN.DEBUG);
-      //Log.addMask(PGNReader.DEBUG);
-      int count = 0;
-
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + bulk_variation)));
-
-	 while ((game = in.readGame()) != null) {
-	    game.getHistory().goToEnd();
-	 }
+      games = loadGames(dataDir + pgn_variation, false);
+      assertTrue(games.size() > 0);
    }
 
    ///////////////////////////////////////////////////////////////////////////
@@ -115,37 +103,39 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      //Log.addMask(SAN.DEBUG);
-      //Log.addMask(PGNReader.DEBUG);
-      int count = 0;
-
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + bulk_annotation)));
-
-	 while ((game = in.readGame()) != null) {
-	    game.getHistory().goToEnd();
-	 }
-
+      games = loadGames(dataDir + pgn_annotation, false);
+      assertTrue(games.size() > 0);
    }
 
    ///////////////////////////////////////////////////////////////////////////
-   public void testAnnotation () 
+   /** this is used for testing new PGNs that have revealed bugs.
+    *  After the bug is squashed the PGN should be moved to another
+    *  file to become a permenent member of the regression testing
+    *  suite.
+    */
+   public void testDebug () 
           throws FileNotFoundException,
 	  	 IOException, 
 	         InvalidGameFormatException,
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      //Log.addMask(SAN.DEBUG);
-      //Log.addMask(PGNReader.DEBUG);
-      int count = 0;
+      loadGames(dataDir + pgn_debug, false);
+   }
 
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + bulk_annotation)));
 
-	 game = in.readGame();
+   ///////////////////////////////////////////////////////////////////////////
+   public void testAnnotationCommentAfterMove () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+
+      games = loadGames(dataDir + pgn_annotation, false);
+
+	 game = (Game) games.get(0);
 	 History history = game.getHistory();
 
 	 history.rewind();
@@ -156,22 +146,16 @@ public class PGNReaderTest extends TestCase {
    }
 
    ///////////////////////////////////////////////////////////////////////////
-   public void testAnnotation2 () 
+   public void testAnnotationExclaimation () 
           throws FileNotFoundException,
 	  	 IOException, 
 	         InvalidGameFormatException,
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      //Log.addMask(SAN.DEBUG);
-      //Log.addMask(PGNReader.DEBUG);
-      int count = 0;
+      games = loadGames(dataDir + pgn_annotation, false);
 
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + bulk_annotation)));
-
-	 game = in.readGame();
+	 game = (Game) games.get(0);
 	 History history = game.getHistory();
 
 	 history.rewind();
@@ -181,6 +165,27 @@ public class PGNReaderTest extends TestCase {
 	    = (ChessAnnotation) history.getCurrentMove().getAnnotation();
 	 assertTrue(anno.getSuffix() == (short) 1);
    }
+
+   ///////////////////////////////////////////////////////////////////////////
+   /*
+   public void testAnnotationCommentBeforeGame () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, true);
+
+	 game = (Game) games.get(1);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 ChessAnnotation anno 
+	    = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+	 assertTrue(anno.getComment().equals("Comment Before Game"));
+   }
+   */
 
    ///////////////////////////////////////////////////////////////////////////
    public void testBadPGNs () 
@@ -193,7 +198,7 @@ public class PGNReaderTest extends TestCase {
 
 	 in = new PGNReader(
 		 new FileReader(
-		    new File(dataDir + bulk_bad)));
+		    new File(dataDir + pgn_bad)));
 
          try {
 	    game = in.readGame();
@@ -209,5 +214,40 @@ public class PGNReaderTest extends TestCase {
 	 catch (AmbiguousMoveException e) {
 	    fail("wrong error for game 1: " + e);
 	 }
+   }
+
+   //Helper///////////////////////////////////////////////////////////////////
+   /** loads the games into a list so aspects of the games can be tested */
+   protected List loadGames (String file, boolean debug)
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      List list = new LinkedList();
+
+      if (debug) {
+        Log.addMask(SAN.DEBUG);
+        Log.addMask(PGNReader.DEBUG);
+      }
+      int count = 0;
+
+	 in = new PGNReader(
+		 new FileReader(
+		    new File(file)));
+
+	 while ((game = in.readGame()) != null) {
+	    game.getHistory().goToEnd();
+	    list.add(game);
+	    count++;
+	    game = null;
+	 }
+
+      if (debug) {
+         Log.removeMask(SAN.DEBUG);
+	 Log.removeMask(PGNReader.DEBUG);
+      }
+      return list;
    }
 }

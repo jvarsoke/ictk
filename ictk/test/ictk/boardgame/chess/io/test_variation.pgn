@@ -6,6 +6,46 @@
 [Black "?"]
 [Result "*"]
 
+1.e4 e5 ( 1...Nf6 ) 2.Nf3 *
+
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 e5 (1...Nf6) 2.Nf3 *
+
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 e5 (1...Nf6 ) 2.Nf3 *
+
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+1.e4 e5 ( 1...Nf6) 2.Nf3 *
+
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
 1.e4 e5 ( 1...Nf6 2.Nc3 ( 2.d3 ( 2.e5 Nc6 ) 2...Nc6 ) ) 2.Nf3 Nf6 *
 
 

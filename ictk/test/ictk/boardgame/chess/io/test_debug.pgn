@@ -1,0 +1,4 @@
+## this file is used for testing new bugs
+## Once the bug is found and killed, the data here should be moved
+## to the appropriate test_*.pgn file to become a permenent 
+## member of the regression test suite.

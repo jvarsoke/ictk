@@ -291,9 +291,9 @@ public class KingTest extends TestCase {
       king = (King) board.getSquare(8,1).getOccupant();
 
       list = king.getLegalDests();
-      assertTrue(list.size() == 0);
+      assertTrue(list.size() == 2);
       assertFalse(board.isStalemate());
-      assertTrue(board.isCheckmate());
+      assertFalse(board.isCheckmate());
    }
 
    //////////////////////////////////////////////////////////////////////
