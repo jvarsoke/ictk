@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE icsevtml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- channel............................................................-->
+   <event id="pcon" 
+          class="PlayerConnection"
+	  enum="PLAYER_CONNECTION"
+	  >
+
+      <description>
+         This coorisponds to Player connection notification, either by
+	 "pin=1" or someone on your Notify list.
+      </description>
+
+      <member id="pcon:player"      typeref="player"/>
+      <member id="pcon:accountType" typeref="accountType"/>
+      <member id="pcon:connected"   typeref="boolean"
+              varname="connected"
+	      functname="Connected"
+              />
+      <member id="pcon:notified"   typeref="boolean"
+              varname="notified"
+	      functname="Notification"
+              />
+
+      <!--pin parser-->
+      <parser id="pcon:pinparser"
+              name="PlayerConnection"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="no">
+
+         <!-- regex -->
+	 <regex>
+	    \[
+	    <regexref ref="regex:fics:player"/>
+	    \shas\s
+	    (connected|disconnected)
+	    \.\]
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="pcon:player"/>
+      evt.setConnected("connected".equals(m.group(3)));
+      evt.setNotification(false);
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="50">
+	    <code format="java">
+      sb.append("[")
+        .append(evt.getPlayer())
+        .append(" has ");
+      if (evt.isConnected())
+         sb.append("connected");
+      else
+         sb.append("disconnected");
+      sb.append(".]");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!--notification parser-->
+      <parser id="pcon:notifcationparser"
+              name="PlayerNotification"
+	      enum="PLAYER_NOTIFICATION"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="yes">
+
+         <!-- regex -->
+	 <regex>
+	    Notification:\s
+	    <regexref ref="regex:fics:player"/>
+	    <regexref ref="regex:fics:accountType"/>
+	    \shas\s
+	    (arrived|departed)
+	    \.
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="pcon:player"/>
+	    <regexgroup num="3" memberref="pcon:accountType"/>
+      evt.setConnected("arrived".equals(m.group(4)));
+      evt.setNotification(true);
+      evt.setEventType(ICSEvent.PLAYER_NOTIFICATION_EVENT);
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="40">
+	    <code format="java">
+      sb.append("Notification: ")
+        .append(evt.getPlayer())
+        .append(evt.getAccountType())
+        .append(" has ");
+
+      if (evt.isConnected())
+         sb.append("arrived.");
+      else
+         sb.append("departed.");
+	    </code>
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>

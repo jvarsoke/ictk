@@ -149,7 +149,7 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
       if (Log.debug &amp;&amp; debug)
          Log.debug(DEBUG, "assigning matches", m);
 
-      <xsl:if test="@detectFake">
+      <xsl:if test="@detectFake='yes'">
       evt.setFake(detectFake(m.group(0)));
       </xsl:if>
 
