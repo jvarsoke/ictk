@@ -19,6 +19,7 @@ general order of priority:
       - EPD
       - XML
       - Scid
+      - BPGN (BugHouse PGN)
    o ICC support
    o SOAP Tablebase lookup
    o Winboard engine interface
