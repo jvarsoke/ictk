@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE ictkml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- tell event ........................................................-->
+   <event id="gameNot" 
+          class="GameNotification"
+	  enum="GAME_NOTIFICATION">
+
+      <description>
+         These are game notifications, which occur when you have a player
+	 on your "gnot" list
+      </description>
+
+      <implements idref="board"/>
+
+      <member id="gameNot:boardNumber"      typeref="boardNumber"
+              inherit="method"
+	      />
+      <member id="gameNot:whitePlayer"      typeref="player"
+              varname="white"
+	      functname="WhitePlayer"
+              />
+      <member id="gameNot:whiteRating"      typeref="rating"
+              varname="whiteRating"
+	      functname="WhiteRating"
+              />
+      <member id="gameNot:blackPlayer"      typeref="player"
+              varname="black"
+	      functname="BlackPlayer"
+              />
+      <member id="gameNot:blackRating"      typeref="rating"
+              varname="blackRating"
+	      functname="BlackRating"
+              />
+      <member id="gameNot:rated"            typeref="boolean"
+              varname="rated"
+	      functname="Rated"
+              />
+      <member id="gameNot:variant"          typeref="variant"/>
+      <member id="gameNot:time"             typeref="int"
+              varname="time"
+	      functname="InitialTime"
+              />
+      <member id="gameNot:incr"             typeref="int"
+              varname="incr"
+	      functname="Increment"
+              />
+
+      <!--parser-->
+      <parser id="gameNot:parser"
+              name="GameNotification"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="yes">
+
+         <!-- regex -->
+	 <regex>
+	    Game\snotification:\s
+	    <regexref ref="regex:fics:player"/> <!--white-->
+	    \s
+	    <regexref ref="regex:fics:rating"/> <!--white rating-->
+	    \svs\.\s
+	    <regexref ref="regex:fics:player"/> <!--black-->
+	    \s
+	    <regexref ref="regex:fics:rating"/> <!--black rating-->
+	    \s
+	    (\w+)    <!-- rated? -->
+	    \s
+	    <regexref ref="regex:fics:variant"/> <!--variant-->
+	    \s
+	    (\d+)    <!-- initial time -->
+	    \s
+	    (\d+)    <!-- increment -->
+	    :\sGame\s
+	    (\d+)    <!-- game number -->
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="gameNot:whitePlayer"/>
+	    <regexgroup num="3" memberref="gameNot:whiteRating"/>
+	    <regexgroup num="4" memberref="gameNot:blackPlayer"/>
+	    <regexgroup num="5" memberref="gameNot:blackRating"/>
+	    <regexgroup num="7" memberref="gameNot:variant"/>
+	    <regexgroup num="8" memberref="gameNot:time"/>
+	    <regexgroup num="9" memberref="gameNot:incr"/>
+	    <regexgroup num="10" memberref="gameNot:boardNumber"/>
+      evt.setRated("rated".equals(m.group(6)));
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="50">
+	    <code format="java">
+      sb.append("Game notification: ")
+        .append(evt.getWhitePlayer())
+        .append(" (")
+        .append(evt.getWhiteRating())
+        .append(") vs. ")
+        .append(evt.getBlackPlayer())
+        .append(" (")
+        .append(evt.getBlackRating())
+        .append(") ");
+
+      if (!evt.isRated())
+         sb.append("un");
+
+      sb.append("rated ")
+        .append(evt.getVariant())
+        .append(" ")
+        .append(evt.getInitialTime())
+        .append(" ")
+        .append(evt.getIncrement())
+        .append(": Game ")
+        .append(evt.getBoardNumber());
+	    </code>
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>

@@ -34,13 +34,6 @@ import java.io.IOException;
 import junit.framework.*;
 
 public class ICSEventParserTest extends TestCase {
-   Pattern 
-      phandle,
-      pacct,
-      prating,
-      pmesg,
-      pdate;
-   Matcher m;
    ICSAccountType acct;
    ICSRating rating;
    String mesg;
@@ -50,68 +43,12 @@ public class ICSEventParserTest extends TestCase {
    }
 
    public void setUp () {
-      phandle = Pattern.compile(ICSEventParser.REGEX_handle);
-      pacct = Pattern.compile(ICSEventParser.REGEX_acct_type);
-      prating = Pattern.compile(ICSEventParser.REGEX_rating);
-      pmesg = Pattern.compile(ICSEventParser.REGEX_mesg);
-      pdate = Pattern.compile(ICSEventParser.REGEX_date);
-
-      eventParser = new ICSEventParser(null) {
-         public void assignMatches (Matcher m, ICSEvent evt) {}
-	 public ICSEvent createICSEvent (Matcher match) { return null; }
-         public String toNative (ICSEvent evt) { return null; }
-      };
    }
 
    public void tearDown () {
-      phandle = pacct = prating = pmesg = pdate = null;
-      eventParser = null;
-      m = null;
-      acct = null;
-      rating = null;
-      mesg = null;
    }
 
-   //tests///////////////////////////////////////////////////////////////
-   public void testAcctType0 () {
-      m = pacct.matcher("(SR)"); 
-      m.find();
-      //Log.debug(0L, "testAcctType0", m);
-      assertTrue(m.group(1).equals("(SR)"));
-      acct = eventParser.parseICSAccountType(m, 1);
-      assertTrue(acct.is(ICSAccountType.SERVICE_REP));
-   }
-
-   //////////////////////////////////////////////////////////////////////
-   public void testAcctType1 () {
-      m = pacct.matcher("(*)"); 
-      m.find();
-      //Log.debug(0L, "testAcctType1", m);
-      assertTrue(m.group(1).equals("(*)"));
-      acct = eventParser.parseICSAccountType(m, 1);
-      assertTrue(acct.is(ICSAccountType.ADMIN));
-   }
-
-   //////////////////////////////////////////////////////////////////////
-   public void testAcctType2 () {
-      m = pacct.matcher("(*)(SR)"); 
-      m.find();
-      //Log.debug(0L, "testAcctType2", m);
-      assertTrue(m.group(1).equals("(*)(SR)"));
-      acct = eventParser.parseICSAccountType(m, 1);
-      assertTrue(acct.is(ICSAccountType.ADMIN));
-      assertTrue(acct.is(ICSAccountType.SERVICE_REP));
-   }
-
-   //////////////////////////////////////////////////////////////////////
-   public void testAcctType3 () {
-      m = pacct.matcher("(*)(SR)(CA)(TM)"); 
-      m.find();
-      //Log.debug(0L, "testAcctType3", m);
-      acct = eventParser.parseICSAccountType(m, 1);
-      assertTrue(acct.is(ICSAccountType.ADMIN));
-      assertTrue(acct.is(ICSAccountType.SERVICE_REP));
-      assertTrue(acct.is(ICSAccountType.CHESS_ADVISOR));
-      assertTrue(acct.is(ICSAccountType.TOURNAMENT_MANAGER));
+   public void testDummy () {
+     //no tests yet
    }
 }

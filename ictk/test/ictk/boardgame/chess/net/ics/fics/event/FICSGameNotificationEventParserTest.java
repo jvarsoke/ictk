@@ -37,11 +37,12 @@ public class FICSGameNotificationEventParserTest extends ParserTest {
    ICSGameNotificationEvent evt;
 
    public FICSGameNotificationEventParserTest () throws IOException {
-//      debug = true;
+      super("ictk.boardgame.chess.net.ics.fics.event");
    }
 
    public void setUp () {
-      parser = new FICSGameNotificationEventParser();
+      parser = FICSGameNotificationEventParser.getInstance();
+      //debug = true;
    }
 
    public void tearDown () {
@@ -51,7 +52,55 @@ public class FICSGameNotificationEventParserTest extends ParserTest {
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
-      evt = (ICSGameNotificationEvent) parser.createICSEvent(mesg[0]);
-      assertTrue(evt != null);
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+
+         evt = (ICSGameNotificationEvent) parser.createICSEvent(mesg[0]);
+	 assertTrue(evt != null);
+
+	 //begin test 
+
+	 //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //inherited///////////////////////////////////////////////////////////
+   public void testParseAll () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testParseAll();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testNative () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testNative();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
    }
 }
