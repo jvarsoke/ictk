@@ -114,7 +114,7 @@ public abstract class GameInfo {
 
    /* getDateString **********************************************************/
    /** returns the date string in typical YYYY.MM.DD format.  If one of
-    *  the values is not set it will be replaced by ????.??.??.
+    *  the values is not set it will be replaced by ????.??.?? accordingly.
     */
    public String getDateString () {
       StringBuffer sb = new StringBuffer(10);
