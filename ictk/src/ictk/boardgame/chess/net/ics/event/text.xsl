@@ -120,14 +120,24 @@
          <xsl:text>  "</xsl:text>
       </xsl:otherwise>
    </xsl:choose>
-   <xsl:value-of select="substring-before($line, ' ')"/>
-   <xsl:value-of select="$postfix"/>
 
-   <xsl:call-template name="_mini_format">
-      <xsl:with-param name="input" select="substring-after($line, ' ')"/>
-      <xsl:with-param name="prefix" select="$prefix"/>
-      <xsl:with-param name="postfix" select="$postfix"/>
-   </xsl:call-template>
+   <xsl:choose>
+
+      <xsl:when test="contains($line, ' ')">
+         <xsl:value-of select="substring-before($line, ' ')"/>
+         <xsl:value-of select="$postfix"/>
+	 <xsl:call-template name="_mini_format">
+	    <xsl:with-param name="input" select="substring-after($line, ' ')"/>
+	    <xsl:with-param name="prefix" select="$prefix"/>
+	    <xsl:with-param name="postfix" select="$postfix"/>
+	 </xsl:call-template>
+      </xsl:when>
+
+      <xsl:otherwise>
+         <xsl:value-of select="$line"/>
+         <xsl:value-of select="$postfix"/>
+      </xsl:otherwise>
+   </xsl:choose>
 
 </xsl:template>
 

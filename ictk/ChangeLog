@@ -16,6 +16,7 @@ Legend:
    [net]    applies to internet communication features
    [fics]   applies to support for the www.freechess.org server
    [icc]    applies to support for the www.chessclub.com server
+   [xslt]   applies to xslt code generation library functions / files
 
 *IN PROGRESS*
    [chess]  fixed 828725 - move counter incremented on Black move rather 
@@ -35,10 +36,13 @@ Legend:
 	    event is which by getEventType().
    [fics]   added events:
                examine, mex, forward, backward, revert, forward at end of game,
-	       back at begin of game, forward on variation.
+	       back at begin of game, forward on variation, observer.
    [test]   removed AllTests.java for Parser tests.
    [test]   added allTests.xsl to autogenerate the AllTest file, so we 
             don't miss any tests.  build.xml was changed to this effect.
+   [xslt]   fixed 794238 - XSLT parser.xsl single line regex ignored
+            changed text.xsl to detect when there is no ' ' in the 
+	    regex line.
 
 0.2.0 - 2003-10-03 FICS Support (limited)
    [net]    added FICS support to main branch of library
