@@ -25,6 +25,7 @@
 
 package ictk.boardgame.chess.net.ics.event;
 import ictk.boardgame.chess.net.ics.*;
+import ictk.boardgame.chess.net.ics.fics.event.FICSMoveListParser;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -94,7 +95,8 @@ public class ICSMoveListEvent extends ICSEvent
    public void setDate (ICSDate date) { this.date = date; }
    public ICSDate getDate () { return date; }
 
+   //readable//////////////////////////////////////////////////////////////
    public String getReadable () {
-      return "Move List";
+      return FICSMoveListParser.getInstance().toNative(this);
    }
 }

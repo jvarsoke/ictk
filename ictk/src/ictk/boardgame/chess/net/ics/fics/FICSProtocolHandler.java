@@ -196,8 +196,9 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
       int i = 0;
       //eventFactories = new ICSEventParser[16];
-      eventFactories = new ICSEventParser[11];
+      eventFactories = new ICSEventParser[12];
       eventFactories[i++] = FICSBoardUpdateStyle12Parser.getInstance();
+      eventFactories[i++] = FICSMoveListParser.getInstance();
       eventFactories[i++] = FICSTellParser.getInstance();
       eventFactories[i++] = FICSKibitzParser.getInstance();
       eventFactories[i++] = FICSChannelParser.getInstance();
@@ -208,24 +209,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       eventFactories[i++] = FICSPlayerNotificationParser.getInstance();
       eventFactories[i++] = FICSGameNotificationParser.getInstance();
       eventFactories[i++] = FICSSeekAdParser.getInstance();
-      /*
-      eventFactories[i++] = new ICSBoardUpdateStyle12Event(this);
-      eventFactories[i++] = new FICSPlayerConnectionEventParser();
-      eventFactories[i++] = new FICSGameNotificationEventParser();
-      eventFactories[i++] = new FICSSeekRemoveEventParser();
-      eventFactories[i++] = new FICSGameResultEventParser();
-      eventFactories[i++] = new FICSGameCreatedEventParser();
-      eventFactories[i++] = new FICSChannelEventParser();
-      eventFactories[i++] = new FICSShoutEventParser();
-      eventFactories[i++] = new FICSSeekAdReadableEventParser();
-      eventFactories[i++] = new FICSKibitzEventParser();
-      eventFactories[i++] = new FICSTellEventParser();
-      eventFactories[i++] = new FICSSeekClearEventParser();
-      eventFactories[i++] = new FICSPlayerNotificationEventParser();
-      */
-      /*
-      eventFactories[i++] = new FICSQTellEvent(this);
-      */
+
       router = new ICSEventRouter();
    }
 
@@ -505,6 +489,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
 	       if (c != '\r') { //get rid of these
 		  buffer.put(c);
+
 		  if (c == prompt[ptr]) {  //look for the prompt
 		     ptr++;
 		     if (prompt.length == ptr) { //found prompt
@@ -515,6 +500,9 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 			ptr = 0;
 		     }
 		  } 
+		  else if (ptr == 1 && c == prompt[0]) {
+		     //got \n before prompt -- do nothing
+		  }
 		  else {  //not prompt
 		     ptr = 0;
 		  }

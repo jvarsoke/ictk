@@ -256,14 +256,20 @@ black to move first (rare case)
 	       tmp.setMoveTime(min * 60000 + s * 1000 + ms);
 	    }
 	    catch (NumberFormatException e) {
-	       Log.debug(Log.PROG_WARNING,
-	          "Error parsing number field(" + i + "): "
-		  + mvMatch.group(i));
+	       Log.error(Log.PROG_WARNING,
+		 "threw NumberFormatException"
+		 + "for(" + i + "): " + mvMatch.group(i)
+		 + " of " + mvMatch.group(0));
+	       evt.setEventType(ICSEvent.UNKNOWN_EVENT);
+	       evt.setMessage(m.group(0));
+	       if (Log.debug)
+		  Log.debug(ICSEventParser.DEBUG, "regex", mvMatch);
+	       return;
 	    }
 	    tmplist.add(tmp);
 	 }
 
-	 if (mvMatch.group(7) != null) {
+	 if (mvMatch.group(8) != null) {
             tmp = new ICSMove ();
 
             try {
@@ -275,11 +281,17 @@ black to move first (rare case)
                ms = Integer.parseInt(mvMatch.group(i = 12));
                tmp.setMoveTime(min * 60000 + s * 1000 + ms);
             }
-            catch (NumberFormatException e) {
-               Log.error(Log.PROG_WARNING,
-                  "Error parsing number field(" + i + "): "
-                  + mvMatch.group(i));
-            }
+	    catch (NumberFormatException e) {
+	       Log.error(Log.PROG_WARNING,
+		 "threw NumberFormatException"
+		 + "for(" + i + "): " + mvMatch.group(i)
+		 + " of " + mvMatch.group(0));
+	       evt.setEventType(ICSEvent.UNKNOWN_EVENT);
+	       evt.setMessage(m.group(0));
+	       if (Log.debug)
+		  Log.debug(ICSEventParser.DEBUG, "regex", mvMatch);
+	       return;
+	    }
             tmplist.add(tmp);
 	 }
       }

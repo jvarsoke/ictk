@@ -125,6 +125,7 @@ public class ANSIConsole implements ICSEventListener {
 	     */
 
 	  case ICSEvent.BOARD_UPDATE_EVENT:
+	  case ICSEvent.MOVE_LIST_EVENT:
 	     prefix = ESC + YELLOW;
 	     break;
 
@@ -143,6 +144,8 @@ public class ANSIConsole implements ICSEventListener {
           System.out.println(prefix + evt + ESC + PLAIN);
        else
           System.out.println(evt);
+
+       System.out.flush();
    }
 
    public String getTimestampAsString (Date date) {
