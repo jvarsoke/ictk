@@ -56,7 +56,7 @@ import java.util.ListIterator;
  *  <p>
  *  For example:
  *  <pre>
- *  History history = Game.getHistory();
+ *  History history = game.getHistory();
  *  history.add(moveA);
  *  history.add(moveB);
  *  history.prev();  //returning the when moveA was just played
