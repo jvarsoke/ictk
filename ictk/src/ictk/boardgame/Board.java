@@ -86,4 +86,14 @@ public interface Board {
    public void playMove (Move m) throws IllegalMoveException,
                     OutOfTurnException;
 
+   /* addBoardListener ***************************************************/
+   /** add a listener for board updates
+    */
+   public void addBoardListener (BoardListener bl);
+
+   /* removeBoardListener ************************************************/
+   public void removeBoardListener (BoardListener bl);
+
+   /* getBoardListener ***************************************************/
+   public BoardListener[] getBoardListeners ();
 }

@@ -72,6 +72,9 @@ public class ChessBoard implements Board {
       /** only used for hashCode */
    protected static final FEN fen = new FEN();
 
+      /** objects listening for updates to the board */
+   protected BoardListener[] listeners;
+
       /** technically this is the actual board */
    protected Square    squares[][]; //file,rank
       /** the team of white Pieces */
@@ -1358,7 +1361,65 @@ public class ChessBoard implements Board {
       return isInitialPositionDefault;
    }
 
-   //////////////////////////////////////////////////////////////
+   //Events///////////////////////////////////////////////////////////////////
+   public void addBoardListener (BoardListener bl) {
+      int size = 0;
+      boolean found = false;
+      BoardListener[] bls = null;
+
+      if (listeners != null) {
+         size = listeners.length;
+
+	 for (int i = 0; !found && i < size; i++) {
+	    found = listeners[i] == bl;
+	 }
+	 if (found) return;
+      }
+
+      bls = new BoardListener[size+1];
+      if (listeners != null)
+         System.arraycopy(listeners, 0, bls, 0, size);
+      bls[size] = bl;
+
+      listeners = bls;
+   }
+
+   public BoardListener[] getBoardListeners () {
+      return listeners;
+   }
+
+   public void removeBoardListener (BoardListener bl) {
+      int size = 0,
+          idx  = 0;
+      boolean found = false;
+      BoardListener[] bls = null;
+
+      if (listeners == null)
+         return;
+
+      size = listeners.length;
+
+      for (int i = 0; !found && i < size; i++) {
+	 found = listeners[i] == bl;
+	 if (found) idx = i;
+      }
+
+      if (!found) return;
+
+      listeners[idx] = null;
+
+      bls = new BoardListener[size-1];
+
+      if (idx != 0)
+	 System.arraycopy(listeners, 0, bls, 0, idx);
+
+      if (idx != size-1)
+	 System.arraycopy(listeners, idx+1, bls, idx, size-1);
+
+      listeners = bls;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
    /* equals() **************************************************/
    /** standard override of the equals(Object) function.
     *  This tests if the positions of the two board are exactly 

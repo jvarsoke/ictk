@@ -372,4 +372,48 @@ public class ChessBoardTest extends TestCase {
       assertTrue(board.getUnCapturedPieces(true).length == 15);
       assertTrue(board.getUnCapturedPieces(false).length == 16);
    }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testListenersAdd () {
+      BoardListener bl = new BoardListener() {
+                            public void boardUpdate (Board b, int c) { } 
+			 }, 
+                    bl2 = new BoardListener() {
+                            public void boardUpdate (Board b, int c) { } 
+			 }; 
+		         
+      board.addBoardListener(bl);
+      assertTrue( board.getBoardListeners().length == 1);
+
+      //no dupes
+      board.addBoardListener(bl);
+      assertTrue( board.getBoardListeners().length == 1);
+
+      board.addBoardListener(bl2);
+      assertTrue( board.getBoardListeners().length == 2);
+
+      //assertTrue( board.getBoardListeners()[0] == bl);
+      //assertTrue( board.getBoardListeners()[1] == bl2);
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testListenersArrayRemove () {
+      BoardListener bl = new BoardListener() {
+                            public void boardUpdate (Board b, int c) { } 
+			 }, 
+                    bl2 = new BoardListener() {
+                            public void boardUpdate (Board b, int c) { } 
+			 }; 
+		         
+      board.addBoardListener(bl);
+      assertTrue( board.getBoardListeners().length == 1);
+
+      board.addBoardListener(bl2);
+      assertTrue( board.getBoardListeners().length == 2);
+
+      board.removeBoardListener(bl);
+      assertTrue( board.getBoardListeners().length == 1);
+
+      assertTrue( board.getBoardListeners()[0] == bl2);
+   }
 }

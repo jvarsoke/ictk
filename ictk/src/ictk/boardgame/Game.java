@@ -73,4 +73,17 @@ public interface Game {
    public Result getResult ();
 
    public void setResult (Result result);
+
+   /* getBoards **************************************************************/
+   /** Board games with only one board return a single element Board[] array.
+    * @return all the boards use in this game.
+    */
+   public Board[] getBoards();
+
+   /* getPlayersToMove ******************************************************/
+   /** returns an array containing the index number of the Players who have 
+    *  the ability to make a move at this time.  The numbers can then be sent
+    *  to GameInfo.getPlayer(int) to receive the Player object.
+    */
+   public int[] getPlayersToMove ();
 }

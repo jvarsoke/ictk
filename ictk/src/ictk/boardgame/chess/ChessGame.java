@@ -84,6 +84,13 @@ public class ChessGame implements SingleBoardGame {
 
    public Board getBoard () { return board; }
 
+   public Board[] getBoards () { 
+      Board[] b = new Board[1];
+      b[0] = board;
+
+      return b;
+   }
+
    public void setResult (Result result) { 
       Move m = history.getFinalMove(true);
       m.setResult(result);
@@ -96,6 +103,13 @@ public class ChessGame implements SingleBoardGame {
     */
    public int getPlayerToMove () {
       return  (board.isBlackMove()) ? 1 : 0;
+   }
+
+   public int[] getPlayersToMove () {
+      int[] i = new int[1];
+      i[0] = getPlayerToMove();
+
+      return i;
    }
 
    //Mutators////////////////////////////////////////////////////////////////

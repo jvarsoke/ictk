@@ -11,7 +11,8 @@ Legend:
    [sample] applies to sample code
 
    [chess]  applies to chess model or io
-   [gui]    applies to gui components
+   [gui]    applies to graphic user interface components
+   [cli]    applies to command-line interface components
    [net]    applies to internet communication features
    [fics]   applies to support for the www.freechess.org server
    [icc]    applies to support for the www.chessclub.com server
@@ -40,6 +41,11 @@ Legend:
 	    ChessBoard.isDestUniqueForClass() now does consider captured 
 	    pieces.
 	    {thanks: Jermone Zago for the bug report}
+
+   [cli]    added 788096 - CLI display for ChessBoards
+            Also added BoardListener keep displays notified of changes in the
+	    underlying model.
+	    {note: very unstable code right now, don't submit bugs}
 
 0.1.2 - 2003-08-04 bug fixes (mostly)
    [dev]    source distribution no longer comes with javadoc, since it can
