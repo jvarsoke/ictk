@@ -208,9 +208,9 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       eventFactories[i++] = FICSPlayerConnectionParser.getInstance();
       eventFactories[i++] = FICSPlayerNotificationParser.getInstance();
       eventFactories[i++] = FICSGameNotificationParser.getInstance();
+      eventFactories[i++] = FICSSeekClearParser.getInstance();
       eventFactories[i++] = FICSSeekAdParser.getInstance();
       eventFactories[i++] = FICSSeekAdReadableParser.getInstance();
-      eventFactories[i++] = FICSSeekClearParser.getInstance();
 
       router = new ICSEventRouter();
    }
@@ -497,7 +497,10 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 		     if (prompt.length == ptr) { //found prompt
 			buffer.limit(buffer.position() - prompt.length);
 			buffer.rewind();
+
+                        //send to parser for processing
 			parse(buffer);
+
 			buffer.clear();
 			ptr = 0;
 		     }
@@ -644,7 +647,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       sendCommand("exit");
    }
 
-   /* sendCommand () *********************************************************/
+   /* sendCommand ************************************************************/
    /** send a command to the server.
     */
    public void sendCommand (String cmd, boolean echo) {
@@ -662,7 +665,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       sendCommand(cmd, true);
    }
 
-   /* parse () **************************************************************/
+   /* parse *****************************************************************/
    /** The 'datagram' or message chunk has already been establish, now we
     *  just gotta figure out what the message is and send it to the right
     *  listeners.
@@ -673,9 +676,32 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       boolean found = false;
 
       for (int i=0; i < eventFactories.length && !found; i++) {
-         if ((icsEvent = eventFactories[i].createICSEvent(str)) != null) {
+
+         if ((matcher = eventFactories[i].match(str)) != null) {
+	    icsEvent = eventFactories[i].createICSEvent(matcher); 
+	    assert icsEvent != null : "parser matched, but event null?";
 	    icsEvent.setServer(this);
+	    router.dispatch(icsEvent);
+
 	    found = true;
+	 }
+      }
+
+      //SEEK_CLEAR is followed by many seek ads usually
+      //SEEK_ADs are not necessarily one per chunk
+      CharSequence more = str;
+      while (matcher != null
+	     && icsEvent != null 
+	     && (icsEvent.getEventType() == ICSEvent.SEEK_CLEAR_EVENT
+		|| icsEvent.getEventType() == ICSEvent.SEEK_AD_EVENT)) {
+
+	 matcher = FICSSeekAdParser.getInstance().match(
+	    more = more.subSequence(matcher.end(), more.length()));
+
+	 if (matcher != null) {
+	    icsEvent = FICSSeekAdParser.getInstance().createICSEvent(matcher); 
+	    assert icsEvent != null : "parser matched, but event null?";
+	    icsEvent.setServer(this);
 	    router.dispatch(icsEvent);
 	 }
       }
