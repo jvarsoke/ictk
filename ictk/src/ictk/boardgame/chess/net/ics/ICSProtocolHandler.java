@@ -66,6 +66,9 @@ public abstract class ICSProtocolHandler implements Runnable {
       /** is the user logged in */
    protected boolean isLoggedIn;
 
+      /** if true, debug info will appear in the the output stream */
+   protected boolean debugParser;
+
       /** connection listeners interested in the status of the socket */
    protected ICSConnectionListener[] conSubscribers;
 
@@ -171,7 +174,7 @@ public abstract class ICSProtocolHandler implements Runnable {
    public boolean isConnected () {
       if (socket == null)
          return false;
-      return socket.isClosed();
+      return !socket.isClosed();
    }
 
    /* isLoggedIn *************************************************************/
@@ -180,6 +183,10 @@ public abstract class ICSProtocolHandler implements Runnable {
     */
    public boolean isLoggedIn () {
       return isLoggedIn;
+   }
+
+   public void setDebugParser (boolean t) {
+      debugParser = t;
    }
 
    /* setEventRouter *********************************************************/

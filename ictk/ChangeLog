@@ -43,6 +43,11 @@ Legend:
    [xslt]   fixed 794238 - XSLT parser.xsl single line regex ignored
             changed text.xsl to detect when there is no ' ' in the 
 	    regex line.
+   [sample] swapped colors for the ChannelListener in the SampleICSClient.
+            Admin == RED, and SRs == YELLOW now.
+   [fics]   isConnected() was reporting an incorrect value on socket.closed()
+            FICSProtocolHandler also socket.closes() on exit; it was commented
+	    out for some reason.
 
 0.2.0 - 2003-10-03 FICS Support (limited)
    [net]    added FICS support to main branch of library

@@ -63,12 +63,15 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
                     GUEST_PROMPT   = "Press return to enter the server as \"",
                     START_SESSION  = "**** Starting FICS session as ",
                     INVALID_PASSWD = "**** Invalid password! ****",
+		    ALREADY_LOGGED_IN = "is already logged in ***",
                     INTERFACE_NAME = 
 		       "-=[ ictk ]=- v0.2 http://ictk.sourceforge.net";
 
    //common regex phrases
    protected final static String REGEX_handle    = "([\\w]+)",
                                  REGEX_acct_type = "(\\(\\S*\\))?";
+
+   protected PrintStream stdout = System.out;
 
    //FIXME: RATING - UNR  is a possiblity
 
@@ -94,7 +97,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       port   = 5000;
 
       int i = 0;
-      eventFactories = new ICSEventParser[16];
+      eventFactories = new ICSEventParser[24];
       eventFactories[i++] = FICSBoardUpdateStyle12Parser.getInstance();
       eventFactories[i++] = FICSMoveListParser.getInstance();
       eventFactories[i++] = FICSTellParser.getInstance();
@@ -111,6 +114,16 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       eventFactories[i++] = FICSSeekRemoveParser.getInstance();
       eventFactories[i++] = FICSSeekAdReadableParser.getInstance();
       eventFactories[i++] = FICSChallengeParser.getInstance();
+
+      eventFactories[i++] = FICSExamineNavigationParser.getInstance();
+      eventFactories[i++] = FICSExaminerOtherParser.getInstance();
+      eventFactories[i++] = FICSExaminerSelfParser.getInstance();
+      eventFactories[i++] = FICSObserverSelfParser.getInstance();
+      eventFactories[i++] = FICSExamineCommitParser.getInstance();
+      eventFactories[i++] = FICSExamineNavigationBeginParser.getInstance();
+      eventFactories[i++] = FICSExamineNavigationEndParser.getInstance();
+      eventFactories[i++] = FICSExamineNavigationEndVariationParser.getInstance();
+ 
 
       router = new ICSEventRouter();
    }
@@ -154,14 +167,16 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 	  isLoggedIn = doLogin();
 	  if (isLoggedIn) {
              setLoginVars();
+             dispatchConnectionEvent(new ICSConnectionEvent(this));
 	     processServerOutput(); 
 	  }
 	  else {
+	     Log.error(Log.USER_ERROR, "unsuccessful login");
 	  //close socket etc
 	  }
 	  //end thread
 	  if (socket != null && !socket.isClosed()) {}
-	     //socket.close();
+	     socket.close();
        }
        catch (IOException e) {
           e.printStackTrace();
@@ -214,8 +229,8 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 	       if (c == '\n' && !seenPasswd) { 
 	          buffer.limit(buffer.position());
 		  buffer.rewind();
-		  System.out.print(buffer.toString());
-		  System.out.flush();
+		  stdout.print(buffer.toString());
+		  stdout.flush();
 		  buffer.clear();
 	       }
 
@@ -229,9 +244,9 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
                   //login prompt
 		  if (!seenLogin
 		      && tmp.lastIndexOf(LOGIN_PROMPT) > -1) {
-		        System.out.print(tmp);
-		        System.out.print(" ");
-			System.out.flush();
+		        stdout.print(tmp);
+		        stdout.print(" ");
+			stdout.flush();
 		        buffer.rewind();
 		        buffer.clear();
 
@@ -242,22 +257,35 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
                   //password prompt
 		  else if (seenLogin && !seenPasswd 
 		           && tmp.lastIndexOf(PASSWD_PROMPT) > -1) {
-		        System.out.print(tmp);
-		        System.out.print(" ");
-			System.out.flush();
+		        stdout.print(tmp);
+		        stdout.print(" ");
+			stdout.flush();
 		        buffer.rewind();
 		        buffer.clear();
 
 		        sendCommand(passwd, false);
 			seenPasswd = true;
-                        System.out.println();
+                        stdout.println();
+		  }
+
+                  //guest already logged in
+		  else if (seenLogin && !seenPasswd 
+		           && tmp.lastIndexOf(ALREADY_LOGGED_IN) > -1) {
+		        stdout.print(tmp);
+		        stdout.print(" ");
+			stdout.flush();
+		        buffer.rewind();
+		        buffer.clear();
+
+                        stdout.println();
+			return false;
 		  }
 
 		  //guest login prompt (instead of password)
 		  else if (seenLogin && !seenPasswd 
 		          && tmp.lastIndexOf(GUEST_PROMPT) > -1) {
-		        System.out.print(tmp);
-			System.out.flush();
+		        stdout.print(tmp);
+			stdout.flush();
 		        buffer.rewind();
 		        buffer.clear();
 
@@ -279,8 +307,8 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
                   //Invalid password
 		  if (tmp.lastIndexOf(INVALID_PASSWD) > -1) {
-		     System.out.print(tmp);
-		     System.out.flush();
+		     stdout.print(tmp);
+		     stdout.flush();
 		     buffer.rewind();
 		     buffer.clear();
 
@@ -308,8 +336,8 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 			   "On Login: never matched session start: "
 			   + tmp);
 		     }
-		     System.out.print(tmp);
-		     System.out.flush();
+		     stdout.print(tmp);
+		     stdout.flush();
 		     buffer.rewind();
 		     buffer.clear();
 
@@ -546,8 +574,9 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    /** send a command to the server.
     */
    public void sendCommand (String cmd, boolean echo) {
-       if (echo) 
-          System.out.println(cmd);
+       //FIXME: this should go to a setable stream, not stdout
+       if (echo)
+          stdout.println(cmd);
 
        if (isBlockMode)
           out.println(1 + " " + cmd);
@@ -564,54 +593,41 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    /** The 'datagram' or message chunk has already been establish, now we
     *  just gotta figure out what the message is and send it to the right
     *  listeners.
+    *  <br>
+    *  It is possible that there are multiple messages in one chunk.  To
+    *  deal with this the string before and after the matched data must 
+    *  also be examined for messages.  These message need to be queued up
+    *  and then sent to the router in order.
     */
    protected void parse (CharSequence str) {
       ICSEvent icsEvent = null;
       Matcher matcher = null;
       boolean found = false;
 
+      if (debugParser) 
+         stdout.println("<PARSING>" + str + "</PARSING>");
+
       for (int i=0; i < eventFactories.length && !found; i++) {
 
          if ((matcher = eventFactories[i].match(str)) != null) {
 	    icsEvent = eventFactories[i].createICSEvent(matcher); 
 	    assert icsEvent != null : "parser matched, but event null?";
+
+	    if (matcher.start() > 3)
+	       parse(str.subSequence(0, matcher.start()));
+
 	    icsEvent.setServer(this);
 	    router.dispatch(icsEvent);
+
+	    if (str.length() - matcher.end() > 3)
+	       parse(str.subSequence(matcher.end(), str.length()));
 
 	    found = true;
 	 }
       }
 
-      //SEEK_CLEAR is followed by many seek ads usually
-      //SEEK_ADs are not necessarily one per chunk
-      CharSequence more = str;
-      while (matcher != null
-	     && icsEvent != null 
-	     && (icsEvent.getEventType() == ICSEvent.SEEK_CLEAR_EVENT
-		|| icsEvent.getEventType() == ICSEvent.SEEK_AD_EVENT)) {
-
-	 matcher = FICSSeekAdParser.getInstance().match(
-	    more = more.subSequence(matcher.end(), more.length()));
-
-	 if (matcher != null) {
-	    icsEvent = FICSSeekAdParser.getInstance().createICSEvent(matcher); 
-	    assert icsEvent != null : "parser matched, but event null?";
-	    icsEvent.setServer(this);
-	    router.dispatch(icsEvent);
-	 }
-      }
-
       if (!found)
-         System.out.println(str);
-
-      //what's after the match?
-      if (matcher != null) {
-        int end = matcher.end();
-        if (end < str.length() && str.charAt(end) == '\n') 
-	   end++;
-        if (end < str.length())
-           System.out.println(str.subSequence(end, str.length()));
-      }
+         stdout.println(str);
    }
 
 /*
@@ -638,17 +654,17 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       switch (cmd) {
 
          case FICSBlockMode.BLK_HISTORY:
-	    System.out.println(">>Got a history!");
+	    stdout.println(">>Got a history!");
 	    icsEvent = history.newICSEventInstance(str);
 	    if (icsEvent == null)
-	    System.out.println("But it didn't match");
+	    stdout.println("But it didn't match");
 	    break;
 
 	 case FICSBlockMode.BLK_MOVES:
-	    System.out.println(">>Got moves list!");
+	    stdout.println(">>Got moves list!");
 	    icsEvent = movelist.newICSEventInstance(str);
 	    if (icsEvent == null)
-	    System.out.println("But it didn't match");
+	    stdout.println("But it didn't match");
 
 	 default:
 
@@ -656,7 +672,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       if (icsEvent != null)
          router.dispatch(icsEvent);
       else
-         System.out.print("BLOCK(" + id + "/" + cmd + "): " 
+         stdout.print("BLOCK(" + id + "/" + cmd + "): " 
 	    + str.toString() + "</BLOCK>");
      */
    }
