@@ -915,7 +915,7 @@ public class ChessMove extends Move {
 	 if (coord.length == 1)
 	   sb.append(((coord[0] == CASTLE_QUEENSIDE) ? "O-O-O" : "O-O"));
 	 else
-	   sb.append(coord[0] + coord[1] 
+	   sb.append("" + coord[0] + coord[1] 
 	             + coord[2] + coord[3]);
 
 	 sb.append("\n")
