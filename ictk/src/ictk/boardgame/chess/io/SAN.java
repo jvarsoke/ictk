@@ -278,7 +278,7 @@ public class SAN extends ChessMoveNotation {
                    : pieceToChar(m.getPromotion());
        
          if (m.isCastleKingside())
-	    sb.append(" O-O");
+	    sb.append("O-O");
 	 else if (m.isCastleQueenside())
 	    sb.append("O-O-O");
 	 else {
