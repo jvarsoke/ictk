@@ -157,10 +157,12 @@
 	 force="yes"
 	 >
       </xslt>
-      <concat>
+      <!-- genfiles.log can be used to later delete the generated files -->
+      <concat destfile="${xslt.ics.event.dir}/genfiles.log">
          <fileset dir="${xslt.ics.event.dir}"
 	          includes="*.tmp.log"
 	 />
+
       </concat>
       <!-- get rid of the useless log files -->
       <delete>
@@ -168,6 +170,12 @@
                   includes="*.tmp.log"
 	 />
       </delete>
+      <echo>Generated Files</echo>
+      <concat>
+         <fileset dir="${xslt.ics.event.dir}"
+	          includes="genfiles.log"
+	 />
+      </concat>
    </target>
 
    <!-- compile targets -->

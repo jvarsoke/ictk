@@ -52,17 +52,16 @@
    <xsl:variable name="filename" select="concat($classname,
                                                 '.java')"
 						 />
-<xsl:text>Writing: </xsl:text>
+						  
+   <!-- show the filename so we can capture in a log and delete later -->
    <xsl:value-of select="$filename"/><xsl:text>
 </xsl:text>
 
-<redirect:write select="$filename">/*
+   <redirect:write select="$filename">/*
  *  ICTK - Internet Chess ToolKit
  *  More information is available at http://ictk.sourceforge.net
  *  Copyright (C) 2003 J. Varsoke &lt;jvarsoke@ghostmanonfirst.com&gt;
  *  All rights reserved.
- *
- *  $Id$
  *
  *  This file is part of ICTK.
  *

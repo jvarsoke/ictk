@@ -63,7 +63,8 @@
                                                 $classname,
 					        '.java')"
 						/>
-<xsl:text>Writing: </xsl:text>
+
+   <!-- write out the filename so we can delete it later -->
    <xsl:value-of select="$filename"/><xsl:text>
 </xsl:text>
    <redirect:write select="$filename">/*
@@ -71,8 +72,6 @@
  *  More information is available at http://ictk.sourceforge.net
  *  Copyright (C) 2002 J. Varsoke &lt;jvarsoke@ghostmanonfirst.com&gt;
  *  All rights reserved.
- *
- *  $Id$
  *
  *  This file is part of ICTK.
  *
