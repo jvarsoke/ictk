@@ -49,6 +49,8 @@ public class AllTests {
       suite.addTest(new TestSuite(FICSSeekRemoveParserTest.class));
       suite.addTest(new TestSuite(FICSShoutParserTest.class));
       suite.addTest(new TestSuite(FICSTellParserTest.class));
+      suite.addTest(new TestSuite(FICSMoveListParserTest.class));
+      suite.addTest(new TestSuite(FICSBoardUpdateStyle12ParserTest.class));
 
       return suite;
    }
