@@ -332,8 +332,9 @@ public class PGNWriterTest extends TestCase {
 
       move = (ChessMove) san.stringToMove(board, "e4");
       anno = new ChessAnnotation();
-      anno.addNAG((short) 1);   // !
-      anno.addNAG((short) 123); // $123
+      anno.addNAG(1);   // !
+      anno.addNAG(123); // $123
+      anno.addNAG(145); // RR
       move.setAnnotation(anno);
       game.getHistory().add(move);
 

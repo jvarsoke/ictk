@@ -56,6 +56,10 @@ Legend:
 	    ChessBoard.setResign(), getResign, setDraw, getDraw, and similar 
 	    were removed from ChessMove.  You should now be using getResult().
 	    {thanks: Jermone Zago for the bug report}
+   [chess]  fixed 778731 - non-numeric NAG "RR" and "N" not parsed by PGNReader.
+   [chess]  changed NAG object methods to no longer insist on 'short'.  Also
+            changed the names of the methods to fit this change.  Several
+	    new methods also added.
 
 0.1.1 - 2003-07-20 bug fixes
    [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.

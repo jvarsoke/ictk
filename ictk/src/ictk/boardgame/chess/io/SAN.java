@@ -212,7 +212,7 @@ public class SAN extends ChessMoveNotation {
 	 if (result.end() < s.length()) {
 	    short[] nags = null;
 
-	    nags = nag.stringToShortArray(s.substring(result.end()));
+	    nags = nag.stringToNumbers(s.substring(result.end()));
 	    if (nags != null) {
 	       anno = new ChessAnnotation();
 	       for (int i=0; i < nags.length; i++)
@@ -321,7 +321,7 @@ public class SAN extends ChessMoveNotation {
 	    if (m.getAnnotation() != null
 	        && ((ChessAnnotation)m.getAnnotation()).getSuffix() != 0)
 	       sb.append(
-	         NAG.shortToSuffix(
+	         NAG.numberToString(
 		    ((ChessAnnotation)m.getAnnotation()).getSuffix()
 		    )
 	         );

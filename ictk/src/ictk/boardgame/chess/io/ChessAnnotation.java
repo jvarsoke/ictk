@@ -61,7 +61,7 @@ public class ChessAnnotation implements Annotation {
    /** add a new NumericAnnotationGlyph (NAG) to the annotation.  There is no 
     * theoretical limit on the max number of NAGs for a particular annotation.
     */
-   public void addNAG (short nag) { 
+   public void addNAG (int nag) { 
       int size = 0;
       short[] newNag = null;
 
@@ -73,7 +73,7 @@ public class ChessAnnotation implements Annotation {
 	 if (nags != null)
 	    System.arraycopy(nags, 0, newNag, 0, nags.length);
 
-	 newNag[newNag.length-1] = nag;
+	 newNag[newNag.length-1] = (short) nag;
 	 nags = newNag;
    }
 
@@ -81,11 +81,11 @@ public class ChessAnnotation implements Annotation {
    /** sets a nag to a specific value.
     *  @throws ArrayIndexOutOfBoundsException
     */
-   public void setNAG (int i, short s) {
+   public void setNAG (int i, int nag) {
       if (nags == null || nags.length >= i)
          throw new ArrayIndexOutOfBoundsException();
       else {
-         nags[i] = s;
+         nags[i] = (short) nag;
       }
    }
 
@@ -148,16 +148,13 @@ public class ChessAnnotation implements Annotation {
       int count = 0;
 
          for (int i=0; i<nags.length; i++) {
-	    if (!allNumeric)
-	       suff = NAG.shortToString(nags[i]);
+	    suff = NAG.numberToString(nags[i], allNumeric);
 
-	    if (count++ > 0)
-	       sb.append(" ");
-
-	    if (suff != null)
+	    if (suff != null) {
+	       if (count++ > 0)
+	          sb.append(" ");
 	       sb.append(suff);
-	    else
-	       sb.append("$").append(nags[i]);
+	    }
 	 }
       return sb.toString();
    }

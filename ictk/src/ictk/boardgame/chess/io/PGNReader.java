@@ -174,6 +174,7 @@ public class PGNReader extends ChessReader {
 		   * the next move (if there are exactly 2).
 		   * This is only true for { } annotations. */
       String       savedComment = null;
+      short        nag = 0;
       
 
 //NEED: should read all move data into one string (eliminate \n) until \n\n
@@ -208,6 +209,21 @@ public class PGNReader extends ChessReader {
          if (tok.charAt(0) == ' '
 	     || tok.charAt(0) == '.' 
 	     || tok.startsWith("\n")) continue;  //token delim
+
+         //NAG - numeric of symbol
+	 else if ((nag = NAG.stringToNumber(tok)) != 0) {
+	    if (Log.debug)
+	       Log.debug(DEBUG, "NAG symbol(nag): " + tok);
+
+	    if (lastMove != null) {
+	       anno = (ChessAnnotation) lastMove.getAnnotation();
+	       if (anno == null)
+		  anno = new ChessAnnotation();
+	       anno.addNAG(nag);
+	       lastMove.setAnnotation(anno);
+	    }
+	    //else skip this since it's not really legal.
+	 }
 
 	 //eol annotaiton
 	 else if (tok.startsWith(";")) {   //comment until eol
@@ -382,26 +398,6 @@ public class PGNReader extends ChessReader {
 	    } 
 	 }
 
-         //NAG
-	 else if (tok.charAt(0) == '$') {
-	    try {
-	       if (Log.debug)
-	          Log.debug(DEBUG, "NAG Token: " + tok);
-
-	       if (lastMove != null) {
-		  anno = (ChessAnnotation) lastMove.getAnnotation();
-		  if (anno == null)
-		     anno = new ChessAnnotation();
-		  anno.addNAG(Short.parseShort(tok.substring(1, tok.length())));
-		  lastMove.setAnnotation(anno);
-	       }
-	    }
-	    catch (NumberFormatException e) {
-	       if (Log.debug)
-	          Log.error(Log.USER_WARNING, "didn't understand this NAG: " 
-		     + tok);
-	    }
-	 }
 
          //start of a variation
 	 else if (tok.charAt(0) == '(') {

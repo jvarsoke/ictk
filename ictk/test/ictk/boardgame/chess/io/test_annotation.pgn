@@ -151,4 +151,9 @@ Bxf2+ 6. Kf1 Qe7 7. Nxh8 d5 8. exd5 Nd4 9. h3 Bg3
 
 1. e4 $9 *
 
+##testing non-numeric NAG
+[White "?"]
+[Black "?"]
+
+1. e4 RR *
 

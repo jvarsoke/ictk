@@ -34,10 +34,16 @@ import java.util.StringTokenizer;
 /* NAG ******************************************************************/
 /** Numeric Annotation Glyph (NAG) - this class is used to translate,
  *  and parse, NAG into verbose annotations.  The verbose annotations
- *  can be fed by Locale specific resource bundles.
+ *  can be fed by Locale specific resource bundles.  The NAGs supported
+ *  are the offical standard NAGs, the Informant proposed NAGs (N, RR),
+ *  and the Scid NAGs (D).
+ *  <br>
+ *  NOTE: if your native language is not available and you'd like to 
+ *  contribute it please send me a translation.
  */
 public class NAG {
    //static //////////////////////////////////////////////////////////////
+   public static short MAX_NAG = 255;
    //public static final String[][] NAG_TEXT;
 
    //instance/////////////////////////////////////////////////////////////
@@ -64,8 +70,8 @@ public class NAG {
       return null;
    }
 
-   /* stringToShortArray ************************************************/
-   public static short[] stringToShortArray (String s) {
+   /* stringToNumbers **************************************************/
+   public static short[] stringToNumbers (String s) {
       if (s == null || s.equals("")) return null;
       StringTokenizer st = new StringTokenizer(s, " ", false);
       String tok = null;
@@ -80,7 +86,7 @@ public class NAG {
       while (st.hasMoreTokens()) {
          tok = st.nextToken();
 	 
-	 nag = suffixToShort(tok);
+	 nag = stringToNumber(tok);
 	 if (nag > 0) {
 	    nags[count++] = nag;
 	    nag = 0;
@@ -98,10 +104,105 @@ public class NAG {
       return nags;
    }
 
-   /* suffixToShort *****************************************************/
+   /* stringToNumber ****************************************************/
    /** converts move suffix annotations to their NAG values.
+    *
+    *  @return 0 if it is not a recognized string.
     */
-   public static short suffixToShort (String str) {
+   public static short stringToNumber (String str) {
+      short nag = 0;
+         nag = symbolToNumber(str);
+	 if (nag == 0 && str.charAt(0) == '$') {
+	    try {
+	       nag = Short.parseShort(str.substring(1));
+	    }
+	    catch (NumberFormatException e) {
+	       if (Log.debug)
+	          Log.error(Log.USER_WARNING, "NAG parsed a bad token: " 
+	          + str.substring(1));
+	    }
+	 }
+
+      return nag;
+   }
+
+   
+   /* isSuffix ************************************************************/
+   /** checks to see if the NAG is qualified to be a suffix for a move.
+    *  Such as !,?,!!,??,!?,?!.  Only an exact match should be true.
+    */
+   public static boolean isSuffix (String str) {
+      return isSuffix(symbolToNumber(str));
+   }
+
+   /* isSuffix ************************************************************/
+   /** checks to see if the NAG is qualified to be a suffix for a move.
+    *  Such as !,?,!!,??,!?,?!
+    */
+   public static boolean isSuffix (int s) {
+      boolean t = false;
+      switch (s) {
+         case 1:
+         case 2:
+         case 3:
+         case 4:
+         case 5:
+         case 6:
+	    t = true;
+	    break;
+	 default:
+	    t = false;
+      }
+      return t;
+   }
+
+   /* isSymbol **************************************************************/
+   /** checks to see if the number matches of the recognized symbols
+    *  such as !, ?!, +=, RR, D.
+    *
+    *  @return true if the String exactly matches one of the standard symbols.
+    */
+   public static boolean isSymbol (int s) {
+      boolean t = false;
+	 switch (s) {
+	    case 1:
+	    case 2:
+	    case 3:
+	    case 4:
+	    case 5:
+	    case 6:
+	    case 10:
+	    case 13:
+	    case 14:
+	    case 15:
+	    case 16:
+	    case 17:
+	    case 18:
+	    case 19:
+	    case 145:
+	    case 146:
+	    case 201:
+	       t = true;
+	       break;
+	 }
+	 return t;
+   }
+
+   /* isSymbol **************************************************************/
+   /** checks to see if the String exactly matches of the recognized symbols
+    *  such as !, ?!, +=.
+    *
+    *  @return true if the String exactly matches one of the standard symbols.
+    */
+   public static boolean isSymbol (String str) {
+      return symbolToNumber(str) != 0;
+   }
+
+   /* symbolToNumber *********************************************************/
+   /** Similar to stringToNumber() but only works for recognized symbols.
+    *  For all other NAGs and non-symbols zero is returned.
+    */
+   public static short symbolToNumber (String str) {
       short nag = 0;
          if ("!".equals(str))        nag = 1;
 	 else if ("?".equals(str))   nag = 2;
@@ -127,98 +228,75 @@ public class NAG {
          //scid specific
 	 else if ("D".equals(str))   nag = 201;
 
-	 else if (str.charAt(0) == '$') {
-	    try {
-	       nag = Short.parseShort(str.substring(1));
-	    }
-	    catch (NumberFormatException e) {
-	       if (Log.debug)
-	          Log.error(Log.USER_WARNING, "NAG parsed a bad token: " 
-	          + str.substring(1));
-	    }
+	 return nag;
+   }
+
+   /* numberToString ******************************************************/
+   /** translates the NAG number into its String representation.
+    *  This would include !, ?, +=, and $123 when appropriate.
+    */
+   public static String numberToString (int nag) {
+      return numberToString (nag, false);
+   }
+
+   /* numberToString ******************************************************/
+   /** translates the NAG number into its String representation.
+    *  This would include !, ?, +=, and $123 when appropriate.
+    *
+    *  @param allNumeric true will only return the numeric format.
+    *  @param allNumeric false will return symbols and numbers.
+    *  @return null if nag is out of range.
+    */
+   public static String numberToString (int nag, boolean allNumeric) {
+      String s = null;
+
+      //only return numeric versions of the string
+      if (allNumeric) {
+         if (nag <= MAX_NAG)
+	    s = "$" + nag;
+      }
+      //return symbols and numeric versions
+      else
+	 switch (nag) {
+	    case 1: s = "!"; break;
+	    case 2: s = "?"; break;
+	    case 3: s = "!!"; break;
+	    case 4: s = "??"; break;
+	    case 5: s = "!?"; break;
+	    case 6: s = "?!"; break;
+
+	    case 10:
+	    case 11: 
+	    case 12: s = "="; break;
+
+	    case 13: s = "~"; break;
+	    case 14: s = "+="; break;
+	    case 15: s = "=+"; break;
+	    case 16: s = "+/-"; break;
+	    case 17: s = "-/+"; break;
+	    case 18: s = "+-"; break;
+	    case 19: s = "-+"; break;
+	    case 20: s = "+-"; break;
+	    case 21: s = "-+"; break;
+
+	    case 145: s = "RR"; break;
+	    case 146: s = "N"; break;
+
+	    case 201: s = "D"; break;
+	    default:
+	       if (nag <= MAX_NAG)
+		  s = "$" + nag;
 	 }
 
-      return nag;
-   }
-
-   /* isSuffix ************************************************************/
-   /** checks to see if the NAG is qualified to be a suffix for a move.
-    *  Such as !,?,!!,??,!?,?!
-    */
-   public static boolean isSuffix (short s) {
-      boolean t = false;
-      switch (s) {
-         case 1:
-         case 2:
-         case 3:
-         case 4:
-         case 5:
-         case 6:
-	    t = true;
-	    break;
-	 default:
-	    t = false;
-      }
-      return t;
-   }
-
-   /* shortToSuffix *******************************************************/
-   /** translates the NAG number into one of six suffixes.  
-    *  Such as (!, ?, !! etc).
-    */
-   public static String shortToSuffix (short nag) {
-      String s = null;
-      switch (nag) {
-         case 1: s = "!"; break;
-	 case 2: s = "?"; break;
-	 case 3: s = "!!"; break;
-	 case 4: s = "??"; break;
-	 case 5: s = "!?"; break;
-	 case 6: s = "?!"; break;
-
-	 case 10:
-	 case 11: 
-	 case 12: s = "="; break;
-
-	 case 13: s = "~"; break;
-	 case 14: s = "+="; break;
-	 case 15: s = "=+"; break;
-	 case 16: s = "+/-"; break;
-	 case 17: s = "-/+"; break;
-	 case 18: s = "+-"; break;
-	 case 19: s = "-+"; break;
-	 case 20: s = "+-"; break;
-	 case 21: s = "-+"; break;
-
-	 case 145: s = "RR"; break;
-	 case 146: s = "N"; break;
-
-	 case 201: s = "D"; break;
-	 default:
-	    s = null;
-      }
       return s;
    }
 
-   /* shortToString *********************************************************/
-   /** @return null if there is no non-numeric representation of this NAG.
-    */
-   public static String shortToString (short nag) {
-      String s = null;
-      s = shortToSuffix(nag);
-      if (s == null)
-         s = "$" + nag;
-
-      return s;
-   }
-
-
-   /* shortToDescription ****************************************************/
+   /* numberToDescription ****************************************************/
    /** converts a NAG into its verbose string interpretation
     */
-   public String shortToDescription (short nag) {
+   public String numberToDescription (int nag) {
    //FIXME: these English descriptions will be moved to resource files
-   //       to allow for more languages.
+   //FIXME: to allow for more languages.
       String s = null;
       switch (nag) {
 	 //case 0: s = "null annotation"; break;

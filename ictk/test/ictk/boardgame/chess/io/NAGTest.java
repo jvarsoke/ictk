@@ -46,55 +46,85 @@ public class NAGTest extends TestCase {
 
    //////////////////////////////////////////////////////////////////////
    public void testVerboseString () {
-      assertTrue(nag.shortToDescription((short) 1).equals("good move"));
+      assertTrue(nag.numberToDescription((short) 1).equals("good move"));
    }
 
    //////////////////////////////////////////////////////////////////////
-   public void testSuffixString () {
-      assertTrue(nag.shortToSuffix((short) 1).equals("!"));
+   public void testNumberToString () {
+      assertTrue(nag.numberToString(1).equals("!"));
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testIsSuffixNumber () {
+      assertTrue(nag.isSuffix(1)); // !
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testIsSuffixNumberNot () {
+      assertFalse(nag.isSuffix(7));
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testIsSuffixString () {
+      assertTrue(nag.isSuffix("!?"));
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testIsSuffixStringNot () {
+      assertFalse(nag.isSuffix("N"));
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testIsSymbol () {
+      assertTrue(nag.isSymbol(145));
    }
 
    //////////////////////////////////////////////////////////////////////
    public void testString () {
-      assertTrue(nag.shortToString((short) 177).equals("$177"));
+      assertTrue(nag.numberToString(14).equals("+="));
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testStringNumeric () {
+      assertTrue(nag.numberToString(14, true).equals("$14"));
    }
 
    //////////////////////////////////////////////////////////////////////
    public void testStringReverse () {
-      nags = nag.stringToShortArray("$9");
+      nags = nag.stringToNumbers("$9");
       assertTrue(nags.length == 1);
       assertTrue(nags[0] == 9);
    }
 
    //////////////////////////////////////////////////////////////////////
-   public void testSuffixToShort () {
-      assertTrue(nag.suffixToShort("N") == 146);
+   public void testSymbolToNumber () {
+      assertTrue(nag.symbolToNumber("N") == 146);
    }
 
    //////////////////////////////////////////////////////////////////////
-   public void testShortArray () {
-      nags = nag.stringToShortArray("! +=");
+   public void testStringToNumbers () {
+      nags = nag.stringToNumbers("! +=");
       assertTrue(nags.length == 2);
       assertTrue(nags[0] == 1);
       assertTrue(nags[1] == 14);
    }
 
    //////////////////////////////////////////////////////////////////////
-   public void testShortArray2 () {
-      nags = nag.stringToShortArray("$5");
+   public void testStringToNumbersOne () {
+      nags = nag.stringToNumbers("$5");
       assertTrue(nags.length == 1);
       assertTrue(nags[0] == 5);
    }
 
    //////////////////////////////////////////////////////////////////////
-   public void testShortArray3 () {
-      nags = nag.stringToShortArray("");
+   public void testStringToNumbersEmpty () {
+      nags = nag.stringToNumbers("");
       assertTrue(nags == null);
    }
 
    //////////////////////////////////////////////////////////////////////
-   public void testShortArray4 () {
-      nags = nag.stringToShortArray("fjdkslfj32n23jdnj 3jerk32 jrker");
+   public void testStringToNumbersJunk () {
+      nags = nag.stringToNumbers("fjdkslfj32n23jdnj 3jerk32 jrker");
       assertTrue(nags == null);
    }
 }
