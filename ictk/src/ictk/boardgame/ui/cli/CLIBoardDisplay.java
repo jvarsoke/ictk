@@ -36,9 +36,49 @@ import java.io.Writer;
  */
 public interface CLIBoardDisplay extends BoardDisplay {
 
+   /* setInverse *************************************************************/
+   /** sets the display to assume the foreground is darker than the background.
+    *  This might be beneficial when using the display on a Black on White
+    *  screen.  By default all CLI Displays assume White on Black.
+    */
+   public void setInverse (boolean t);
+
+   /* isInverse *************************************************************/
+   /** checks to see if the display is assuming the foreground is darker than
+    *  the background.  For example, on a Black on White display.
+    *
+    *  @returns true if the display assumes the foreground is darker.
+    */
+   public boolean isInverse ();
+
+   /* setWriter *************************************************************/
+   /** sets the stream where the display will be sent.  Currently a
+    *  PrintWriter must be specified.
+    *  <br>
+    *  Example:
+    *  <code>
+    *     display.setWriter(new PrintWriter(System.out, true));
+    *  </code>
+    *  <br>
+    *  Note: if you're expecting output and not seeing it, make sure you
+    *  set auto-flush on for the PrintWriter.
+    */
    public void setWriter (PrintWriter out);
+
+   /* getWriter *************************************************************/
+   /** returns the Writer currently being used.  This is always a PrintWriter
+    *  with other Streams or Writers nestled inside.
+    */
    public Writer getWriter ();
+
+   /* print *****************************************************************/
+   /** prints the current board onto the Writer.
+    */
    public void print ();
+
+   /* print *****************************************************************/
+   /** prints the current specified board onto the Writer.
+    */
    public void print (Board board);
 
 }
