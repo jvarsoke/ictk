@@ -56,6 +56,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
     ** socket in nanoseconds. Setting this to 0 will peg your CPU needlessly **/
    protected int SOCKET_DELAY = 1000;
 
+   //FIXME: this stuff is WAY too server specific
    protected String LOGIN_PROMPT   = "login:",
                     PASSWD_PROMPT  = "password:",
                     CMD_PROMPT     = "\nfics% ",
@@ -67,39 +68,14 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
    //common regex phrases
    protected final static String REGEX_handle    = "([\\w]+)",
-                                 REGEX_acct_type = "(\\(\\S*\\))?",  
-                                 REGEX_rating    = "\\(\\s*([0-9+-]+[EP]?)\\)";
+                                 REGEX_acct_type = "(\\(\\S*\\))?";
 
-   //NEED: RATING - UNR  is a possiblity
+   //FIXME: RATING - UNR  is a possiblity
 
-   //colors
-   public final static char ESC = '\u001B';
-   public final static String BLACK   = "[0;30",
-                              RED     = "[0;31m",
-			      GREEN   = "[0;32m",
-			      YELLOW  = "[0;33m",
-                              BLUE    = "[0;34m",
-                              MAGENTA = "[0;35m",
-                              CYAN    = "[0;36m",
-                              WHITE   = "[0;37m",
-                              BOLD_BLACK   = "[1;30m",
-                              BOLD_RED     = "[1;31m",
-			      BOLD_GREEN   = "[1;32m",
-			      BOLD_YELLOW  = "[1;33m",
-                              BOLD_BLUE    = "[1;34m",
-                              BOLD_MAGENTA = "[1;35m",
-                              BOLD_CYAN    = "[1;36m",
-                              BOLD_WHITE   = "[1;37m",
-			      PLAIN = "[0;m";
-
-   static final protected Pattern 
-				  takebackPattern,
-				  availInfoPattern;
-
+      /** parsers for various events from the server.
+       ** The order of the parsers should be optimized by frequency
+       ** of events. */
    final protected ICSEventParser[] eventFactories;
-
-      /** Telnet connection to server */
-//   boolean loggedIn = false;
 
       /** is block_mode turned on for the server protocol. */
    boolean isBlockMode = false;
@@ -111,40 +87,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
       /** collected input yet to be processed */
    CharBuffer buffer = CharBuffer.allocate(BUFFER_SIZE);
-
-   //constructor//////////////////////////////////////////////////////////
-   static {
-      //patterns
-      takebackPattern = Pattern.compile("^("                //beginning
-                                    + REGEX_handle          //player
-				    + "\\swould like to take back\\s"
-				    + "(\\d+)"            //number of half moves
-				    + "\\shalf move\\(s\\)\\."
-				    + ")"                  //end match
-          , Pattern.MULTILINE | Pattern.DOTALL);
-
-      availInfoPattern = Pattern.compile("^("		    //beginning
-                                    + REGEX_handle          //player
-				    + REGEX_acct_type
-				    + "\\s"
-				    + "(Blitz\\s?"
-				    + REGEX_rating
-				    + ", Std\\s?"
-				    + REGEX_rating
-				    + ", Wild\\s?"
-				    + REGEX_rating
-				    + ", Light\\s?"
-				    + REGEX_rating
-				    + ", Bug\\s?"
-				    + REGEX_rating
-				    + ")?"
-				    + ".*is"
-				    + "(.+)"             //"now" or "no longer"
-				    + "\\savailable for matches\\."
-				    + ")"
-          , Pattern.MULTILINE | Pattern.DOTALL);
-   }
-
 
    //constructors/////////////////////////////////////////////////////////////
    public FICSProtocolHandler () {
@@ -392,9 +334,9 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       //sendCommand("iset block 1");
       //isBlockMode = true;
       sendCommand("set prompt", false);
-      sendCommand("set interface " + INTERFACE_NAME, false);
-      sendCommand("iset ms 1", false);
       sendCommand("set style 12", false);
+      sendCommand("iset ms 1", false);
+      sendCommand("set interface " + INTERFACE_NAME, false);
       sendCommand("set bell 0", false);
    }
 
@@ -426,14 +368,16 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
          while ((b = in.read()) != -1) {
 
-            //FIXME: diagnostics
+            //diagnostics
 	    //out of range invisible characters
 	    //10 is \n
 	    //13 is \r ?
 	    if (b!= 10 && b!=13 && (b < 32 || b > 126)) {
+	       /*
 	       String foo = "[" + b + "]";
 	       for (int z=0;z<foo.length();z++)
 		  buffer.put(foo.charAt(z));
+	       */
 	    }
 
 	    //normal character
@@ -475,7 +419,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       catch (IOException e) {
          e.printStackTrace();
       }
-      //System.out.println("FICSProtocolHandler: socket connection closed");
    }
 
    /* chunkByBlockMode *****************************************************/
@@ -592,7 +535,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       catch (IOException e) {
          e.printStackTrace();
       }
-      //System.out.println("FICSProtocolHandler: socket connection closed");
    }
 
    /* disconnect *************************************************************/
@@ -659,13 +601,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 	 }
       }
 
-      if (found) { /*no-op*/ }
-      else if ((matcher = match(takebackPattern, str)) != null)
-         sendTakeBackEvent(matcher);
-      else if ((matcher = match(availInfoPattern, str)) != null)
-         sendAvailInfoEvent(matcher);
-
-      else 
+      if (!found)
          System.out.println(str);
 
       //what's after the match?
@@ -678,6 +614,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       }
    }
 
+/*
    protected Matcher match (Pattern p, CharSequence str) {
       Matcher m = null;
       m = p.matcher(str);
@@ -687,9 +624,12 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       else 
          return null;
    }
+*/
 
    //parseResponse/////////////////////////////////////////////////////////////
-   protected void parseResponse (int id, int cmd, CharSequence str) {
+   /** <b>used for blockmode, currently disabled</b>
+    */
+   private void parseResponse (int id, int cmd, CharSequence str) {
    /*
       ICSEvent icsEvent = null;
       ICSEvent history = new FICSHistoryEvent(this);
@@ -719,35 +659,5 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
          System.out.print("BLOCK(" + id + "/" + cmd + "): " 
 	    + str.toString() + "</BLOCK>");
      */
-   }
-
-
-   //actions//////////////////////////////////////////////////////////////////
-   protected void sendConnectionEvent (Matcher m) {
-      System.out.println(ESC + BOLD_BLACK + m.group() + ESC + PLAIN);
-   }
-
-   protected void sendBoardEvent (Matcher m) {
-      System.out.println(ESC + YELLOW + m.group() + ESC + PLAIN);
-   }
-
-   protected void sendMoveListEvent (Matcher m) {
-      System.out.println(ESC + YELLOW + m.group() + ESC + PLAIN);
-      debugGroupDump(m);
-   }
-
-   protected void sendTakeBackEvent (Matcher m) {
-      System.out.println(ESC + RED + m.group() + ESC + PLAIN);
-   }
-
-   protected void sendAvailInfoEvent (Matcher m) {
-      System.out.println(ESC + BOLD_BLACK + m.group() + ESC + PLAIN);
-   }
-
-   //debug functions////////////////////////////////////////////////////////
-   private void debugGroupDump (Matcher m) {
-      for(int i=0; i<=m.groupCount(); i++) {
-         System.out.println(i + ": " + m.group(i));
-      }
    }
 }

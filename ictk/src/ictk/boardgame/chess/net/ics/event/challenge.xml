@@ -80,6 +80,10 @@
               varname="computer"
 	      functname="Computer"
 	      />
+      <member id="challenge:abuser"		typeref="boolean"
+              varname="abuser"
+	      functname="Abuser"
+	      />
 
       <!--parser-->
       <parser id="challenge:parser"
@@ -117,7 +121,7 @@ You can "accept" or "decline", or propose different parameters.
 	    \.\n
 	    (?:--\*\*\s
 	    <regexref ref="regex:fics:player"/>
-	    \sis\sa\s(computer)\s\*\*--\n)?     <!-- computer account -->
+	    \sis\san?\s(computer|abuser)\s\*\*--\n)?  <!-- computer/abuser account -->
 	    You\scan\s"accept"\sor\s"decline",\sor\spropose\sdifferent\sparameters\.
 	 </regex>
 
@@ -140,7 +144,13 @@ You can "accept" or "decline", or propose different parameters.
 
       //probably more than just "computer" here, but need to see it.
       if (m.group(12) != null) {
-         evt.setComputer(true);
+         if ("computer".equals(m.group(12)))
+            evt.setComputer(true);
+	 else if ("abuser".equals(m.group(12)))
+	    evt.setAbuser(true);
+	 else 
+	    Log.error(Log.PROG_WARNING,
+	       "unknown Challenge event alert: " + m.group(12));
       }
 	 </assignMatches>
 
@@ -186,6 +196,12 @@ You can "accept" or "decline", or propose different parameters.
          sb.append("--** ")
 	   .append(evt.getChallenger())
 	   .append(" is a computer **--\n");
+      }
+
+      if (evt.isAbuser()) {
+         sb.append("--** ")
+	   .append(evt.getChallenger())
+	   .append(" is an abuser **--\n");
       }
       
       sb.append(

@@ -30,10 +30,14 @@ import ictk.boardgame.chess.net.ics.event.*;
 
 import java.util.*;
 
+/** This class is used for XBoard like display of events from the server.
+ *  Events are color coded for easy discrimination.
+ */
 public class ANSIConsole implements ICSEventListener {
 
-   public boolean showTimestamp = true;
-   public static Calendar cal = new GregorianCalendar();
+   public boolean debug            = false;
+   protected boolean showTimestamp = true;
+   protected static Calendar cal   = new GregorianCalendar();
 
    //colors
    public final static char ESC = '\u001B';
@@ -55,22 +59,20 @@ public class ANSIConsole implements ICSEventListener {
                               BOLD_WHITE   = "[1;37m",
                               PLAIN = "[0;m";
 
-
-
+   /* icsEventDispatched ****************************************************/
    public void icsEventDispatched (ICSEvent evt) {
-//      System.out.println("DISPATCHER(" + evt.getEventType() + "): ");
       String prefix = null;
 
-       switch (evt.getEventType()) {
+      switch (evt.getEventType()) {
 
-          case ICSEvent.CHANNEL_EVENT:
-	     switch (((ICSChannelEvent) evt).getChannel()) {
-	        case 1:  prefix = ESC + CYAN; break;
-		case 85:
-		case 88: prefix = ESC + YELLOW; break;
-		default: prefix = ESC + BOLD_CYAN;
-	     }
-	     break;
+         case ICSEvent.CHANNEL_EVENT:
+	    switch (((ICSChannelEvent) evt).getChannel()) {
+	       case 1:  prefix = ESC + CYAN; break;
+	       case 85:
+	       case 88: prefix = ESC + YELLOW; break;
+	       default: prefix = ESC + BOLD_CYAN;
+	    }
+	    break;
 
 	  case ICSEvent.SHOUT_EVENT:
 	     switch (((ICSChannelEvent) evt).getChannel()) {
@@ -114,12 +116,6 @@ public class ANSIConsole implements ICSEventListener {
 	     prefix = ESC + BLUE;
 	     break;
 
-/*
-	  case ICSEvent.QTELL_EVENT:
-	     prefix = ESC + BOLD_RED;
-	     break;
-	     */
-
 	  case ICSEvent.BOARD_UPDATE_EVENT:
 	  case ICSEvent.MOVE_LIST_EVENT:
 	     prefix = ESC + YELLOW;
@@ -131,25 +127,27 @@ public class ANSIConsole implements ICSEventListener {
 	     //TODO:should probably split line like Xboard
 	     prefix = ESC + BOLD_RED;  
 	     break;
-       }
+      }
 
-       if (showTimestamp) {
-          System.out.print(ESC + BOLD_BLACK 
-	     + getTimestampAsString(evt.getTimestamp())
-	     + ESC + PLAIN);
-       }
+      if (showTimestamp) {
+         System.out.print(ESC + BOLD_BLACK 
+	    + getTimestampAsString(evt.getTimestamp())
+	    + ESC + PLAIN);
+      }
 
-       System.out.print("<" + evt.getEventType() + ">");
+      if (debug)
+         System.out.print("<" + evt.getEventType() + ">");
 
-       if (prefix != null)
-          System.out.println(prefix + evt + ESC + PLAIN);
-       else
-          System.out.println(evt);
+      if (prefix != null)
+         System.out.println(prefix + evt + ESC + PLAIN);
+      else
+         System.out.println(evt);
 
-       System.out.flush();
+      System.out.flush();
    }
 
-   public String getTimestampAsString (Date date) {
+   /* getTimestampAsString **************************************************/
+   protected String getTimestampAsString (Date date) {
       StringBuffer sb = new StringBuffer(5);
       int tmp = 0;
          cal.setTime(date);
@@ -165,5 +163,17 @@ public class ANSIConsole implements ICSEventListener {
 	 sb.append(tmp);
 
 	 return sb.toString();
+   }
+
+   /* setTimestampVisible ***************************************************/
+   public void setTimestampVisible (boolean t) {
+      showTimestamp = t;
+   }
+
+   /* isTimestampVisible ****************************************************/
+   /** shows time stamped messages. <i>default: true</i>
+    */
+   public boolean isTimestampVisible () {
+      return showTimestamp;
    }
 }
