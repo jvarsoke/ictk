@@ -171,7 +171,7 @@ public class ICSEventRouter {
    /** adding this type of listener will subscribe the listener to
     *  the following types of events for this board number:<br>
     *  type 1: board updates, moves forward and back, resignations<br>
-    *  type 2: tackback requests, draw offers, adjourn and pause requests<br>
+    *  type 2: takeback requests, draw offers, adjourn and pause requests<br>
     *  type 3: kibitzes, whispers, and board says<br>
     *  NOTE: all types must be registered independently
     */
@@ -206,6 +206,16 @@ public class ICSEventRouter {
       chSubscribers.put(key, list);
    }
 
+   /* removeChannelListener *************************************************/
+   /** removes a listener to a particular channel.
+    *
+    *  @param channelType is the EventType for this sort of channel.  For
+    *                     example: ICSEvent.CHANNEL_EVENT is for normal
+    *                     channel tells, ICSEvent.SHOUT_EVENT is for
+    *                     shouts.
+    *  @param channelNumber is number of the channel, or in the case of 
+    *                     shouts is the type of shout.
+    */
    public void removeChannelListener (int channelType,
                                    int channelNumber,
 				   ICSEventListener eh) {
@@ -221,6 +231,12 @@ public class ICSEventRouter {
          chSubscribers.put(key, list);
    }
 
+   /* isChannelExclusive ****************************************************/
+   /** are channel events for this channel only routed to this channel's
+    *  listener(s), or are they also send to the CHANNEL_EVENT listener.
+    *  This setting has no bearing on whether the defaultListener
+    *  receives the event or not.
+    */
    public void setChannelExclusive (int channelType,
                                     int channelNumber,
 				    boolean t) {
@@ -228,6 +244,12 @@ public class ICSEventRouter {
       chExclusive.put(key, ((t) ? Boolean.TRUE : Boolean.FALSE));
    }
 
+   /* isChannelExclusive ****************************************************/
+   /** are channel events for this channel only routed to this channel's
+    *  listener(s), or are they also send to the CHANNEL_EVENT listener.
+    *  This setting has no bearing on whether the defaultListener
+    *  receives the event or not.
+    */
    public boolean isChannelExclusive (int channelType,
                                       int channelNumber) {
       Integer key = new Integer(channelType * OFFSET + channelNumber);

@@ -27,6 +27,8 @@ package ictk.boardgame.chess.net.ics;
 
 import java.net.*;
 import java.io.*;
+import ictk.boardgame.chess.net.ics.event.ICSConnectionListener;
+import ictk.boardgame.chess.net.ics.event.ICSConnectionEvent;
 
 /** The generic connection object.  This handles logins, disconnects
  *  and chunking the server messages.
@@ -64,11 +66,13 @@ public abstract class ICSProtocolHandler implements Runnable {
       /** is the user logged in */
    protected boolean isLoggedIn;
 
+      /** connection listeners interested in the status of the socket */
+   protected ICSConnectionListener[] conSubscribers;
+
    //constructors//////////////////////////////////////////////////////////////
    public ICSProtocolHandler () {
       thread = new Thread(this);
    }
-
 
    //assessors-mutators////////////////////////////////////////////////////////
    /* setHandle **************************************************************/
@@ -165,7 +169,7 @@ public abstract class ICSProtocolHandler implements Runnable {
    public boolean isConnected () {
       if (socket == null)
          return false;
-      return socket.isConnected();
+      return socket.isClosed();
    }
 
    /* isLoggedIn *************************************************************/
@@ -201,4 +205,40 @@ public abstract class ICSProtocolHandler implements Runnable {
    abstract public void sendCommand (String cmd);
    abstract public void sendCommand (String cmd, boolean echo);
 
+   /* addConnectionListener *************************************************/
+   public void addConnectionListener (ICSConnectionListener listener) {
+      ICSConnectionListener[] tmp = null;
+
+      if (conSubscribers == null) {
+         tmp = new ICSConnectionListener[1];
+         tmp[0] = listener;
+      }
+      else {
+         tmp = new ICSConnectionListener[conSubscribers.length+1];
+         System.arraycopy(conSubscribers, 0, tmp, 0, conSubscribers.length);
+         tmp[conSubscribers.length] = listener;
+      }
+      conSubscribers = tmp;
+   }
+
+   /* removeConnectionListener **********************************************/
+   public void removeConnectionListener (ICSConnectionListener listener) {
+      ICSConnectionListener[] tmp = null;
+
+      if (conSubscribers != null && conSubscribers.length > 1) {
+         tmp = new ICSConnectionListener[conSubscribers.length - 1];
+         int count = 0;
+         for (int i=0; i < conSubscribers.length; i++)
+            if (conSubscribers[i] != listener)
+               tmp[count++] = conSubscribers[i];
+      }
+      conSubscribers = tmp;
+   }
+
+   /* dispatchConnectionEvent ***********************************************/
+   public void dispatchConnectionEvent (ICSConnectionEvent evt) {
+      if (conSubscribers != null)
+         for (int i=0; i<conSubscribers.length; i++)
+	    conSubscribers[i].connectionStatusChanged(evt);
+   }
 }

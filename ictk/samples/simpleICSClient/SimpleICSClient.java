@@ -33,13 +33,17 @@
  * @author  jvarsoke
  */
 
+import java.util.Date;
+
 import ictk.boardgame.chess.net.ics.ui.cli.ANSIConsole;
 import ictk.boardgame.chess.net.ics.ICSProtocolHandler;
 import ictk.boardgame.chess.net.ics.ICSEventRouter;
 import ictk.boardgame.chess.net.ics.fics.FICSProtocolHandler;
 import ictk.boardgame.chess.net.ics.event.ICSEvent;
+import ictk.boardgame.chess.net.ics.event.ICSConnectionListener;
+import ictk.boardgame.chess.net.ics.event.ICSConnectionEvent;
 
-public class SimpleICSClient {
+public class SimpleICSClient implements ICSConnectionListener {
    String handle;
    String passwd;
 
@@ -55,6 +59,8 @@ public class SimpleICSClient {
       this.passwd = passwd;
 
       ics = new FICSProtocolHandler();
+      ics.addConnectionListener(this);
+
       ansiConsole = new ANSIConsole();
 
       ICSEventRouter router = ics.getEventRouter();
@@ -99,6 +105,18 @@ public class SimpleICSClient {
 
     public void setVisible (boolean t) {
        commandLine.setVisible(t);
+    }
+
+    public void connectionStatusChanged (ICSConnectionEvent evt) {
+       ICSProtocolHandler conn = evt.getConnection();
+
+       if (!conn.isConnected()) {
+          System.err.println("Connection Terminated: " + new Date());
+          System.exit(0);
+       }
+       else {
+          System.err.println("Connection Live but received event: " + evt);
+       }
     }
 
     /**

@@ -267,11 +267,8 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
        catch (IOException e) {
           e.printStackTrace();
        }
-       System.err.println("FICSProtocolHandler: run end.");
-       buffer.rewind();
-       System.out.print(buffer.toString());
-       System.out.flush();
-       System.err.println(new Date());
+       //FIXME: might want to differentiate between bad end and normal end
+       dispatchConnectionEvent(new ICSConnectionEvent(this));
    }
 
    /* doLogin ****************************************************************/
@@ -521,7 +518,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       catch (IOException e) {
          e.printStackTrace();
       }
-      System.out.println("FICSProtocolHandler: socket connection closed");
+      //System.out.println("FICSProtocolHandler: socket connection closed");
    }
 
    /* chunkByBlockMode *****************************************************/
@@ -636,7 +633,7 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       catch (IOException e) {
          e.printStackTrace();
       }
-      System.out.println("FICSProtocolHandler: socket connection closed");
+      //System.out.println("FICSProtocolHandler: socket connection closed");
    }
 
    /* disconnect *************************************************************/

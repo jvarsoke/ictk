@@ -23,15 +23,21 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package ictk.boardgame.chess.net.ics;
+package ictk.boardgame.chess.net.ics.event;
 
-import java.io.PrintStream;
+import ictk.boardgame.chess.net.ics.ICSProtocolHandler;
 
-public class ICSErrorLog {
-   public static PrintStream out = System.err;
-   
+/* ICSConnectionEvent *******************************************************/
+/** Contains info on the connection status and which connection generated 
+ *  this event.
+ */
 
-   public static void report (String mesg) {
-      out.println(mesg);
+public class ICSConnectionEvent {
+   protected ICSProtocolHandler connection;
+
+   public ICSConnectionEvent (ICSProtocolHandler con) {
+      connection = con;
    }
+
+   public ICSProtocolHandler getConnection () { return connection; }
 }
