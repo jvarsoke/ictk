@@ -1,0 +1,46 @@
+<body>
+<p class="bodyFont"> <span class="heading">Summary:</span> The Internet Chess 
+  ToolKit is a Java based set of libraries and widgets useful for performing common 
+  tasks such as reading SAN, PGN, FEN, generating legal moves, connecting to online chess server (future), and GUI widgets (future). The net libraries 
+  convert ICS (Internet Chess Server) output into java events. This library is 
+  licensed under the <a href="http://www.fsf.org/licenses/gpl.html">GPL v2</a>.</p>
+<p><span class="heading">About:</span> <span class="bodyFont">The purpose of the 
+  Internet Chess ToolKit is to provide an extensible library to facilitate the 
+  development of internet server clients, bots, training programs, peer-to-peer 
+  players, and and various other programs useful for the game player. The library 
+  was designed with a high level of abstraction and utilization of object oriented 
+  design patterns to make it extensible; The model set up should allow for implementations 
+  of many games besides Chess, which is the main focus of this library. Such other 
+  games might include chess variants like BugHouse, or completely different games 
+  like scrabble and the Chinese game of Go. Another goal of the library is ease 
+  of use. A lot of effort has gone into comprehensive documentation and providing 
+  sensible names for methods, as well as providing many convenience methods.</span></p>
+<p class="bodyFont">The goal of this library has never been to facilitate the 
+  development of engines. The amount of objects created, and the delegation of 
+  legal move generation to each of the pieces is not conducive to the efficiency 
+  required to make a competitive engine. Of course if speed is not a goal of your 
+  engine it might be interesting to use this library. All that's really needed 
+  is an evaluation routine to chose which of the legal moves the computer prefers.</p>
+<p class="bodyFont">Much of this library is dedicated to providing support for 
+  accepted game notation formats such as <a href="http://www.yacdb.com/pgn/pgn_lidx.htm">PGN</a> 
+  (a standard game history notation) and FEN (a position notation). In later releases 
+  the library will support less conventional notations such as <a href="http://scid.sourceforge.net">Scid</a> 
+  databases, <a href="http://www.enpassant.dk/chess/palview/enhancedpgn.htm">XPGN</a>, 
+  <a href="http://www.saremba.de/chessgml/">ChessGML</a> and others (if anyone has the specs on the current <a href="http://www.chessbase.com">ChessBase</a> 
+  format please email me). As much as is possible the library also tries to support 
+  internationalization, with priority on presentation and then on archival.</p>
+<p class="bodyFont">The net libraries enable programs to connect to internet game 
+  playing servers. The primary focus at this point is on establishing support 
+  for <a href="http://www.freechess.org">FICS</a> (a free as in beer server), 
+  but later versions will also support <a href="http://www.chessclub.com">ICC</a> 
+  (a pay server similar to FICS). The main purpose of the library is to remove 
+  the grunt work and screen-scraping tedium from the developer by translating 
+  all ICS output into Java event objects. In general you connect to the server 
+  and then objects register to listen for different types of events. All the data 
+  has already been parsed for you; all you need do is make some sort of use of 
+  it. Unfortunately, there are <em>many</em> different ICS events, but over time 
+  ictk hopes to support them all.</p>
+<p class="bodyFont">GUI widgets and other commonly useful objects will be added 
+  to the library as well, however this task is very low priority at the moment. 
+  Contributions in this area are more than welcome.</p>
+</body>
