@@ -51,6 +51,8 @@ public interface Game {
     */
    public GameInfo getGameInfo ();
 
+   public void setGameInfo (GameInfo gi);
+
    /* getHistory *************************************************************/
    /** returns the move history for the entire game.  You need to use this 
     *  object to add moves to the game and navigate through the game's
@@ -58,14 +60,17 @@ public interface Game {
     */
    public History getHistory ();
 
+   public void setHistory (History history);
+
    /* getCurrentResult *******************************************************/
    /** returns the current status of this Game.
     */
    public Result getCurrentResult ();
 
-
    /* getResult **************************************************************/
    /** returns file final result of the game on the main line.
     */
    public Result getResult ();
+
+   public void setResult (Result result);
 }

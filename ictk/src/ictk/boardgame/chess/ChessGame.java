@@ -78,9 +78,18 @@ public class ChessGame implements SingleBoardGame {
 
    public GameInfo getGameInfo () { return gameInfo; }
 
+   public void setGameInfo (GameInfo gi) { gameInfo = (ChessGameInfo) gi; }
+
    public History getHistory () { return history; }
 
    public Board getBoard () { return board; }
+
+   public void setResult (Result result) { 
+      Move m = history.getFinalMove(true);
+      m.setResult(result);
+      if (gameInfo != null)
+         gameInfo.setResult(result);
+   }
 
    /* getPlayerToMove *******************************************************/
    /** returns 0 if it is White to move, 1 if Black to move.
