@@ -45,38 +45,42 @@ public abstract class ICSEvent {
    public static final long   DEBUG = Log.ICSEvent;
    public static final int    
                               UNKNOWN_EVENT                =  0,
+
 			      BOARD_UPDATE_EVENT           =  1,
-			      CHANNEL_EVENT                =  2,
-			      SHOUT_EVENT                  =  3,
+			      GAME_CREATED_EVENT           =  2,
+			      GAME_RESULT_EVENT            =  3,
+			      GAME_NOTIFICATION_EVENT      =  4,
+			      TAKEBACK_REQUEST_EVENT       =  5,
 
-   			      SEEK_AD_EVENT                =  4,
-			      SEEK_REMOVE_EVENT            =  5,
 
-			      TELL_EVENT                   =  6,
-			      SAY_EVENT                    =  7,
+			      CHANNEL_EVENT                =  6,
+			      SHOUT_EVENT                  =  7,
+			      TOURNAMENT_CHANNEL_EVENT     =  8,
 
-			      KIBITZ_EVENT                 =  8,
-			      WHISPER_EVENT                =  9,
+			      TELL_EVENT                   =  9,
+			      SAY_EVENT                    = 10,
 
-			      QTELL_EVENT                  = 14,
-			      AUTO_SALUTE_EVENT            = 15,
-			      MOVE_LIST_EVENT              = 16,
-			      GAME_RESULT_EVENT            = 17,
-			      MATCH_REQUEST_EVENT          = 18,
-			      TAKEBACK_REQUEST_EVENT       = 19,
-			      PLAYER_NOTIFICATION_EVENT    = 20,
-			      GAME_NOTIFICATION_EVENT      = 21,
-			      AVAIL_INFO_EVENT             = 22,
-			      USER_DEFINED_EVENT           = 23,
-   			      SEEK_AD_READABLE_EVENT       = 24,
-			      SEEK_REMOVE_READABLE_EVENT   = 25,
-			      BOARD_SAY_EVENT              = 26, 
-			      SEEK_CLEAR_EVENT             = 27,
-			      PLAYER_CONNECTION_EVENT      = 28,
-			      GAME_CREATED_EVENT           = 29,
-			      HISTORY_EVENT                = 30,
-			      TOURNAMENT_CHANNEL_EVENT     = 31,
-			      NUM_EVENTS		   = 32;
+   			      SEEK_AD_EVENT                = 11,
+			      SEEK_REMOVE_EVENT            = 12,
+   			      SEEK_AD_READABLE_EVENT       = 13,
+			      SEEK_REMOVE_READABLE_EVENT   = 14,
+			      SEEK_CLEAR_EVENT             = 15,
+
+			      KIBITZ_EVENT                 = 16,
+			      WHISPER_EVENT                = 17,
+			      BOARD_SAY_EVENT              = 18, 
+
+			      QTELL_EVENT                  = 19,
+			      AUTO_SALUTE_EVENT            = 20,
+			      MOVE_LIST_EVENT              = 21,
+			      MATCH_REQUEST_EVENT          = 22,
+			      PLAYER_NOTIFICATION_EVENT    = 23,
+			      AVAIL_INFO_EVENT             = 24,
+			      USER_DEFINED_EVENT           = 25,
+
+			      PLAYER_CONNECTION_EVENT      = 26,
+			      HISTORY_EVENT                = 27,
+			      NUM_EVENTS		   = 28;
 
       /** each event has a type for easy casting */
    protected int eventType = UNKNOWN_EVENT;

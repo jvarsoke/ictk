@@ -222,10 +222,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       this.port = port;
    }
 
-   public ICSEventRouter getRouter() {
-      return router;
-   }
-
    //methods/////////////////////////////////////////////////////////////////
    public void connect () 
       throws UnknownHostException, IOException {
