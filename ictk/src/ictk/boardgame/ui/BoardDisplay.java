@@ -34,8 +34,21 @@ import ictk.boardgame.BoardListener;
  */
 public interface BoardDisplay extends BoardListener {
 
+   /* setBoard **************************************************************/
+   /** set the Board that this Display will use as a model.
+    */
    public void setBoard (Board board);
+
+   /* getBoard **************************************************************/
+   /** returns the Board that this Display is using as a model.
+    */
    public Board getBoard ();
 
+   /* update ****************************************************************/
+   /** this refreshes the board display.  Depending on what kind of display
+    *  the implementing class is, this might do any number of different things
+    *  from printing a board to System.out in the case of a CLI or refreshing
+    *  the screen in the case of a GUI.
+    */
    public void update ();
 }

@@ -37,34 +37,11 @@ import ictk.boardgame.chess.*;
 
 public class TxChessBoardDisplayTest extends TestCase {
    TxChessBoardDisplay display;
-   ChessBoard          board, 
-                       board2;
+   ChessBoard          board;
    ChessMove           move;
-   //PrintWriter         out;
    StringWriter        swriter;
    String              str,
                        str2;
-
-   char[][] default_position={{'R','P',' ',' ',' ',' ','p','r'},
-                        {'N','P',' ',' ',' ',' ','p','n'},
-                        {'B','P',' ',' ',' ',' ','p','b'},
-                        {'Q','P',' ',' ',' ',' ','p','q'},
-                        {'K','P',' ',' ',' ',' ','p','k'},
-                        {'B','P',' ',' ',' ',' ','p','b'},
-                        {'N','P',' ',' ',' ',' ','p','n'},
-                        {'R','P',' ',' ',' ',' ','p','r'}};
-
-/*
-      char[][] position={{'R','P',' ',' ',' ',' ','p','r'},
-                        {'N','P',' ',' ',' ',' ','p','n'},
-                        {'B','P',' ',' ',' ',' ','p','b'},
-                        {'Q','P',' ',' ',' ',' ','p','q'},
-                        {'K','P',' ',' ',' ',' ','p','k'},
-                        {'B','P','N',' ',' ',' ','p','b'},
-                        {' ','P',' ',' ',' ',' ','p','n'},
-                        {'R','P',' ',' ',' ',' ','p','r'}};
-*/
-
 
    public TxChessBoardDisplayTest (String name) {
       super(name);
@@ -77,7 +54,6 @@ public class TxChessBoardDisplayTest extends TestCase {
 
    public void tearDown () {
       board = null;
-      board2 = null;
       move = null;
       swriter = null;
       str = null;
@@ -87,22 +63,318 @@ public class TxChessBoardDisplayTest extends TestCase {
    }
 
    //////////////////////////////////////////////////////////////////////
-   public void testSetPositionDataReset () {
+   public void testDefaultInitialPosition () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "8   r n b q k b n r \n"
-	      + "7   p p p p p p p p \n"
-	      + "6   #   #   #   #   \n"
-	      + "5     #   #   #   # \n"
-	      + "4   #   #   #   #   \n"
-	      + "3     #   #   #   # \n"
-	      + "2   P P P P P P P P \n"
-	      + "1   R N B Q K B N R \n"
+	 str2 = "8   r n b q k b n r\n"
+	      + "7   p p p p p p p p\n"
+	      + "6   #   #   #   #  \n"
+	      + "5     #   #   #   #\n"
+	      + "4   #   #   #   #  \n"
+	      + "3     #   #   #   #\n"
+	      + "2   P P P P P P P P\n"
+	      + "1   R N B Q K B N R\n"
 	      + "\n"
-	      + "    A B C D E F G H \n"
+	      + "    A B C D E F G H\n"
 	      ;
 
 
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testDefaultInitialPositionFlipped () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "1   R N B K Q B N R\n"
+	      + "2   P P P P P P P P\n"
+	      + "3   #   #   #   #  \n"
+	      + "4     #   #   #   #\n"
+	      + "5   #   #   #   #  \n"
+	      + "6     #   #   #   #\n"
+	      + "7   p p p p p p p p\n"
+	      + "8   r n b k q b n r\n"
+	      + "\n"
+	      + "    H G F E D C B A\n"
+	      ;
+
+
+         display.setWhiteOnBottom(false);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testNoCoordinates () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "r n b q k b n r\n"
+	      + "p p p p p p p p\n"
+	      + "#   #   #   #  \n"
+	      + "  #   #   #   #\n"
+	      + "#   #   #   #  \n"
+	      + "  #   #   #   #\n"
+	      + "P P P P P P P P\n"
+	      + "R N B Q K B N R\n"
+	      ;
+
+         display.setVisibleCoordinates(display.NO_COORDINATES);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testTopCoordinates () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "A B C D E F G H\n"
+	      + "\n"
+	      + "r n b q k b n r\n"
+	      + "p p p p p p p p\n"
+	      + "#   #   #   #  \n"
+	      + "  #   #   #   #\n"
+	      + "#   #   #   #  \n"
+	      + "  #   #   #   #\n"
+	      + "P P P P P P P P\n"
+	      + "R N B Q K B N R\n"
+	      ;
+
+         display.setVisibleCoordinates(display.TOP_COORDINATES);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testRightCoordinates () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "r n b q k b n r  8\n"
+	      + "p p p p p p p p  7\n"
+	      + "#   #   #   #    6\n"
+	      + "  #   #   #   #  5\n"
+	      + "#   #   #   #    4\n"
+	      + "  #   #   #   #  3\n"
+	      + "P P P P P P P P  2\n"
+	      + "R N B Q K B N R  1\n"
+	      ;
+
+         display.setVisibleCoordinates(display.RIGHT_COORDINATES);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testBottomCoordinates () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "r n b q k b n r\n"
+	      + "p p p p p p p p\n"
+	      + "#   #   #   #  \n"
+	      + "  #   #   #   #\n"
+	      + "#   #   #   #  \n"
+	      + "  #   #   #   #\n"
+	      + "P P P P P P P P\n"
+	      + "R N B Q K B N R\n"
+	      + "\n"
+	      + "A B C D E F G H\n"
+	      ;
+
+         display.setVisibleCoordinates(display.BOTTOM_COORDINATES);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testLeftCoordinates () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "8  r n b q k b n r\n"
+	      + "7  p p p p p p p p\n"
+	      + "6  #   #   #   #  \n"
+	      + "5    #   #   #   #\n"
+	      + "4  #   #   #   #  \n"
+	      + "3    #   #   #   #\n"
+	      + "2  P P P P P P P P\n"
+	      + "1  R N B Q K B N R\n"
+	      ;
+
+         display.setVisibleCoordinates(display.LEFT_COORDINATES);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testAllCoordinates () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 =
+	        "    A B C D E F G H\n"
+	      + "\n"
+	      + "8   r n b q k b n r   8\n"
+	      + "7   p p p p p p p p   7\n"
+	      + "6   #   #   #   #     6\n"
+	      + "5     #   #   #   #   5\n"
+	      + "4   #   #   #   #     4\n"
+	      + "3     #   #   #   #   3\n"
+	      + "2   P P P P P P P P   2\n"
+	      + "1   R N B Q K B N R   1\n"
+	      + "\n"
+	      + "    A B C D E F G H\n"
+	      ;
+
+
+         display.setVisibleCoordinates(display.TOP_COORDINATES 
+	                               | display.RIGHT_COORDINATES
+				       | display.BOTTOM_COORDINATES
+				       | display.LEFT_COORDINATES);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testCompact () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "8 rnbqkbnr\n"
+	      + "7 pppppppp\n"
+	      + "6 # # # # \n"
+	      + "5  # # # #\n"
+	      + "4 # # # # \n"
+	      + "3  # # # #\n"
+	      + "2 PPPPPPPP\n"
+	      + "1 RNBQKBNR\n"
+	      + "\n"
+	      + "  ABCDEFGH\n"
+	      ;
+
+         display.setCompact(true);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+   //////////////////////////////////////////////////////////////////////
+   public void testCompactAllCoordinates () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 =
+	        "  ABCDEFGH\n"
+	      + "\n"
+	      + "8 rnbqkbnr 8\n"
+	      + "7 pppppppp 7\n"
+	      + "6 # # # #  6\n"
+	      + "5  # # # # 5\n"
+	      + "4 # # # #  4\n"
+	      + "3  # # # # 3\n"
+	      + "2 PPPPPPPP 2\n"
+	      + "1 RNBQKBNR 1\n"
+	      + "\n"
+	      + "  ABCDEFGH\n"
+	      ;
+
+         display.setVisibleCoordinates(display.TOP_COORDINATES 
+	                               | display.RIGHT_COORDINATES
+				       | display.BOTTOM_COORDINATES
+				       | display.LEFT_COORDINATES);
+         display.setCompact(true);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testLowerCaseCoords () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "8   r n b q k b n r\n"
+	      + "7   p p p p p p p p\n"
+	      + "6   #   #   #   #  \n"
+	      + "5     #   #   #   #\n"
+	      + "4   #   #   #   #  \n"
+	      + "3     #   #   #   #\n"
+	      + "2   P P P P P P P P\n"
+	      + "1   R N B Q K B N R\n"
+	      + "\n"
+	      + "    a b c d e f g h\n"
+	      ;
+
+
+         display.setLowerCaseCoordinates(true);
+	 display.print();
+	 str = swriter.toString();
+	 assertTrue (str.equals(str2));
+      }
+      finally {
+         Log.removeMask(ChessBoard.DEBUG);
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testInverse () {
+      //Log.addMask(ChessBoard.DEBUG);
+      try {
+	 str2 = "8   r n b q k b n r\n"
+	      + "7   p p p p p p p p\n"
+	      + "6     #   #   #   #\n"
+	      + "5   #   #   #   #  \n"
+	      + "4     #   #   #   #\n"
+	      + "3   #   #   #   #  \n"
+	      + "2   P P P P P P P P\n"
+	      + "1   R N B Q K B N R\n"
+	      + "\n"
+	      + "    A B C D E F G H\n"
+	      ;
+
+
+         display.setInverse(true);
 	 display.print();
 	 str = swriter.toString();
 	 assertTrue (str.equals(str2));

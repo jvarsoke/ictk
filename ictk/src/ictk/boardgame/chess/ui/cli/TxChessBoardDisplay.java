@@ -42,11 +42,36 @@ import java.io.*;
  */
 public class TxChessBoardDisplay implements CLIChessBoardDisplay,
                                             BoardListener {
+
+      /** where to send the board display */
    protected PrintWriter out = new PrintWriter(System.out, true);
+
+      /** the chessboard model this object is the view of */
    protected ChessBoard board;
 
+      /** notation is used to help localize board piece characters */
    protected ChessMoveNotation notation = new SAN();
 
+      /** is the board currently oriented so white is on the bottom */
+   protected boolean whiteOnBottom = true,
+
+      /** should the board re-orient itself so the player to move is always
+       ** on the bottom. */
+                     sideToMoveOnBottom = false;
+
+      /** mask for which coordinates should be visible.
+       ** Defaults to LEFT and BOTTOM */
+   protected int coordMask = LEFT_COORDINATES | BOTTOM_COORDINATES;
+
+      /** should the output use as few spaces as possible? */
+   protected boolean compact,
+      /** if true, then a black on white screen will be assumed */
+                     inverse,
+      /** present coordinates in lowercase */
+		     lowercaseCoords;
+
+
+   //constructors/////////////////////////////////////////////////////////////
    public TxChessBoardDisplay (ChessBoard board, OutputStream out) {
       this(board, new PrintWriter(out));
    }
@@ -65,70 +90,217 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
    }
 
    //BoardListenerd Interface/////////////////////////////////////////////////
-   public void boardUpdate (Board b, int code) {
-      update();
+   public void boardUpdate (Board b, int code) { 
+      update(); 
    }
+   //instance/////////////////////////////////////////////////////////////////
+
+   /* setCompact ************************************************************/
+   /** setting this attribute to true will eliminate needless space 
+    *  characters in the output.
+    *  <br>
+    *  Default: false.
+    */
+   public void setCompact (boolean t) { compact = t; }
+
+   /* isCompact *************************************************************/
+   /** test if this display is in Compact mode 
+    */
+   public boolean isCompact () { return compact; }
 
    //BoardDisplay Interface///////////////////////////////////////////////////
-   public void setBoard (Board board) {
-      this.board = (ChessBoard) board;
-   }
+   public void setBoard (Board board) { this.board = (ChessBoard) board; }
 
    public Board getBoard () { return board; }
 
-   public void update () {
-      print();
-   }
+   public void update () { print(); }
 
-   //CLIBoardDisplay Interface////////////////////////////////////////////////
+   //ChessBoardDisplay Interface//////////////////////////////////////////////
+   public void setWhiteOnBottom (boolean t) { whiteOnBottom = t; }
+
+   public boolean isWhiteOnBottom () { return whiteOnBottom; }
+
+   public void setSideToMoveOnBottom (boolean t) { sideToMoveOnBottom = t; }
+
+   public boolean getSideToMoveOnBottom () { return sideToMoveOnBottom; }
+
+   public void setVisibleCoordinates (int mask) { coordMask = mask; }
+
+   public int getVisibleCoordinates () { return coordMask; }
+
+   public void setLowerCaseCoordinates (boolean t) { lowercaseCoords = t; }
+
+   public boolean isLowerCaseCoordinates () { return lowercaseCoords; }
+
+   //CLIBoardDisplay Interface/////////////////////////////////////////////////
+
+   /* getInverse *************************************************************/
+   public void setInverse (boolean t) { inverse = t; }
+
+   /* isInverse **************************************************************/
+   public boolean isInverse () { return inverse; }
+
+   /* setWriter **************************************************************/
    public void setWriter (PrintWriter out) {
       this.out = out;
    }
 
+   /* getWriter **************************************************************/
    public Writer getWriter () {
       return out;
    }
 
+   /* print ******************************************************************/
    public void print () {
       print(board);
    }
 
+   /* print ******************************************************************/
    public void print (Board board) {
-      ChessBoard b = (ChessBoard) board;
-      Square sq = null;
-      StringBuffer last_line = new StringBuffer(20);
-      char c = ' ';
-      int r, f;
+      ChessBoard   b = (ChessBoard) board;
+      Square       sq = null;
+      StringBuffer last_line = null; 
+      char         c = ' ';
+      int          r, 
+                   f,
+		   x; //dummy var to satisfy the picky java compiler
+      boolean top = (coordMask & TOP_COORDINATES) == TOP_COORDINATES,
+              left = (coordMask & LEFT_COORDINATES) == LEFT_COORDINATES,
+	      right = (coordMask & RIGHT_COORDINATES) == RIGHT_COORDINATES,
+	      bottom = (coordMask & BOTTOM_COORDINATES) == BOTTOM_COORDINATES,
+	      flipped = (!whiteOnBottom && !sideToMoveOnBottom)
+	                || (b.isBlackMove() && sideToMoveOnBottom);
+      char blackSquare = ((inverse) ? '#' : ' '),
+           whiteSquare = ((inverse) ? ' ' : '#');
 
-         last_line.append("\n    ");
-         for (r=b.MAX_RANK, f=1; r >= 1; r--,f=1) {
+         //make the top coordinate line
+	 if (top) {
+	    if (left) {
+	       out.print("  ");
+	       if (!compact)
+	          out.print("  ");
+	    }
+
+            r = 1;
+            for (f=((flipped) ? b.MAX_FILE : 1); 
+	         ((flipped) ? f >= 1 : f <= b.MAX_FILE); 
+		 x = ((flipped) ? f-- : f++)) {
+
+	       sq = b.getSquare(f, r);
+
+               if (lowercaseCoords)
+	          out.print(Character.toLowerCase(
+		     notation.fileToChar(sq.getFile())));
+	       else
+		  out.print(Character.toUpperCase(
+		     notation.fileToChar(sq.getFile())));
+
+	       if (!compact && f != ((flipped) ? 1 : b.MAX_FILE))
+	          out.print(" ");
+	    }
+	    out.println();
+	    out.println();
+	 }
+        
+	 //setup bottom coordinate line
+         if (bottom) {
+	    last_line = new StringBuffer((compact) ? 10 : 20);
+	    last_line.append("\n");  
+	    if (left) {
+	       last_line.append("  ");
+               if (!compact) 
+	          last_line.append("  ");
+	    }
+	 }
+	 
+
+         //loop through ranks then files
+	 //forward or back, depending on flip
+         for (r=((flipped) ? 1 : b.MAX_RANK), 
+	      f=((flipped) ? b.MAX_FILE : 1); 
+	      ((flipped) ? r <= b.MAX_RANK : r >= 1); 
+	      x = ((flipped) ? r++ : r--)) {
+
 	    sq = b.getSquare(f, r);
-            out.print(notation.rankToChar(sq.getRank()));
-	    out.print("   ");
 
+            //setup the left coordinates
+	    if (left) {
+	       if (lowercaseCoords) 
+                  out.print(Character.toLowerCase(
+		     notation.rankToChar(sq.getRank())));
+	       else
+                  out.print(Character.toUpperCase(
+		     notation.rankToChar(sq.getRank())));
 
-            for (f=1; f <= b.MAX_FILE; f++) {
+	       out.print(" ");
+
+	       if ((top || bottom) && !compact)
+	          out.print(" ");
+
+	       if (!compact)
+	          out.print(" ");
+	    }
+
+            //loop through the Rank
+            for (f=((flipped) ? b.MAX_FILE : 1); 
+	         ((flipped) ? f >= 1 : f <= b.MAX_FILE); 
+		 x = ((flipped) ? f-- : f++)) {
+
 	       sq = b.getSquare(f, r);
                if (sq.isOccupied()) {
                    c = notation.pieceToChar((ChessPiece) sq.getPiece());
                    if (((ChessPiece)sq.getPiece()).isBlack())
                       c = Character.toLowerCase(c);
                    out.print(c);
-		   out.print(" ");
                }
                else
                   if (sq.isBlack())
-                     out.print("  ");
+                     out.print(blackSquare);
                   else
-                     out.print("# ");
-               if (r==b.MAX_RANK)
-                  last_line.append(Character.toUpperCase(
-                     notation.fileToChar(sq.getFile()))) 
-		     .append(" ");
-            }
-            out.println();
+                     out.print(whiteSquare);
 
+	       if (!compact && f != ((flipped) ? 1 : b.MAX_FILE))
+	          out.print(" ");
+
+               if (bottom && r == ((flipped) ? 1 : b.MAX_RANK)) {
+	          if (lowercaseCoords) 
+		     last_line.append(Character.toLowerCase(
+			notation.fileToChar(sq.getFile())));
+		  else
+		     last_line.append(Character.toUpperCase(
+			notation.fileToChar(sq.getFile())));
+
+		  if (!compact && f != ((flipped) ? 1 : b.MAX_FILE))
+		     last_line.append(" ");
+	       }
+
+            }
+
+	    if (right) {
+	       out.print(" ");
+
+	       if ((top || bottom) && !compact)
+	          out.print(" ");
+
+	       if (!compact)
+	          out.print(" ");
+
+	       if (lowercaseCoords) 
+                  out.print(Character.toLowerCase(
+		     notation.rankToChar(sq.getRank())));
+	       else
+                  out.print(Character.toUpperCase(
+		     notation.rankToChar(sq.getRank())));
+	    }
+
+	    if (flipped) 
+	       f=b.MAX_FILE;
+	    else
+	       f=1;
+
+            out.println();
          }
-         out.println(last_line.toString());
+         if (bottom) 
+	    out.println(last_line.toString());
    }
 }

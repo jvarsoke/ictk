@@ -82,4 +82,14 @@ public interface ChessBoardDisplay {
    /** returns the mask of which coordinates are set visible for this board.
     */
    public int getVisibleCoordinates ();
+
+   /* setLowerCaseCoordinates ************************************************/
+   /** sets the coordinates to appear in lowercase.
+    */
+   public void setLowerCaseCoordinates (boolean t);
+
+   /* isLowerCaseCoordinates *************************************************/
+   /** returns if the coordinates are currently set to appear in lowercase.
+    */
+   public boolean isLowerCaseCoordinates ();
 }
