@@ -90,3 +90,19 @@ b1=Q 35. Q8f6 c2 36. h8=Q c1=Q 37. Qh6f8 Qe4+
 5. Nxe4 $13 Be7 $14 6. Bxf6 $15 gxf6 $16 7. g3 $17 f5 $18 8. Nc3 $19 Bf6 $22 
 9. Nge2 $32 Nc6 $36 10. d5 $40 $44 exd5 $132 11. Nxd5 $138 Bxb2 $140 
 12. Bg2 $142 O-O $144 13. O-O Be5 1-0
+
+##Double CR (\n\n) should not terminate read.
+##bug: 791572
+[White "A"]
+[Black "B"]
+[Result "*"]
+
+1. e4 d6 
+
+2. d4 Nf6 
+
+
+3. Nc3 c6 4. f4 Qa5 
+
+5. Bd2 Qb6 *
+

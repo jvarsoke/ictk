@@ -2,3 +2,29 @@
 ## Once the bug is found and killed, the data here should be moved
 ## to the appropriate test_*.pgn file to become a permenent 
 ## member of the regression test suite.
+[Event "ICS unrated blitz match"]
+[Site "chessclub.com"]
+[Date "2003.07.03"]
+[Round "-"]
+[White "Franck"]
+[Black "guest2212"]
+[Result "1-0"]
+[Annotator "Crafty v19.0"]
+
+1.e4 e6 2.d4 d5 3.e5 c5 4.c3 cxd4 5.cxd4 Nc6 6.Nf3 Nge7
+7.Bd3 Qb6
+( {10:+0.68} 7...Qb6 8.Nc3 Bd7 9.Bc2 Nb4 10.O-O
+Qd8 11.Bf4 Nxc2 12.Qxc2 += )
+
+( {10:-0.02} 7...Nf5 8.Bb5 Qb6 9.Bxc6+ Qxc6
+10.O-O Bd7 11.g4 Ne7 12.Nc3
+Rc8 = )
+8.O-O Bd7 9.Bc2 g6 10.a3 Bg7 11.b4 O-O 12.Nc3 f6 13.Be3
+( {10:-0.79} 13.Be3 fxe5 14.dxe5 Qd8 15.Bd4 Nxd4
+16.Qxd4 Nc6 17.Qe3 Qc7
+18.Rfe1 -/+ )
+
+( {10:-0.01} 13.exf6 Bxf6 14.Be3 Rac8 15.Bh6 Rf7
+16.Na4 Qc7 17.Nc5 Nd8
+18.Nxd7 Qxc2 19.Nxf6+ Rxf6 = )
+1-0

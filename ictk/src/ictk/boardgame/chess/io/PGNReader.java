@@ -30,8 +30,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.BufferedReader;
 import java.io.*;
-import java.util.StringTokenizer;
+import java.io.StreamTokenizer;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 import java.util.GregorianCalendar;
 import java.util.regex.*;
 import java.util.Stack;
@@ -156,17 +157,18 @@ public class PGNReader extends ChessReader {
                   IllegalMoveException,
 		  AmbiguousMoveException,
 	          IOException {
-      History     history = game.getHistory();
-      boolean     done    = false;
-      String      line    = null;
-      StringTokenizer st  = null;
-      String      tok     = null;
-      ChessMove   move    = null;
+      History     history  = game.getHistory();
+      boolean     finished = false,
+                  done     = false;
+      String      line     = null;
+      String      tok      = null,
+                  tok2     = null;
+      ChessMove   move     = null;
       ChessMove   lastMove = null;
-      int         count   = 0;  //move count
+      int         count    = 0;  //move count
       int i = 0;  //used for temp
-      ChessResult res     = null;
-      Stack       forks   = new Stack(); //fork for variations to return to
+      ChessResult res      = null;
+      Stack       forks    = new Stack(); //fork for variations to return to
       ChessAnnotation anno = null;
                   /* this is for when we have two or more annotations
 	           * in a row.  We either need to apply it to the 
@@ -174,39 +176,223 @@ public class PGNReader extends ChessReader {
 		   * the next move (if there are exactly 2).
 		   * This is only true for { } annotations. */
       String       savedComment = null;
-      short        nag = 0;
+      short        nag     = 0;
+      StreamTokenizer st   = new StreamTokenizer(this);
+      StringBuffer sb      = new StringBuffer();  //for storing comments
 
       if (Log.debug)
          Log.debug(DEBUG, "reading History");
 
-      StringBuffer sb = new StringBuffer();
+      //number parsing is on by default.  turn it off
+      st.ordinaryChars(33, 255);
+      st.wordChars(33,255);
 
-//FIXME: by spec, move list does not end with \n\n. But with final result
-//FIXME: might need to use a StreamTokenizer here.
-      while (!done && (line = readLine()) != null) {
-         if (Log.debug) 
-	    Log.debug(DEBUG, "line in: " + line);
+      //delimeters
+      st.ordinaryChar('.');  
+      st.ordinaryChar('(');  //RAV begin
+      st.ordinaryChar(')');  //RAV end
+      st.ordinaryChar('{');  //comment
+      st.ordinaryChar('}');  //comment end
+      st.ordinaryChar(';');  //comment to end of line
+      st.ordinaryChar('*');  //undefined result
 
-         if (line.startsWith("%")) continue;  //pgn ESC comment line
-	 if (line.equals("")) done = true;
-	 sb.append(line).append("\n");  //reproducing the original line
-      }
+      st.ordinaryChar('\t'); //eat these
+      st.eolIsSignificant(true); //just to eat them
 
-      //now we have whole move list in the sb
-      st = new StringTokenizer(sb.toString(), " .(){};\t\n", true);
 
-      String tok2 = null;
-      while (st != null && st.hasMoreTokens()) {
-
-         tok = st.nextToken();
+      //loop until we hit a result or see the EOF
+      while (!finished && st.nextToken() != st.TT_EOF) {
+         tok = st.sval;
 
          if (Log.debug)
 	    Log.debug(DEBUG, "token: " + tok);
 
          //delimeter token
-         if (tok.charAt(0) == ' '
-	     || tok.charAt(0) == '.' 
-	     || tok.startsWith("\n")) continue;  //token delim
+	 if (tok == null) {
+	    switch (st.ttype) {
+	       case StreamTokenizer.TT_EOL:
+	       case '.':
+	          continue;
+		  
+	       //comment until eol
+	       case ';':
+		  sb = new StringBuffer();
+
+                  st.ordinaryChar(' ');
+		  while (st.nextToken() != st.TT_EOL) {
+		     tok2 = st.sval;
+		     if (st.ttype != '\t')
+		        if (tok2 != null)
+			   sb.append(tok2);
+			else
+			   sb.append((char) st.ttype);
+		  }
+		  st.whitespaceChars(' ', ' ');
+
+		  if (Log.debug)
+		     Log.debug(DEBUG, "eol comment: {" + sb.toString() + "}");
+
+		  //set as annotation of last move
+		  //if lastMove != history.getCurrentMove() then we just started
+		  //a variation, and the comment needs to be a prenotation of
+		  //the next move we run across
+		  if (lastMove != null 
+		     && lastMove == history.getCurrentMove()) {
+		     anno = (ChessAnnotation) lastMove.getAnnotation();
+
+		     if (anno == null || anno.getComment() == null) {
+			if (anno == null)
+			   anno = new ChessAnnotation();
+			anno.setComment(sb.toString());
+			lastMove.setAnnotation(anno);
+			if (Log.debug)
+			   Log.debug(DEBUG, 
+			      "eol comment for (" +  lastMove + "): "
+			      + lastMove.getAnnotation().getComment());
+		     }
+		     else
+			anno.appendComment(" " + sb.toString());
+
+		     anno = null;
+		  }
+
+		  //keep for prenotation of next move
+		  else {
+		     savedComment = sb.toString();
+		  }
+		  break;
+
+               //internal {anno} Annotation
+	       case '{':
+		  sb = new StringBuffer();
+		  done = false;
+
+                  st.ordinaryChar(' ');
+		  while (!done && st.nextToken() != st.TT_EOF) {
+		     tok2 = st.sval;
+		     switch (st.ttype) {
+			case '}': 
+			   done = true; 
+			   break;
+			case StreamTokenizer.TT_EOL:
+			case '\t':
+			   break;
+			default:
+			   if (tok2 != null)
+			      sb.append(tok2);
+			   else
+			      sb.append((char) st.ttype);
+		     }
+		  }
+		  st.whitespaceChars(' ', ' ');
+
+		  if (Log.debug)
+		     Log.debug(DEBUG, "comment: {" + sb.toString() + "}");
+
+		  //if lastMove != history.getCurrentMove() then we just started
+		  //a variation, and the comment needs to be a prenotation of
+		  //the next move we run across
+		  if (lastMove != null 
+		     && lastMove == history.getCurrentMove()) {
+		     anno = (ChessAnnotation) lastMove.getAnnotation();
+
+		     //if this is the first annotation we've seen after the move
+		     //then it certainly belongs to the lastMove.
+		     if (anno == null || anno.getComment() == null) {
+			if (anno == null) 
+			   anno = new ChessAnnotation();
+			anno.setComment(sb.toString());
+			lastMove.setAnnotation(anno);
+			anno = null;
+		     }
+
+		     //If the lastMove already has an annotation then
+		     //this comment might belong to the next move.
+		     //If there is more than one comment between
+		     //moves. N-1 are appended to the lastMove.
+		     else {
+			if (savedComment != null)
+			   lastMove.getAnnotation().appendComment(" "
+			      + savedComment);
+			savedComment = sb.toString();
+		     }
+		  }
+		  //if there's no lastMove this must be the game comment.
+		  //It should be attached as a preNotation to the first move.
+		  else {
+		     savedComment = sb.toString();
+		  }
+		  break;
+
+	       //RAV: start of a variation
+	       case '(':
+		  //go back one move so the next history.add() will add
+		  //a variation
+		  history.prev();  
+		  forks.push(history.getCurrentMove());
+
+		  if (Log.debug)
+		     Log.debug(DEBUG, "starting variation from " 
+			+ history.getCurrentMove());
+
+		  //if we still have a comment that has no home it must go
+		  //with the last move outside the variation, not the 
+		  //prenotation of the first move in the variation.
+		  if (savedComment != null) {
+		     anno = (ChessAnnotation) lastMove.getAnnotation();
+		     if (anno == null || anno.getComment() == null) {
+			if (anno == null) 
+			   anno = new ChessAnnotation();
+			anno.setComment(savedComment);
+		     }
+		     else
+			anno.appendComment(" " + savedComment);
+		     savedComment = null;
+		  }
+		  break;
+
+	       //RAV: end of a variation
+	       case ')':
+		  ChessMove fork = (ChessMove) forks.pop();
+		  history.goTo(fork);
+
+		  if (Log.debug)
+		     Log.debug(DEBUG, "ending variation from " 
+			+ fork);
+
+		  history.next();
+
+		  //if we still have a comment that has no home it must go
+		  //with the last move in the variation and not the
+		  //prenotation of the first move outside the variation
+		  if (savedComment != null) {
+		     anno = (ChessAnnotation) lastMove.getAnnotation();
+		     if (anno == null || anno.getComment() == null) {
+			if (anno == null) 
+			   anno = new ChessAnnotation();
+			anno.setComment(savedComment);
+		     }
+		     else
+			anno.appendComment(" " + savedComment);
+		     savedComment = null;
+		  }
+
+		  //make sure we set lastMove to the mainline again
+		  lastMove = (ChessMove) history.getCurrentMove();
+		  break;
+
+	       //undecided result of game
+	       case '*':
+		  if (Log.debug)
+		     Log.debug(DEBUG, "Result token: " + tok);
+		  if (lastMove != null)
+		     lastMove.setResult(new ChessResult(ChessResult.UNDECIDED));
+		  finished = true;
+		  break;
+
+	    } //end switch
+
+	 } //end null tok
 
          //NAG - numeric of symbol
 	 else if ((nag = NAG.stringToNumber(tok)) != 0) {
@@ -223,117 +409,22 @@ public class PGNReader extends ChessReader {
 	    //else skip this since it's not really legal.
 	 }
 
-	 //eol annotaiton
-	 else if (tok.startsWith(";")) {   //comment until eol
-	    sb = new StringBuffer();
-	    done = false;
-
-	    while (!done && st.hasMoreTokens()) {
-	       tok2 = st.nextToken();
-	       if (tok2.startsWith("\n")) done = true;
-	       else if (!tok2.equals("\t"))
-	          sb.append(tok2);
-	    }
-
-	    if (Log.debug)
-	       Log.debug(DEBUG, "eol comment: {" + sb.toString() + "}");
-
-            //set as annotation of last move
-            //if lastMove != history.getCurrentMove() then we just started
-	    //a variation, and the comment needs to be a prenotation of
-	    //the next move we run across
-	    if (lastMove != null && lastMove == history.getCurrentMove()) {
-	       anno = (ChessAnnotation) lastMove.getAnnotation();
-
-	       if (anno == null || anno.getComment() == null) {
-	          if (anno == null)
-	             anno = new ChessAnnotation();
-		  anno.setComment(sb.toString());
-	          lastMove.setAnnotation(anno);
-		  if (Log.debug)
-		     Log.debug(DEBUG, "eol comment for (" +  lastMove + "): "
-		        + lastMove.getAnnotation().getComment());
-	       }
-	       else
-	          anno.appendComment(" " + sb.toString());
-
-	       anno = null;
-	    }
-
-	    //keep for prenotation of next move
-	    else {
-	       savedComment = sb.toString();
-	    }
-	 }
-
-	 //internal {anno} Annotation
-	 else if (tok.startsWith("{")) {
-	    sb = new StringBuffer();
-	    done = false;
-	    if (tok.length() > 1)
-	       sb.append(tok.substring(1, tok.length()));
-
-	    while (!done && st.hasMoreTokens()) {
-	       tok2 = st.nextToken();
-	       if (tok2.endsWith("}")) {
-	          if (tok2.length() > 1) 
-		     sb.append(tok2.substring(0, tok2.length()-1));
-	          done = true;
-	       }
-	       else if (!tok2.equals("\n") && !tok2.equals("\t"))
-	          sb.append(tok2);
-	    }
-
-	    if (Log.debug)
-	       Log.debug(DEBUG, "comment: {" + sb.toString() + "}");
-
-            //if lastMove != history.getCurrentMove() then we just started
-	    //a variation, and the comment needs to be a prenotation of
-	    //the next move we run across
-	    if (lastMove != null && lastMove == history.getCurrentMove()) {
-	       anno = (ChessAnnotation) lastMove.getAnnotation();
-
-	       //if this is the first annotation we've seen after the move
-	       //then it certainly belongs to the lastMove.
-	       if (anno == null || anno.getComment() == null) {
-	          if (anno == null) 
-		     anno = new ChessAnnotation();
-	          anno.setComment(sb.toString());
-		  lastMove.setAnnotation(anno);
-	          anno = null;
-	       }
-
-	       //If the lastMove already has an annotation then
-	       //this comment might belong to the next move.
-	       //If there is more than one comment between
-	       //moves. N-1 are appended to the lastMove.
-	       else {
-	          if (savedComment != null)
-		     lastMove.getAnnotation().appendComment(" "
-		        + savedComment);
-		  savedComment = sb.toString();
-	       }
-	    }
-	    //if there's no lastMove this must be the game comment.
-	    //It should be attached as a preNotation to the first move.
-	    else {
-	       savedComment = sb.toString();
-	    }
-	 }
-
          //move number or Result
 	 else if (Character.isDigit(tok.charAt(0))) {
 	    if ((res = (ChessResult) notation.stringToResult(tok)) != null) {
+
+	       finished = true;
+
 	       if (Log.debug)
 	          Log.debug(DEBUG, "Result token: " + tok);
-	       done = true;
 	       if (lastMove != null) {
 		  lastMove.setResult(res);
 		  if (Log.debug) {
 		     Log.debug(DEBUG, "Result set(" + lastMove + "): " + res);
 		     ChessMove prevTmp = (ChessMove) lastMove.getPrev();
 		     if (prevTmp != null)
-		     Log.debug(DEBUG, "Result set(" + lastMove + "): " + res + " prev move: " + lastMove.getPrev().dump());
+		     Log.debug(DEBUG, "Result set(" + lastMove + "): " 
+		        + res + " prev move: " + lastMove.getPrev().dump());
 
 		  }
 	       }
@@ -341,6 +432,7 @@ public class PGNReader extends ChessReader {
 	          if (Log.debug)
 		     Log.debug(DEBUG, "Result not set; no last move");
 	    }
+	    //if it's not a result we don't do anything with the move number
 	 }
 
 	 //actual move
@@ -378,7 +470,6 @@ public class PGNReader extends ChessReader {
 		  Log.debug2(DEBUG,"From Token: " + tok);
 		  Log.debug2(DEBUG,"Board: \n" + board);
 	       }
-	       done = true;
 	       throw e;
 	    }
 	    catch (AmbiguousMoveException e) {
@@ -387,7 +478,6 @@ public class PGNReader extends ChessReader {
 		  Log.debug2(DEBUG,"From Token: " + tok);
 		  Log.debug2(DEBUG,"Board: \n" + board);
 	       }
-	       done = true;
 	       throw e;
 	    }
 	    catch (IllegalMoveException e) {
@@ -396,77 +486,9 @@ public class PGNReader extends ChessReader {
 		  Log.debug2(DEBUG,"From Token: " + tok);
 		  Log.debug2(DEBUG,"Board: \n" + board);
 	       }
-	       done = true;
 	       //history.rewind();
 		  throw e;
 	    } 
-	 }
-
-
-         //start of a variation
-	 else if (tok.charAt(0) == '(') {
-	    //go back one move so the next history.add() will add
-	    //a variation
-	    history.prev();  
-	    forks.push(history.getCurrentMove());
-
-	    if (Log.debug)
-	       Log.debug(DEBUG, "starting variation from " 
-	          + history.getCurrentMove());
-
-            //if we still have a comment that has no home it must go
-	    //with the last move outside the variation, not the prenotation
-	    //of the first move in the variation.
-	    if (savedComment != null) {
-	       anno = (ChessAnnotation) lastMove.getAnnotation();
-	       if (anno == null || anno.getComment() == null) {
-	          if (anno == null) 
-		     anno = new ChessAnnotation();
-	          anno.setComment(savedComment);
-	       }
-	       else
-	          anno.appendComment(" " + savedComment);
-	       savedComment = null;
-	    }
-	 }
-
-         //end of a variation
-	 else if (tok.charAt(0) == ')') {
-
-	    ChessMove fork = (ChessMove) forks.pop();
-	    history.goTo(fork);
-
-	    if (Log.debug)
-	       Log.debug(DEBUG, "ending variation from " 
-	          + fork);
-
-	    history.next();
-
-            //if we still have a comment that has no home it must go
-	    //with the last move in the variation and not the
-	    //prenotation of the first move outside the variation
-	    if (savedComment != null) {
-	       anno = (ChessAnnotation) lastMove.getAnnotation();
-	       if (anno == null || anno.getComment() == null) {
-	          if (anno == null) 
-		     anno = new ChessAnnotation();
-	          anno.setComment(savedComment);
-	       }
-	       else
-	          anno.appendComment(" " + savedComment);
-	       savedComment = null;
-	    }
-
-            //make sure we set lastMove to the mainline again
-	    lastMove = (ChessMove) history.getCurrentMove();
-	 }
-
-         //undecided result of game
-	 else if (tok.charAt(0) == '*') {
-	    if (Log.debug)
-	       Log.debug(DEBUG, "Result token: " + tok);
-	    if (lastMove != null)
-	       lastMove.setResult(new ChessResult(ChessResult.UNDECIDED));
 	 }
 
 	 //unknown
@@ -475,6 +497,7 @@ public class PGNReader extends ChessReader {
 	    if (Log.debug) 
 	       Log.debug(DEBUG, "No idea what this is: <" + tok + ">");
 	 }
+
       }
 
       if (Log.debug) {
