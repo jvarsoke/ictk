@@ -169,6 +169,27 @@ public class HistoryTest extends TestCase {
    }
 
    //////////////////////////////////////////////////////////////////////
+   public void testVCRFastForward () throws IllegalMoveException,
+                              OutOfTurnException,
+                              AmbiguousMoveException {
+      game = new ChessGame();
+      history = game.getHistory();
+
+      history.add(san.stringToMove(game.getBoard(), "e4"));
+      history.add(san.stringToMove(game.getBoard(), "e5"));
+      history.add(move = san.stringToMove(game.getBoard(), "Nf3"));
+      board = (ChessBoard) game.getBoard();
+      history.add(san.stringToMove(game.getBoard(), "Nc6"));
+      history.add(san.stringToMove(game.getBoard(), "Bc4"));
+
+      history.rewind();
+      history.fastforward(3);
+      assertTrue(move == history.getCurrentMove());
+      assertTrue(board.equals(game.getBoard()));
+   }
+
+
+   //////////////////////////////////////////////////////////////////////
    public void testVCRRewindFF () throws IllegalMoveException,
                               OutOfTurnException,
                               AmbiguousMoveException {

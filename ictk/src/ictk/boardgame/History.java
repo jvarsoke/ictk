@@ -477,6 +477,22 @@ public class History {
       currMoveNumber = initialMoveNumber;
    }
 
+   /* fastforward *********************************************************/
+   /** moves forward on the mainline of the current variation N moves.
+    *  If there are less than N moves on the line it will stop at the 
+    *  last move.  
+    *
+    *  @param returns the number of moves actually moved through.
+    */
+   public int fastforward (int n) {
+      int count = 0;
+      while (hasNext() && count < n) {
+         next();
+	 count++;
+      }
+      return count;
+   }
+
    /* goToEnd () **********************************************************/
    /** opposite of rewind() this goes to the end of the current branch
     *  performing all moves on the branch's main line as it goes.
