@@ -446,7 +446,7 @@ public class ChessMove extends Move {
 	 prev = board.lastMove;
 	 board.lastMove = this;
          //incr move counter
-	 if (piece.isBlack)
+	 if (!piece.isBlack)
 	    board.moveNumber++;
 
 
@@ -532,7 +532,7 @@ public class ChessMove extends Move {
 	 board.isBlackMove =  piece.isBlack;
 	 board.lastMove = (ChessMove) prev; 
          //move number
-	 if (piece.isBlack)
+	 if (!piece.isBlack)
 	    board.moveNumber--;
 
          executed = false;
