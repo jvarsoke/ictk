@@ -97,6 +97,7 @@ public class TestClient extends javax.swing.JFrame implements java.awt.event.Act
 	     System.out.println("Client: attempting to connect");
 	     fics.setHandle(handle);
 	     fics.setPassword(passwd);
+	     fics.setLagCompensation(true);
              fics.connect();
 	  }
 	  catch (java.net.UnknownHostException e) {

@@ -25,6 +25,9 @@
 
 package ictk.boardgame.chess.net.ics.fics; 
 
+import free.freechess.timeseal.TimesealingSocket;
+
+import ictk.util.Log;
 import ictk.boardgame.chess.net.ics.fics.event.*;
 import ictk.boardgame.chess.net.ics.event.*;
 import ictk.boardgame.chess.net.ics.*;
@@ -34,28 +37,37 @@ import java.net.*;
 import java.io.*;
 import java.nio.*;
 import java.util.regex.*;
-//import com.jvarsoke.boardgame.chess.*;
+import java.util.Date;
 
+
+/* FICSProtocolHandler ********************************************************/
+/** Handles logging into the FICS server and splitting the server messages
+ *  into chunks.  These chunks are then examined to see if they corrispond to
+ *  any of the known FICS events.  The message is then sent to the 
+ *  ICSEventRouter connected to this object so it can be dispatched to
+ *  an object that wishes to be notified of that event.
+ */
 public class FICSProtocolHandler extends ICSProtocolHandler {
-   public final static int SOCKET_TIMEOUT = 10000;
+     /** the socket time-out is used to see if our connection is dropped
+      ** and we're not told about it. The number is in milliseconds*/
+   public final static int SOCKET_TIMEOUT = 30 * 100 * 60;
    /** this is the delay between tests to see if there's any info on the 
     ** socket in nanoseconds. Setting this to 0 will peg your CPU needlessly **/
    protected int SOCKET_DELAY = 1000;
-   protected PrintWriter out;
-   protected InputStreamReader in;
 
-   protected String LOGIN_PROMPT  = "login:";
-   protected String PASSWD_PROMPT = "password:";
-   protected String INTERFACE_NAME = "-=[ ictk ]=- v0.2 http://ictk.sourceforge.net";
-   protected String CMD_PROMPT    = "\nfics% ";
-   protected String GUEST_PROMPT  = "Press return to enter the server as \"";
-   protected String START_SESSION = "**** Starting FICS session as ";
-   protected char[] prompt = CMD_PROMPT.toCharArray();
+   protected String LOGIN_PROMPT   = "login:",
+                    PASSWD_PROMPT  = "password:",
+                    CMD_PROMPT     = "\nfics% ",
+                    GUEST_PROMPT   = "Press return to enter the server as \"",
+                    START_SESSION  = "**** Starting FICS session as ",
+                    INVALID_PASSWD = "**** Invalid password! ****",
+                    INTERFACE_NAME = 
+		       "-=[ ictk ]=- v0.2 http://ictk.sourceforge.net";
 
    //common regex phrases
-   protected final static String REGEX_handle    = "([\\w]+)";      
-   protected final static String REGEX_acct_type = "(\\(\\S*\\))?";  
-   protected final static String REGEX_rating    = "\\(\\s*([0-9+-]+[EP]?)\\)";
+   protected final static String REGEX_handle    = "([\\w]+)",
+                                 REGEX_acct_type = "(\\(\\S*\\))?",  
+                                 REGEX_rating    = "\\(\\s*([0-9+-]+[EP]?)\\)";
 
    //NEED: RATING - UNR  is a possiblity
 
@@ -86,23 +98,21 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 				  takebackPattern,
 				  availInfoPattern;
 
-   final protected ICSEvent[] eventFactories;
-
-      /** moniker the chess player is using */
-   String handle = null;
-   String passwd = null;
-   String host   = "64.71.131.140";
-   int    port   = 5000;
+   final protected ICSEventParser[] eventFactories;
 
       /** Telnet connection to server */
-   boolean loggedIn = false;
-   boolean seenLogin = false;
-   boolean seenPasswd = false;
+//   boolean loggedIn = false;
+
+      /** is block_mode turned on for the server protocol. */
    boolean isBlockMode = false;
 
-      /** collected input yet to be processed */
-   StringBuffer buffer;
+      /** the max amount the server input buffer can hold before throwing 
+       ** an error.  The value of this should be plenty as it really only
+       ** needs to be as large as the longest message chunk.  */
    int BUFFER_SIZE = 128 * 1048;
+
+      /** collected input yet to be processed */
+   CharBuffer buffer = CharBuffer.allocate(BUFFER_SIZE);
 
    //constructor//////////////////////////////////////////////////////////
    static {
@@ -180,24 +190,28 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 
    //constructors/////////////////////////////////////////////////////////////
    public FICSProtocolHandler () {
+      host   = "64.71.131.140"; //defaults
+      port   = 5000;
+
       int i = 0;
-      eventFactories = new ICSEvent[16];
-      eventFactories[i++] = new FICSSeekAdEvent(this);
-      eventFactories[i++] = new FICSSeekRemoveEvent(this);
-      eventFactories[i++] = new ICSBoardUpdateStyle12Event(this);
-      eventFactories[i++] = new FICSGameResultEvent(this);
-      eventFactories[i++] = new FICSGameCreatedEvent(this);
-      eventFactories[i++] = new FICSChannelEvent(this);
-      eventFactories[i++] = new FICSShoutEvent(this);
-      eventFactories[i++] = new FICSSeekAdReadableEvent(this);
-      eventFactories[i++] = new FICSKibitzEvent(this);
-      eventFactories[i++] = new FICSTellEvent(this);
-      eventFactories[i++] = new FICSBoardSayEvent(this);
-      eventFactories[i++] = new FICSSeekClearEvent(this);
-      eventFactories[i++] = new FICSPlayerConnectionEvent(this);
-      eventFactories[i++] = new FICSPlayerNotificationEvent(this);
-      eventFactories[i++] = new FICSGameNotificationEvent(this);
+      //eventFactories = new ICSEventParser[16];
+      eventFactories = new ICSEventParser[12];
+      //eventFactories[i++] = new ICSBoardUpdateStyle12Event(this);
+      eventFactories[i++] = new FICSPlayerConnectionEventParser();
+      eventFactories[i++] = new FICSGameNotificationEventParser();
+      eventFactories[i++] = new FICSSeekRemoveEventParser();
+      eventFactories[i++] = new FICSGameResultEventParser();
+      eventFactories[i++] = new FICSGameCreatedEventParser();
+      eventFactories[i++] = new FICSChannelEventParser();
+      eventFactories[i++] = new FICSShoutEventParser();
+      eventFactories[i++] = new FICSSeekAdReadableEventParser();
+      eventFactories[i++] = new FICSKibitzEventParser();
+      eventFactories[i++] = new FICSTellEventParser();
+      eventFactories[i++] = new FICSSeekClearEventParser();
+      eventFactories[i++] = new FICSPlayerNotificationEventParser();
+      /*
       eventFactories[i++] = new FICSQTellEvent(this);
+      */
       router = new ICSEventRouter();
       router.setDefaultRoute(new ANSIConsole());
    }
@@ -209,33 +223,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    }
 
    //methods/////////////////////////////////////////////////////////////////
-   public void setHandle (String handle) {
-      this.handle = handle;
-   }
-
-   public String getHandle () { 
-      return handle; 
-   }
-
-   public void setPassword (String password) {
-      this.passwd = password;
-   }
-
-   public void setHost (String host) {
-      this.host = host;
-   }
-
-   public void setPort (int port) {
-      this.port = port;
-   }
-
-
-   public boolean isConnected () {
-      if (socket == null)
-         return false;
-      return socket.isConnected();
-   }
-
    public void connect () 
       throws UnknownHostException, IOException {
 
@@ -243,158 +230,315 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
          throw new IllegalStateException(
 	    "Both handle and password must be set before login");
 
-      socket = new Socket(host, port);
+      if (isLagCompensated)
+         socket = new TimesealingSocket(host, port);
+      else
+         socket = new Socket(host, port);
+
       //socket.setSoTimeout(SOCKET_TIMEOUT);
+      try {
+         socket.setKeepAlive(true);
+      }
+      catch (SocketException e) {
+         Log.error(Log.USER_WARNING, e.getMessage());
+      }
+
+//FIXME: Should BufferedInputStream be used here?
       in = new InputStreamReader(socket.getInputStream());
       out = new PrintWriter(socket.getOutputStream());
       thread.start();
    }
 
+   /* run *********************************************************************/
    public void run () {
-   //prompt = char[];
        try {
-	  loggedIn = doLogin();
-	  if (loggedIn) {
+	  isLoggedIn = doLogin();
+	  if (isLoggedIn) {
+             setLoginVars();
 	     processServerOutput(); 
 	  }
 	  else {
 	  //close socket etc
 	  }
 	  //end thread
-	  if (socket != null)
-	     socket.close();
+	  if (socket != null && !socket.isClosed()) {}
+	     //socket.close();
        }
        catch (IOException e) {
           e.printStackTrace();
        }
        System.err.println("FICSProtocolHandler: run end.");
+       buffer.rewind();
+       System.out.print(buffer.toString());
+       System.out.flush();
+       System.err.println(new Date());
    }
 
-   /* doLogin() **********************************************************/
-   /** Do the login sequence.  This is non-chunked data
-    */
-    /*this is a mess -- but it only runs once*/
+   /* doLogin ****************************************************************/
    protected boolean doLogin () throws IOException {
-      int loginState = 0;  //0=haven't tried, -1=fail, 1=pass
-      BufferedReader b_in = new BufferedReader(in);
-      char[] cbuff = new char[BUFFER_SIZE];
-      boolean _loggedIn = false;
-      buffer = new StringBuffer(BUFFER_SIZE);
-      String str = null;
-      int cnt = 0;
-
-      while (socket != null && socket.isConnected()
-             && loginState == 0) {
-	 cnt = b_in.read(cbuff, 0, BUFFER_SIZE);
-
-	 if (cnt > 0) {
-	    str = new String(cbuff, 0, cnt);
+      boolean seenLogin = false,
+              seenPasswd = false;
+      String tmp = null;
+      int b = 0;
+      char c = ' ';
+      int mark = 0;
       
-	    System.out.print(str);
-	    System.out.flush();
-	    //figure out if we've hit the login prompt
-	    String tmp = null;
-	    buffer.append(str); 
+      Matcher match = null;
+	 //Successful login start
+      Pattern REGEX_sessionStart = Pattern.compile(
+		     "^\\*\\*\\*\\* Starting FICS session as "
+		     + REGEX_handle
+		     + REGEX_acct_type
+		     + " \\*\\*\\*\\*"
+		      , Pattern.MULTILINE);
 
-	    //the easy case where we got the whole string
-	    if (!seenLogin) {
-	       if (str.length() > LOGIN_PROMPT.length())
-		  tmp = str;
-	       else
-		  tmp = buffer.toString();
-		  
+         while ((b = in.read()) != -1) {
 
-	       if (tmp.lastIndexOf(LOGIN_PROMPT) > 0) {
-		  //we have the prompt
-		  sendCommand(handle);
-		  seenLogin = true;
-		  buffer = new StringBuffer(BUFFER_SIZE);
-	       }
-	    }
-	    //looking for password prompt
-	    else if (!seenPasswd) {
-	       if (str.length() > PASSWD_PROMPT.length())
-		  tmp = str;
-	       else
-		  tmp = buffer.toString();
-
-	       if (tmp.lastIndexOf(PASSWD_PROMPT) > 0) {
-		  sendCommand(passwd);
-		  seenPasswd = true;
-	       }
-	       else if (tmp.lastIndexOf(GUEST_PROMPT) > 0) {
-		  sendCommand("");
-		  seenPasswd = true;
-	       }
-	       buffer = new StringBuffer(BUFFER_SIZE);
+	    //out of range invisible characters
+	    //10 is \n
+	    //13 is \r ?
+	    if (b!= 10 && b!=13 && (b < 32 || b > 126)) {
+	    //Diagnostics
+	    /*
+	       String foo = "[" + b + "]";
+	       for (int z=0;z<foo.length();z++)
+		  buffer.put(foo.charAt(z));
+	    */
 	    }
 
-	    //looking for start of session
-	    //and grabbing handle
+	    //normal character
 	    else {
-	       tmp = buffer.toString();
-	       StringBuffer login = new StringBuffer(20);
-	       int begin = tmp.indexOf(START_SESSION);
-	       boolean found = false;
-	       if (begin > -1) {
-		  begin += START_SESSION.length();
-		  for (int i=begin; i < begin+20 && !found; i++) {
-		     found =  (tmp.charAt(i) == ' ' || tmp.charAt(i) == '(');
-		     if (!found) login.append(tmp.charAt(i));
+	       c = (char) b;
+
+	       if (c == '\r') {} //get rid of these
+	       else 
+		  buffer.put(c);
+
+               //this was a line of text that wasn't a prompt
+	       if (c == '\n' && !seenPasswd) { 
+	          buffer.limit(buffer.position());
+		  buffer.rewind();
+		  System.out.print(buffer.toString());
+		  System.out.flush();
+		  buffer.clear();
+	       }
+
+               //we've hit a prompt (probably)
+	       else if (c == ':') {
+		  mark = buffer.position();
+	          buffer.limit(mark);
+		  buffer.rewind();
+	          tmp = buffer.toString();
+
+                  //login prompt
+		  if (!seenLogin
+		      && tmp.lastIndexOf(LOGIN_PROMPT) > -1) {
+		        System.out.print(tmp);
+		        System.out.print(" ");
+			System.out.flush();
+		        buffer.rewind();
+		        buffer.clear();
+
+		        sendCommand(handle);
+			seenLogin = true;
 		  }
-		  handle = login.toString();
-		  _loggedIn=true;
-		  loginState = 1; //FIXME: need setting for bad state
+
+                  //password prompt
+		  else if (seenLogin && !seenPasswd 
+		           && tmp.lastIndexOf(PASSWD_PROMPT) > -1) {
+		        System.out.print(tmp);
+		        System.out.print(" ");
+			System.out.flush();
+		        buffer.rewind();
+		        buffer.clear();
+
+		        sendCommand(passwd, false);
+			seenPasswd = true;
+                        System.out.println();
+		  }
+
+		  //guest login prompt (instead of password)
+		  else if (seenLogin && !seenPasswd 
+		          && tmp.lastIndexOf(GUEST_PROMPT) > -1) {
+		        System.out.print(tmp);
+			System.out.flush();
+		        buffer.rewind();
+		        buffer.clear();
+
+		        sendCommand("");
+			seenPasswd = true;
+		  }
+		  else {
+		     buffer.limit(buffer.capacity());
+		     buffer.position(mark);
+		  }
+	       }
+
+               //looking for a response from the password
+	       else if (c == '\n' && seenPasswd) {
+		  mark = buffer.position();
+	          buffer.limit(mark);
+		  buffer.rewind();
+	          tmp = buffer.toString();
+
+                  //Invalid password
+		  if (tmp.lastIndexOf(INVALID_PASSWD) > -1) {
+		     System.out.print(tmp);
+		     System.out.flush();
+		     buffer.rewind();
+		     buffer.clear();
+
+		     return false;
+		  }
+
+                  //Successful Login
+		  else if (tmp.lastIndexOf(START_SESSION) > -1) {
+		     match = REGEX_sessionStart.matcher(tmp);
+		     if (match.find()) {
+		        handle = match.group(1);
+			try {
+			   if (match.group(2) == null)
+			      acctType = new ICSAccountType();
+			   else 
+			      acctType = new ICSAccountType (match.group(2));
+			}
+			catch (IOException e) {
+			   Log.error(Log.PROG_ERROR, 
+			      "On Login: " + e.getMessage());
+			}
+		     }
+		     else {
+		        Log.error(Log.PROG_ERROR,
+			   "On Login: never matched session start: "
+			   + tmp);
+		     }
+		     System.out.print(tmp);
+		     System.out.flush();
+		     buffer.rewind();
+		     buffer.clear();
+
+		     return true;
+		  }
+
+		  else {
+		     buffer.limit(buffer.capacity());
+		     buffer.position(mark);
+		  }
 	       }
 	    }
 	 }
-      }
-      setLoginVars();
-      return _loggedIn;
+      return true;
    }
 
+   /* setLoginVars **********************************************************/
+   /** sets variables this connection will use.  Some are necessary
+    *  for the correct parsing of server messages.
+    */
    protected void setLoginVars () { 
-      sendCommand("iset block 1");
-      isBlockMode = true;
-      sendCommand("iset ms 1");
-      sendCommand("set interface " + INTERFACE_NAME);
+      //sendCommand("iset block 1");
+      //isBlockMode = true;
+      sendCommand("set prompt", false);
+      sendCommand("set interface " + INTERFACE_NAME, false);
+      sendCommand("iset ms 1", false);
+      sendCommand("set style 12", false);
+      sendCommand("set bell 0", false);
    }
 
 
    /* processServerOutput **************************************************/
    /** processes output once the user is logged in
     */
-   protected void processServerOutput () { 
+   protected void processServerOutput () {
+      if (isBlockMode)
+         chunkByBlockMode();
+      else
+         chunkByPrompt();
+   }
+
+   /* chunkByPrompt ********************************************************/
+   /** if we're not using BlockMode we have to guess where the message
+    *  chunk begins and ends.  This method defines a server message chunk
+    *  as that output between two prompts.  This mode is not as efficient
+    *  as BlockMode because a regex is used to figure out which message
+    *  type we're looking at, but it does work with Timeseal.
+    */
+   protected void chunkByPrompt () {
+      int b    = -1;  //integer form of the character
+      char c   = ' ';
+      byte ptr = 0;   //pointer to a position in the prompt
+      char[] prompt = CMD_PROMPT.toCharArray();
+
+      try {
+
+         while ((b = in.read()) != -1) {
+
+            //FIXME: diagnostics
+	    //out of range invisible characters
+	    //10 is \n
+	    //13 is \r ?
+	    if (b!= 10 && b!=13 && (b < 32 || b > 126)) {
+	       String foo = "[" + b + "]";
+	       for (int z=0;z<foo.length();z++)
+		  buffer.put(foo.charAt(z));
+	    }
+
+	    //normal character
+	    else {
+	       c = (char) b;
+
+	       if (c != '\r') { //get rid of these
+		  buffer.put(c);
+		  if (c == prompt[ptr]) {  //look for the prompt
+		     ptr++;
+		     if (prompt.length == ptr) { //found prompt
+			buffer.limit(buffer.position() - prompt.length);
+			buffer.rewind();
+			parse(buffer);
+			buffer.clear();
+			ptr = 0;
+		     }
+		  } 
+		  else {  //not prompt
+		     ptr = 0;
+		  }
+	       }
+	    }
+	 }
+	 //purge remaining buffer
+	 if (buffer.position() > 0) {
+	    buffer.limit(buffer.position());
+	    buffer.rewind();
+	    parse(buffer);
+	 }
+      }
+      catch (IOException e) {
+         e.printStackTrace();
+      }
+      System.out.println("FICSProtocolHandler: socket connection closed");
+   }
+
+   /* chunkByBlockMode *****************************************************/
+   /** uses FICS's block mode to process the server output.  This cannot
+    *  be used with Timeseal because Timeseal chops off the high-order bits
+    *  and DAV made Block_mode use the high-order bits.  Duh.
+    *
+    *  <bold>This is currently disabled and has at least one known killer
+    *  bug.  But is kept in the code for future reference.</bold>
+    */
+   protected void chunkByBlockMode () { 
       short block_state = 0;
       int id = 0,  //block-id
           cmd = 0; //block-cmd number
       char c = ' ';
       int b = ' '; //integer form of the character
       short ptr = 0;
-      CharBuffer buff = CharBuffer.allocate(BUFFER_SIZE),
-                 idBuff = CharBuffer.allocate(6),
+      CharBuffer idBuff = CharBuffer.allocate(6),
 		 cmdBuff = CharBuffer.allocate(3);
+      char[] prompt = CMD_PROMPT.toCharArray();
 
       try {
-/*
-         while (socket != null && socket.isConnected()) {
-try {
-Thread.sleep(0L, SOCKET_DELAY);	    
-}
-catch (Exception e) {
-  System.err.println("exception in thread");
-}
-*/
-/*
-//FIXME: this from comp.lang.java.programmer
-Just perfom the read()-operation without checking if there's something
-to read. Java supports select(), but you'll need to switch to java.nio,
-which supports blocking and non-blocking io operations on channels.
-*/
 	    while ((b = in.read()) != -1) { //in.ready()) {
 	       
-	       //b = in.read();
-
 	       //Dealing with Block Mode
 	       if (b == FICSBlockMode.BLOCK_START
 	           || b == FICSBlockMode.BLOCK_SEPARATOR)
@@ -405,8 +549,8 @@ which supports blocking and non-blocking io operations on channels.
 	          idBuff.rewind();
 		  cmdBuff.limit(cmdBuff.position());
 		  cmdBuff.rewind();
-		  buff.limit(buff.position());
-		  buff.rewind();
+		  buffer.limit(buffer.position());
+		  buffer.rewind();
 	          try {
 		     id = Integer.parseInt(idBuff.toString());
 		     cmd = Integer.parseInt(cmdBuff.toString());
@@ -418,13 +562,13 @@ which supports blocking and non-blocking io operations on channels.
 		        + "{" + block_state + "}"
 		        + " id(" + idBuff.toString() 
 			+ ") or cmd(" + cmdBuff.toString() + "):"
-			+ buff.toString());
+			+ buffer.toString());
 		  }
 		  finally {
-		     parseResponse(id, cmd, buff);
+		     parseResponse(id, cmd, buffer);
 		     idBuff.clear();
 		     cmdBuff.clear();
-		     buff.clear();
+		     buffer.clear();
 	             block_state = 0;
 		     ptr = 0;
 		  }
@@ -434,7 +578,7 @@ which supports blocking and non-blocking io operations on channels.
 	       else if (b!= 10 && b!=13 && (b < 32 || b > 126)) {
 	          String foo = "[" + b + "]";
 		  for (int z=0;z<foo.length();z++)
-		     buff.put(foo.charAt(z));
+		     buffer.put(foo.charAt(z));
 	       }
 
 	       //normal character
@@ -450,18 +594,18 @@ which supports blocking and non-blocking io operations on channels.
 			break;
 		     case 3:
 		        if (c != '\r')
-			   buff.put(c);
+			   buffer.put(c);
 			break;
 		     case 0:
 			if (c != '\r') { //get rid of these
-			   buff.put(c);
+			   buffer.put(c);
 			   if (c == prompt[ptr]) {  //look for the prompt
 			      ptr++;
 			      if (prompt.length == ptr) { //found prompt
-				 buff.limit(buff.position() - prompt.length);
-				 buff.rewind();
-				 parse(buff);
-				 buff.clear();
+				 buffer.limit(buffer.position()- prompt.length);
+				 buffer.rewind();
+				 parse(buffer);
+				 buffer.clear();
 				 ptr = 0;
 			      }
 			   } else {  //not prompt
@@ -477,13 +621,9 @@ which supports blocking and non-blocking io operations on channels.
 		  }
 	       }
 	    }
-/*
-	 }
-*/
-	 //FIXME: doens't work
-	 if (buff.position() > 0) {
-	    buff.rewind();
-	    parse(buff);
+	 if (buffer.position() > 0) {
+	    buffer.rewind();
+	    parse(buffer);
 	 }
       }
       catch (IOException e) {
@@ -492,6 +632,7 @@ which supports blocking and non-blocking io operations on channels.
       System.out.println("FICSProtocolHandler: socket connection closed");
    }
 
+   /* disconnect *************************************************************/
    public void disconnect () {
       sendCommand("exit");
    }
@@ -499,8 +640,10 @@ which supports blocking and non-blocking io operations on channels.
    /* sendCommand () *********************************************************/
    /** send a command to the server.
     */
-   public void sendCommand (String cmd) {
-       System.out.println(cmd);
+   public void sendCommand (String cmd, boolean echo) {
+       if (echo) 
+          System.out.println(cmd);
+
        if (isBlockMode)
           out.println(1 + " " + cmd);
        else
@@ -508,8 +651,9 @@ which supports blocking and non-blocking io operations on channels.
        out.flush();
    }
 
-
-
+   public void sendCommand (String cmd) {
+      sendCommand(cmd, true);
+   }
 
    /* parse () **************************************************************/
    /** The 'datagram' or message chunk has already been establish, not we
@@ -525,7 +669,8 @@ which supports blocking and non-blocking io operations on channels.
       boolean found = false;
 
       for (int i=0; i < eventFactories.length && !found; i++) {
-         if ((icsEvent = eventFactories[i].newICSEventInstance(str)) != null) {
+         if ((icsEvent = eventFactories[i].createICSEvent(str)) != null) {
+	    icsEvent.setServer(this);
 	    found = true;
 	    router.dispatch(icsEvent);
 	 }
@@ -568,6 +713,7 @@ which supports blocking and non-blocking io operations on channels.
 
    //parseResponse/////////////////////////////////////////////////////////////
    protected void parseResponse (int id, int cmd, CharSequence str) {
+   /*
       ICSEvent icsEvent = null;
       ICSEvent history = new FICSHistoryEvent(this);
       ICSEvent movelist = new FICSMoveListEvent(this);
@@ -595,6 +741,7 @@ which supports blocking and non-blocking io operations on channels.
       else
          System.out.print("BLOCK(" + id + "/" + cmd + "): " 
 	    + str.toString() + "</BLOCK>");
+     */
    }
 
 

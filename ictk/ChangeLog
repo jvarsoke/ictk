@@ -4,11 +4,31 @@ ChangeLog
 ---------
 
 Legend:
-   [dev]    applies to some development tool
-   [gui]    applies to gui components
-   [net]    applies to internet communication features
-   [chess]  applies to chess model or io
    [all]    applies to all
+   [dev]    applies to some development tool
+
+   [chess]  applies to chess model or io
+
+   [gui]    applies to gui components
+
+   [net]    applies to internet communication features
+   [fics]   applies to support for the www.freechess.org server
+   [icc]    applies to support for the www.chessclub.com server
+
+In progress
+   [net]    added FICS support to main branch of library
+   [fics]   removed BlockMode message chunking
+   [fics]   recoded login sequence to not use StringBuffer
+            Also now correctly determines beginning of session.
+   [fics]   added guest account detection on login
+   [fics]   added Timeseal support
+            thanks to Alexander Maryanovsky (Jin)
+   [fics]   changed FICS.*Events to FICS*.EventParsers to benefit from
+            loose coupling of parsers to events.  This will allow server
+	    event translations.
+   [fics]   added test suites for the parsers
+   [fics]   added template files for Parsers and ParserTest to auto generate
+            these files.
 
 0.1.0 - 2003-03-25 first public release
    [all]    fixed equals()

@@ -4,15 +4,19 @@
       Internet Chess ToolKit project build file
    </description>
 
-   <!-- global properties -->
-   <property name="version" value="0.1"/>
-   <property name="source.dir" value="src"/>
-   <property name="test.dir" value="test"/>
-   <property name="build.dir" value="build"/>
-   <property name="docs.dir" value="docs"/>
-   <property name="output.jar" value="ictk-${version}.jar"/>
+   <!-- configurable properties -->
+   <property name="home.dir"          value="/home/jvarsoke"/>
+   <property name="junit.home"        value="${home.dir}/lib/java"/>
 
-   <property name="junit.home"  value="/home/jvarsoke/lib/java"/>
+   <!-- global properties -->
+   <property name="version"           value="0.1"/>
+   <property name="source.dir"        value="src"/>
+   <property name="test.dir"          value="test"/>
+   <property name="build.dir"         value="build"/>
+   <property name="docs.dir"          value="docs"/>
+   <property name="output.jar"        value="ictk-${version}.jar"/>
+
+   <property name="3rdparty.libs.dir" value="lib"/>
 
    <!-- source files to compile for distro -->
    <fileset dir="${source.dir}" casesensitive="yes">
@@ -34,6 +38,9 @@
 
    <path id="compile.class.path">
       <fileset dir="${junit.home}">
+         <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${3rdparty.libs.dir}">
          <include name="*.jar"/>
       </fileset>
       <dirset dir="${build.dir}">

@@ -28,8 +28,12 @@ package ictk.boardgame.chess.net;
 import ictk.boardgame.chess.net.ics.*;
 import ictk.boardgame.chess.net.ics.event.*;
 
+import java.util.*;
 
 public class ANSIConsole implements ICSEventListener {
+
+   public boolean showTimestamp = true;
+   public static Calendar cal = new GregorianCalendar();
 
    //colors
    public final static char ESC = '\u001B';
@@ -58,70 +62,91 @@ public class ANSIConsole implements ICSEventListener {
       String prefix = null;
 
        switch (evt.getEventType()) {
-          case ICSChannelEvent.CHANNEL_EVENT:
+          case ICSEvent.CHANNEL_EVENT:
 	     switch (((ICSChannelEvent) evt).getChannel()) {
 	        case 1:  prefix = ESC + CYAN; break;
 		case 85:
 		case 88: prefix = ESC + YELLOW; break;
+	        case ICSChannelEvent.SHOUT_CHANNEL: prefix = ESC + GREEN; 
+		   break;
+	        case ICSChannelEvent.SSHOUT_CHANNEL: 
+	        case ICSChannelEvent.CSHOUT_CHANNEL: 
+	        case ICSChannelEvent.TSHOUT_CHANNEL: 
+		   prefix = ESC + BOLD_GREEN; 
+		   break;
 		default: prefix = ESC + BOLD_CYAN;
 	     }
 	     break;
 
-	  case ICSTellEvent.TELL_EVENT:
-	  case ICSTellEvent.SAY_EVENT:
-	  case ICSBoardSayEvent.BOARD_SAY_EVENT:
+	  case ICSEvent.TELL_EVENT:
+	  case ICSEvent.SAY_EVENT:
+	  case ICSEvent.BOARD_SAY_EVENT:
 	     prefix = ESC + BOLD_YELLOW;
 	     break;
 
-	  case ICSKibitzEvent.KIBITZ_EVENT:
+	  case ICSEvent.KIBITZ_EVENT:
 	     prefix = ESC + BOLD_MAGENTA;
 	     break;
 
-	  case ICSKibitzEvent.WHISPER_EVENT:
+	  case ICSEvent.WHISPER_EVENT:
 	     prefix = ESC + MAGENTA;
 	     break;
 
-	  case ICSShoutEvent.SHOUT_EVENT:
-	  case ICSShoutEvent.SHOUT_EMOTE_EVENT:
-	     prefix = ESC + GREEN;
-	     break;
-
-	  case ICSShoutEvent.CSHOUT_EVENT:
-	  case ICSShoutEvent.SSHOUT_EVENT:
-	  case ICSShoutEvent.TSHOUT_EVENT:
-	     prefix = ESC + BOLD_GREEN;
-	     break;
-
-	  case ICSSeekAdEvent.SEEK_AD_EVENT:
-	  case ICSSeekRemoveEvent.SEEK_REMOVE_EVENT:
-	  case ICSSeekClearEvent.SEEK_CLEAR_EVENT:
-	  case ICSPlayerConnectionEvent.PLAYER_CONNECTION_EVENT:
-	  case ICSPlayerNotificationEvent.PLAYER_NOTIFICATION_EVENT:
-	  case ICSGameResultEvent.GAME_RESULT_EVENT:
-	  case ICSGameCreatedEvent.GAME_CREATED_EVENT:
+	  case ICSEvent.SEEK_AD_EVENT:
+	  case ICSEvent.SEEK_REMOVE_EVENT:
+	  case ICSEvent.SEEK_CLEAR_EVENT:
+	  case ICSEvent.PLAYER_CONNECTION_EVENT:
+	  case ICSEvent.PLAYER_NOTIFICATION_EVENT:
+	  case ICSEvent.GAME_RESULT_EVENT:
+	  case ICSEvent.GAME_CREATED_EVENT:
 	     prefix = ESC + BOLD_BLACK;
 	     break;
 
-	  case ICSSeekAdReadableEvent.SEEK_AD_READABLE_EVENT:
-	  case ICSGameNotificationEvent.GAME_NOTIFICATION_EVENT:
+	  case ICSEvent.SEEK_AD_READABLE_EVENT:
+	  case ICSEvent.GAME_NOTIFICATION_EVENT:
 	     prefix = ESC + BLUE;
 	     break;
 
-	  case ICSQTellEvent.QTELL_EVENT:
+	  case ICSEvent.QTELL_EVENT:
 	     prefix = ESC + BOLD_RED;
 	     break;
 
-	  case ICSBoardUpdateEvent.BOARD_UPDATE_EVENT:
+	  case ICSEvent.BOARD_UPDATE_EVENT:
 	     prefix = ESC + YELLOW;
 	     break;
 
 	  default:
        }
+
+       if (showTimestamp) {
+          System.out.print(ESC + BOLD_BLACK 
+	     + getTimestampAsString(evt.getTimestamp())
+	     + ESC + PLAIN);
+       }
+
        System.out.print("<" + evt.getEventType() + ">");
 
        if (prefix != null)
           System.out.println(prefix + evt + ESC + PLAIN);
        else
           System.out.println(evt);
+   }
+
+   public String getTimestampAsString (Date date) {
+      StringBuffer sb = new StringBuffer(5);
+      int tmp = 0;
+         cal.setTime(date);
+
+         tmp = cal.get(Calendar.HOUR_OF_DAY);
+	 if (tmp < 10)
+	    sb.append("0");
+	 sb.append(tmp).append(":");
+
+	 tmp = cal.get(Calendar.MINUTE);
+	 if (tmp < 10)
+	    sb.append("0");
+	 sb.append(tmp);
+
+	 return sb.toString();
    }
 }

@@ -43,6 +43,13 @@ public class Log {
       /** where the more normal logs go */
    public static PrintStream out = System.out;
 
+   public static final int PROG_CRITICAL = 1,
+                           PROG_ERROR    = 2,
+                           PROG_WARNING  = 3,
+			   USER_CRITICAL = 4,
+                           USER_ERROR    = 5, 
+                           USER_WARNING  = 6;
+
    public static long History       = 1L,
                       Board         = 2 * History,
 		      Move          = 2 * Board,
@@ -133,7 +140,7 @@ public class Log {
    public static void debug (long mask, Object o) {
       if ((mask_level & mask) == mask) {
          
-         err.println("[" + getCaller() + "] " + o);
+         err.println("[" + getCaller(2) + "] " + o);
       }
    }
 
@@ -151,16 +158,42 @@ public class Log {
    /* errorIf **********************************************************/
    /** this reports an error if the boolean condition is true
     */
-   public static void errorIf (boolean t, String msg) {
+   public static void errorIf (boolean t, int severity, String msg) {
       if (t == false)
-         err.println("Error: " + msg);
+         errorReport(severity, msg);
    }
 
    /* error ************************************************************/
    /** reports the error message to the error stream.
     */
-   public static void error (String msg) {
-      err.println("Error: " + msg);
+   public static void error (int severity, String msg) {
+      errorReport(severity, msg);
+   }
+
+   /* errorReport ******************************************************/
+   /** internal so the getCaller() call will be the same level for
+    *  error and errorIf
+    */
+   protected static void errorReport (int severity, String msg) {
+      if (severity < USER_CRITICAL) 
+         err.print("[" + getCaller(3) + "] ");
+      switch (severity) {
+         case PROG_CRITICAL:
+	 case USER_CRITICAL:
+	    err.print("CRITICAL: ");
+	    break;
+	 case PROG_ERROR:
+	 case USER_ERROR:
+	    err.print("ERROR: ");
+	    break;
+	 case PROG_WARNING:
+	 case USER_WARNING:
+	    err.print("WARNING: ");
+	    break;
+	 default:
+	    err.print("UNKNOWN: ");
+      }
+      err.println(msg);
    }
 
    /* debug ************************************************************/
@@ -169,7 +202,7 @@ public class Log {
     */
    public static void debug (long mask, String description, Matcher m) {
       if ((mask_level & mask) == mask) {
-	 err.println("[" + getCaller() + "] " + description);
+	 err.println("[" + getCaller(2) + "] " + description);
 	 for(int i=0; i<=m.groupCount(); i++) {
 	    out.println(i + ": " + m.group(i));
 	 }
@@ -185,26 +218,27 @@ public class Log {
 
    /* getCaller() **********************************************************/
    /** gets the calling Class and method off the execution stack.
+    *  @param lvl - which item on the stack do you want to see?
     */
-   protected static String getCaller () {
+   protected static String getCaller (int lvl) {
       StackTraceElement[] stack = null;
       String caller = null;
       String tmp = null;
 
       stack = new Throwable().getStackTrace();
 
-      if (stack.length >= 2) {
+      if (stack.length >= lvl) {
          
-	 tmp = stack[2].getClassName();
+	 tmp = stack[lvl].getClassName();
          if (isFullyQualifiedClass)
 	    caller = tmp;
 	 else
 	    caller = tmp.substring(tmp.lastIndexOf(".")+1);
 
-	 caller += "." + stack[2].getMethodName() + "():";
+	 caller += "." + stack[lvl].getMethodName() + "():";
 
-	 if (stack[2].getLineNumber() >= 0)
-	    caller += "" + stack[2].getLineNumber();
+	 if (stack[lvl].getLineNumber() >= 0)
+	    caller += "" + stack[lvl].getLineNumber();
 	 else
 	    caller += "?";
       }
