@@ -29,6 +29,12 @@ import java.util.regex.Matcher;
 import java.util.StringTokenizer;
 import java.io.IOException;
 
+/* ICSAccountType ************************************************************/
+/** Every user on an ICS system may have different account attributes 
+ *  associated with it.  These attributes are held in this object as 
+ *  flags for the account.  Some flags are mutually exclusive on the 
+ *  server, but this object does not take that into account.
+ */
 public class ICSAccountType {
 
    public final static int UNREGISTERED        = 0,
@@ -48,17 +54,14 @@ public class ICSAccountType {
 			   IM                  = 14,
 			   WGM                 = 15,
 			   GM                  = 16,
-			   NUM_FLAGS	       = 16;
+			   DEMO                = 17
+			   NUM_FLAGS	       = 18;
 
+   //FIXME: this could be a long mask instead.  But coding for this was quicker
    protected boolean[] flag;
 
    public ICSAccountType () {
       flag = new boolean[NUM_FLAGS];
-   }
-
-   public ICSAccountType (int mask) {
-      this();
-      set(mask);
    }
 
    public ICSAccountType (String s) throws IOException {
@@ -67,14 +70,26 @@ public class ICSAccountType {
          set(s);
    }
 
+   /* set ********************************************************************/
+   /** sets a flag either on or off.
+    */
    public void set (int type, boolean t) {
       flag[type] = t;
    }
 
+   /* is *********************************************************************/
+   /** tests to see if a particular lfag is set to true or not.
+    */
    public boolean is (int type) {
       return flag[type];
    }
 
+   /* set ********************************************************************/
+   /** converts a string in the format "(SR)(TM)" to set the currect 
+    *  flags.
+    *
+    *  @throws IOException if an account type isn't recognized.
+    */
    public void set (String s) throws IOException {
       StringTokenizer st = new StringTokenizer(s, "()", false);
       String tok = null;
@@ -84,14 +99,15 @@ public class ICSAccountType {
 	 if ("U".equals(tok)) flag[UNREGISTERED] = true;
 	 else if ("*".equals(tok)) flag[ADMIN] = true;
 	 else if ("C".equals(tok)) flag[COMPUTER] = true;
-	 else if ("B".equals(tok)) flag[BLIND] = true;
 	 else if ("SR".equals(tok)) flag[SERVICE_REP] = true;
 	 else if ("H".equals(tok)) flag[HELPER] = true;
-	 else if ("T".equals(tok)) flag[TEAM] = true;
-	 else if ("TM".equals(tok)) flag[TOURNAMENT_MANAGER] = true;
 	 else if ("TD".equals(tok)) flag[TOURNAMENT_DIRECTOR] = true;
+	 else if ("TM".equals(tok)) flag[TOURNAMENT_MANAGER] = true;
 	 else if ("FM".equals(tok)) flag[FM] = true;
 	 else if ("IM".equals(tok)) flag[IM] = true;
+	 else if ("B".equals(tok)) flag[BLIND] = true;
+	 else if ("T".equals(tok)) flag[TEAM] = true;
+	 else if ("D".equals(tok)) flag[DEMO] = true;
 	 else if ("WIM".equals(tok)) flag[WIM] = true;
 	 else if ("WFM".equals(tok)) flag[WGM] = true;
 	 else if ("WGM".equals(tok)) flag[WGM] = true;
@@ -103,11 +119,11 @@ public class ICSAccountType {
       }
    }
 
-   public void set (int mask) {
-      
-   }
-
-   public String typeToString (int type) {
+   /* typeToString ***********************************************************/
+   /** converts a flag into its string representation. For example:
+    *  SERVICE_REP will return "SR"
+    */
+   public static String typeToString (int type) {
       String s = null;
       
       switch (type) {
@@ -128,12 +144,17 @@ public class ICSAccountType {
 	 case IM:                  s = "IM"; break;
 	 case WGM:                 s = "WGM"; break;
 	 case GM:                  s = "GM"; break;
+	 case DEMO:		   s = "D"; break;
 	 default:
 	    System.err.println("Received illegal account type: " + type);
       }
       return s;
    }
 
+   /* toString ***************************************************************/
+   /** converts the account flags into their string representation. Such as
+    *  "(SR)(TM)"
+    */
    public String toString () {
       StringBuffer sb = null;
 
