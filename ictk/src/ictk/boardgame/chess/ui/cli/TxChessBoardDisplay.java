@@ -39,7 +39,20 @@ import java.io.*;
 
 /* TxChessBoardDisplay ******************************************************/
 /** This is a TxChess style command-line visual representation of a board.
- *  TxChess is an old C program used for email chess.
+ *  TxChess is an old C program used for email chess.  The board usually
+ *  looks like this:
+ *  <pre>
+ *  8   r n b q # r k
+ *  7   p p p #   p b p
+ *  6   #   # p # n p
+ *  5     #   # p #   #
+ *  4   #   P   P   #
+ *  3     # N #   # P #
+ *  2   P P # P N P B P
+ *  1   R # B Q   R K #
+ *
+ *      A B C D E F G H
+ * </pre>
  */
 public class TxChessBoardDisplay implements CLIChessBoardDisplay,
                                             BoardListener {
