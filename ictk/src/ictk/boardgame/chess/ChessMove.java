@@ -910,8 +910,15 @@ public class ChessMove extends Move {
       int[] coord = getCoordinates();
 
          sb.append("Move: \n")
-	   .append("   coordinates: " + coord[0] + coord[1] 
-	                              + coord[2] + coord[3] + "\n")
+	   .append("   coordinates: ");
+
+	 if (coord.length == 1)
+	   sb.append(((coord[0] == CASTLE_QUEENSIDE) ? "O-O-O" : "O-O"));
+	 else
+	   sb.append(coord[0] + coord[1] 
+	             + coord[2] + coord[3]);
+
+	 sb.append("\n")
 	   .append("   verified: " + verified + "\n")
 	   .append("   origin: " + orig + "\n")
 	   .append("   destination: " + dest + "\n")
@@ -938,6 +945,8 @@ public class ChessMove extends Move {
 	   .append("   prenotation: ").append(getPrenotation())
 	   .append("\n")
 	   .append("   annotation: ").append(getAnnotation())
+	   .append("\n")
+	   .append("   previous: ").append(getPrev())
 	   .append("\n");
 
 	 if (continuation == null || continuation.isTerminal())
