@@ -404,6 +404,7 @@
 	   ${docs.dir}/**
 	   ${output.jar}
 	   ${samples.dir}/**
+	   ${lib.dir}/**
 	   "
 	   />
 

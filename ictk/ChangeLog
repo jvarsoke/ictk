@@ -17,6 +17,11 @@ Legend:
    [fics]   applies to support for the www.freechess.org server
    [icc]    applies to support for the www.chessclub.com server
 
+*IN PROGRESS*
+   [chess]  fixed 828725 - move counter incremented on Black move rather 
+            than White
+   [dev]    fixed 821399 - timesealing.jar wasn't added to "bin" distro
+
 
 0.2.0 - 2003-10-03 FICS Support (limited)
    [net]    added FICS support to main branch of library
