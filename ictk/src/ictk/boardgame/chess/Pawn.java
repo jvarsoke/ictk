@@ -26,6 +26,8 @@
 package ictk.boardgame.chess;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Pawn extends ChessPiece {
    public final static byte    INDEX           = 5;
@@ -57,7 +59,7 @@ public class Pawn extends ChessPiece {
    */
 
    //LegalDests////////////////////////////////////////////////////////////
- 
+
    /* genLegalDests() *****************************************************/
    protected int genLegalDests () {
       super.genLegalDests();
@@ -134,18 +136,59 @@ public class Pawn extends ChessPiece {
 	 }
 
          return legalDests.size();
-    }
+   }
 
-    public boolean onEnPassantRank () {
-       return ((!isBlack && orig.rank == 5)   //5th Rank
-             || (isBlack && orig.rank == 4)); //4th Rank
-    }
+   /* genLegalDestsSaveKing **********************************************/
+   /**the king is under attack.  This goes through the legalmoves array
+    * and keeps only those that save the king's life.
+    */
+   protected void genLegalDestsSaveKing (ChessPiece king, ChessPiece threat) {
+      //check if is the square of the threat, or blocks threat from
+      //king square
+      Iterator oldLegals = legalDests.iterator();
+      Square sq = null;
+
+         if (captured) return;
+
+         legalDests = new ArrayList(2);
+
+         while (oldLegals.hasNext()) {
+            sq = (Square) oldLegals.next();
+
+            //does the destination (sq) block the threat?
+            if (threat.isBlockable(sq, king))
+               legalDests.add(sq);
+
+            //does it capture the threat?
+            else if (sq.equals(threat.getSquare()))
+               legalDests.add(sq);
+
+            //if the threat is a pawn
+	    //and that pawn has performed a double-move on the last turn
+	    //and this pawn can take it enPassant
+	    else if (threat.isPawn()
+	             && threat.getSquare().getFile() 
+		        == board.getEnPassantFile()
+		     && sq.getFile()
+		        == board.getEnPassantFile()
+		    )
+               legalDests.add(sq);
+         }
+   }
+
+   /* onEnPassantRank ***************************************************/
+   /** is this pawn on the a possible enpassant rank (not the file).
+    */
+   public boolean onEnPassantRank () {
+      return ((!isBlack && orig.rank == 5)   //5th Rank
+            || (isBlack && orig.rank == 4)); //4th Rank
+   }
 
    /* isBlockable *******************************************************/
-    public boolean isBlockable (Square target) {
+   public boolean isBlockable (Square target) {
 
-       return false;
-    }
+      return false;
+   }
 
 
    /* isBlockable ********************************************************/
@@ -154,39 +197,39 @@ public class Pawn extends ChessPiece {
    }
 
 
-    /* isLegalAttack ****************************************************/
-    public boolean isLegalAttack (Square target) {
-       if (board.staleLegalDests)
-          board.genLegalDests();
+   /* isLegalAttack ****************************************************/
+   public boolean isLegalAttack (Square target) {
+      if (board.staleLegalDests)
+         board.genLegalDests();
 
-       if (target.file == orig.file) {
-          return false;
-       }
-       else {
-          return isLegalDest(target); 
-       }
-    }
+      if (target.file == orig.file) {
+         return false;
+      }
+      else {
+         return isLegalDest(target); 
+      }
+   }
 
-    /* hasMoved() *******************************************************/
-    public boolean hasMoved () {
-       if ((isBlack && orig.rank == 7) //7th Rank
-           || (!isBlack && orig.rank == 2)) //2st Rank
-          return false;
-       else
-          return true;
-    }
+   /* hasMoved() *******************************************************/
+   public boolean hasMoved () {
+      if ((isBlack && orig.rank == 7) //7th Rank
+          || (!isBlack && orig.rank == 2)) //2st Rank
+         return false;
+      else
+         return true;
+   }
 
-    //Utilities//////////////////////////////////////////////////////////
-    /* isPromotionSquare *************************************************/
-    /** if the pawn reaches this square will it promote.
-     *  not sure how useful this function is.
-     */
-    static public boolean isPromotionSquare (Square sq, boolean isBlack) {
-       if (isBlack && sq.rank == 1) return true;
-       else if (!isBlack && sq.rank == 8) return true;
-       else return false;
-    }
+   //Utilities//////////////////////////////////////////////////////////
+   /* isPromotionSquare *************************************************/
+   /** if the pawn reaches this square will it promote.
+    *  not sure how useful this function is.
+    */
+   static public boolean isPromotionSquare (Square sq, boolean isBlack) {
+      if (isBlack && sq.rank == 1) return true;
+      else if (!isBlack && sq.rank == 8) return true;
+      else return false;
+   }
 
-    public boolean isPawn () { return true;}
+   public boolean isPawn () { return true;}
           
 }

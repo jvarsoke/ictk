@@ -59,6 +59,8 @@ In progress
 	    in the case of a variation.
    [chess]  fixed 774076 - PGNWriter error on writing null GameInfo
    [chess]  fixed 774085 - PGNWriter error on writing null History
+   [chess]  fixed 774510 - EnPassant did not escape check.
+            {thanks: Jerome Zago for the bug report}
    [chess]  added ChessBoard.isDoubleCheck() and changed isCheck() to be
             true when double-check is true.
    [chess]  added Move.getPrenotation() and family.  These are for 

@@ -1317,7 +1317,7 @@ public class ChessBoard implements Board {
    /** returns the file index (1-8) of the file where enpassant is legal
     * @return NO_ENPASSANT if the file is not set
     */
-   public int getEnPassantFile () {
+   public byte getEnPassantFile () {
       return enpassantFile;
    }
 

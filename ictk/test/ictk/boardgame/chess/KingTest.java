@@ -443,4 +443,24 @@ public class KingTest extends TestCase {
       assertFalse(qrook == king.findMyRook(true));
       assertTrue(krook == king.findMyRook(true));
    }
+
+   //////////////////////////////////////////////////////////////////////
+   /** Checks to see if EnPassant is a valid way to escape check.
+    */
+   public void testEnPassantEscapesCheck () {
+      //Log.addMask(ChessBoard.DEBUG);
+      char[][] position={{' ',' ',' ','P',' ',' ',' ',' '},
+                         {' ',' ',' ','P','p',' ',' ',' '},
+                         {' ',' ',' ','K','P','k',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '}};
+
+      board.setPosition(position);
+      board.setEnPassantFile('b');
+      Pawn pawn = (Pawn) board.getSquare(3,5).getOccupant();
+      assertTrue(pawn.isLegalDest(board.getSquare(2,6)));
+   }
 }
