@@ -223,26 +223,30 @@
    </target>
 
    <!-- binary distribution files -->
-   <target name="bin" depends="jar,docs"
+   <target name="bin" depends="clean,jar,docs"
            description="create the binary release file">
       <property name="bin.include"
            value="
-	   AUTHORS,COPYING,ChangeLog,HACKING,NEWS,README,TODO,
-	   docs/**,
+	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO 
+	   docs/** 
 	   ${output.jar}
 	   "
 	   />
 
-      <zip destfile="${release.file}.zip"
-           basedir="."
-	   includes="${bin.include}"
-	   update="true"
-	   />
+      <zip destfile="${release.file}.zip">
+         <zipfileset prefix="${release.file}/"
+	             dir="."
+		     includes="${bin.include}"
+	    />
+      </zip>
+
       <tar destfile="${release.file}.tar.gz"
-           basedir="."
-	   includes="${bin.include}"
-	   compression="gzip"
-	   />
+	   compression="gzip" >
+         <tarfileset prefix="${release.file}/"
+	             dir="."
+		     includes="${bin.include}"
+	    />
+      </tar>
    </target>
 
    <!-- source distribution files -->
@@ -251,25 +255,29 @@
 
       <property name="src.include"
            value="
-	   AUTHORS,COPYING,ChangeLog,HACKING,NEWS,README,TODO,
-	   build.xml,
-	   docs/**,
-	   src/**,
-	   test/**,
+	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO
+	   build.xml
+	   docs/**
+	   src/**
+	   test/**
 	   lib/**
 	   "
 	   />
 
-      <zip destfile="${release.file}-src.zip"
-           basedir="."
-	   includes="${src.include}"
-	   update="true"
-	   />
+      <zip destfile="${release.file}-src.zip">
+         <zipfileset prefix="${release.file}/"
+	             dir="."
+		     includes="${src.include}"
+	    />
+      </zip>
+
       <tar destfile="${release.file}-src.tar.gz"
-           basedir="."
-	   includes="${src.include}"
-	   compression="gzip"
-	   />
+	   compression="gzip" >
+         <tarfileset prefix="${release.file}/"
+	             dir="."
+		     includes="${src.include}"
+	    />
+      </tar>
    </target>
 
 
