@@ -1,0 +1,15 @@
+<head>
+<body>
+The purpose of this package is to supply abstract classes that
+facilitate the implementation of turn-based boardgames.  Most
+classes in this package are abstract and do not have much to them
+except a skeleton.  The notable exceptions are History, Move and
+ContinuationList (and it's implementations).  
+These three classes create a datastructure that resembles a
+tree.  It's a history of the moves in the game and includes 
+variations.  While the History class maintains access to the 
+datastructure, Moves are nodes on the structure and ContinuationList
+allows for the branching that variations necessitate.  ContinuationList
+is also used for promoting and demoting variations to the mainline.
+</body>
+</head>

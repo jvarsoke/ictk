@@ -1,0 +1,50 @@
+-=[ ictk ]=- Internet Chess Toolkit
+
+HACKING - contributing to the ictk project
+-------
+
+
+CODING STYLE
+------------
+
+When I contribute a patch to your project I'll do it your way.  If you want 
+me to accept your patch you'll follow mine.
+
+Indents: I use 3-spaces indent.  I have vi set shiftwidth=3.  I also have 
+autoindent set on.  This might make the code look wierd on your screen but 
+it looks fine on mine.
+
+K&R hitchcocks: I use curly braces (hitchcocks) on the same line as the 'if'
+and the 'else', 'try' and 'catch', and also on the same line as the function.
+I also keep the open and closing hitchcock for the 'if' on a different lin
+from the 'else'.  For example:
+    if ( ) {
+    }
+    else {
+    }
+
+Function & Variable names: should follow Java recommended standards.
+
+Screen width: I use an 80-char wide xterm.  Old-school, I know.  Please,
+cut your lines to fit this standard.
+
+Internal Classes: I use these rarely.  Normally I promote them to full fledged
+classes.  If it's internal there better be a good reason.
+
+Imports: I use import statements not java.lang.String.  The latter makes
+the lines too long and in general just looks ugly.
+
+For everything else just look at the code and do what I do.
+
+
+PACKAGES
+--------
+
+If you're writing a variant of an already existing game make sure its 
+package goes in a subdirectory of the main game.  So if you were to add
+CrazyHouse to ictk you should put in under /ictk/boardgame/chess/crazyhouse.
+
+DOCUMENTATION
+-------------
+
+As you can see almost all my methods have JavaDoc headers.  Yours should too.

@@ -1,0 +1,26 @@
+-=[ ictk ]=- Internet Chess Toolkit
+
+TODO List
+---------
+
+The following are features that on the drawing board for the future, and in 
+general order of priority:
+
+   o FICS support
+   o Cloning support for classes
+   o CrazyHouse
+   o BugHouse
+   o Losers
+   o Suicide
+   o Atomic
+   o other game file formats
+      - Localized PGN / FEN
+      - extended PGN
+      - EPD
+      - XML
+      - Scid
+   o ICC support
+   o SOAP Tablebase lookup
+   o Winboard engine interface
+   o Go (IGo, Goe, Wei-qi, Wei-chi, Baduk)
+

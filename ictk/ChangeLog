@@ -1,0 +1,108 @@
+-=[ ictk ]=- Internet Chess Toolkit
+
+ChangeLog
+---------
+
+Legend:
+   [dev]    applies to some development tool
+   [gui]    applies to gui components
+   [net]    applies to internet communication features
+   [chess]  applies to chess model or io
+   [all]    applies to all
+
+0.1.0 - 2003-03-25 first public release
+   [all]    fixed equals()
+   [all]    added hashCode()
+   [all]    added lots of javadoc
+   [all]    cleaned up lots of code
+   [all]    removed dead code
+
+0.0.7 - 2003-03-12
+   [dev]    moved project to SourceForge.net
+   [dev]    moved source to CVS
+   [dev]    moved directory structure for CVS
+   [dev]    moved packages to be under ictk
+   [dev]    added GPL headers
+   [dev]    added JUnit test suite (and fixed lots of bugs. lots.)
+   [dev]    added Ant support
+   [dev]    moved to JDK 1.4
+   
+   [all]    removed dependency on external regex parsers
+            Now using JDK 1.4 standard regex library.
+   [all]    added lots of internal documentation for javadoc
+   [all]    changed several class names to be more hierarchical
+   [all]    changed package model to be much more abstract
+            to allow for non-chess turn-based games.
+	    For example, History now has no knowledge of chess.
+   [chess]  removed language bias from model
+   [chess]  added internationization to presentation
+            . SAN can present in several languages (16)
+              It can also read in them.
+            . NAG has hooks to internationalize
+              the verbose interpretations of NAG values.
+	      Currently only in English.
+   [all]    added Annotations as external to moves
+   [all]    added variation support to History
+   [chess]  added PGNReader/Writer variation support
+   [chess]  added XBoardNotation
+   [all]    added debug logging and messages through ictk.util.Log
+   [all]    added equals() to most classes
+   [all]    added dump() to many classes and changed several
+            so they return a String instead of printing to STDERR
+   [chess]  changed castling assessment to be FischerRandom favorable
+   [chess]  changed BoardReader/Writer to BoardNotation 
+   [chess]  removed TxChess notation support
+   [chess]  moved Rook/Bishop/Queen.isBlockable to Piece.isBlockable
+            now using the LineOfSight algorythm
+   [gui]    removed TxChess gui objects from source tree
+   [net]    removed net from main source tree (still under heavy dev)
+
+0.0.6 - 2002-05-04
+   [chess]  fixed bad castling rules
+   [all]    fixed AmbiguousMoveException spelling and reporting
+   [chess]  added board position setup
+   [chess]  added FEN read/write
+   [chess]  added PGN with FEN
+   [all]    added history: gotoMove
+
+0.0.5 - 2001-09-17
+   [dev]    moved gui to Forte 3.0
+   [gui]    recoded image load
+   [gui]    recoded JPreferences in Forte new interaction between 
+            pref and listeners
+   [gui]    added JGameInfo
+   [gui]    recoded JAbout in Forte
+   [gui]    added splash screen
+   [gui]    added  new images
+
+0.0.4 - 2001-08-28
+   [all]    added command line option -d to start txchess in debug mode
+   [all]    added undo last executed move (remove from history list)
+   [chess]  added reads/writes PGN
+   [chess]  added suffix annotations (!, ?, !! etc)
+   [chess]  fixed SAN was showing "xd4" instead of "exd4"
+   [chess]  fixed SAN was showing "Rh1h2" instead of "R1h2" when file 
+            not unique
+   [gui]    added preferences dialog with ability to change board square colors
+   [gui]    added config file that is generated if you choose to 
+            "Save Preferences"
+            The generated file is "txchess.ini" for windoze and
+            ".txchessrc" for Unix
+   [gui]    added preference: turn square edges on or off
+   [gui]    added preference: coordinate borders
+
+
+0.0.3 - 2001-08-22
+   [chess]  added read/write new TxChess format files
+   [gui]    added history representation
+   [gui]    fixed first move on new game wasn't appearing in history lists
+   [chess]  added promotion rules
+   [chess]  added enpassant
+
+0.0.2 - 2000-12-14
+   [gui]    added GUI representation of board
+
+0.0.1 - 1998-09-28
+   [chess]  added legal move generation
+
+0.0.0 - 1997-07-07 The beginning

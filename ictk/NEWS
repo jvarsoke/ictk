@@ -1,0 +1,39 @@
+-=[ ictk ]=- Internet Chess Toolkit
+
+NEWS - new features etc
+----
+These are general features, improvements and changes made to
+the suite of classes in ictk.  If you want a more specific
+account of what was changed look at the ChangeLog file.
+
+
+0.1.0 - 2003-03-25 First public release
+   o Added lots of javadoc
+
+0.0.7 - 2003-03-12
+   o Now officially licensed under the GPLv2
+   o Ant support for building
+   o History variations now supported
+   o Internationalization support
+   o GUI removed
+   o Net removed (under heavy development)
+   o Removed dependency on external Regex
+   o Migrated to JDK 1.4
+
+0.0.6 - 2002-05-04
+   o Added FEN read/write
+
+0.0.5 - 2001-09-17
+   o GUI moved to Forte 3.0
+   o JPreferences Window added
+   o JGameInfo displays most PGN type info
+   o JAbout added to GUI
+   o Splash screen added on startup (yes you can disable it)
+
+0.0.4 - 2001-08-28
+   o Read and Write PGN (no FEN or variation support yet)
+   o Read SAN
+   o GUI nows has Prefernces for setting colors etc
+
+0.0.3 - 2001-08-22
+   o Read and Write TxChess version 1 and 2 formats

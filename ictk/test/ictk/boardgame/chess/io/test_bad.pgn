@@ -1,0 +1,36 @@
+[Event "FIDE World Cup Gp A"]
+[Site "Shenyang CHN"]
+[Date "2000.09.01"]
+[Round "1"]
+[White "Aleksandrov, A."]
+[Black "Azmaiparashvili, Z."]
+[Result "1/2-1/2"]
+[ECO "A41"]
+[WhiteElo "2591"]
+[BlackElo "2673"]
+[PlyCount "71"]
+[EventDate "2000.08.01"]
+
+1. d4 d6 2. e4 g6 3. c4 e5 4. Nc3 exd4 5. Qxd4 Nf6 6. Bg5 Nbd7 7. Qd2 h6 8. Be3
+Bg7 9. Be2 Ne5 10. O-O-O Be6 11. c5 dxc5 12. Bxc5 Qxd2+ 13. Rxd2 Nfd7 14. Be3
+Nc4 15. Vxc4 {bad move} Bxc4 16. Nf3 Bxc3 17. bxc3 O-O-O 18. Rhd1 Bb5 19. Nd4 
+Ba4 20. Nc2 Ne5 21. Rxd8+ Rxd8 22. Rxd8+ Kxd8 23. f3 h5 24. Bg5+ Kd7 25. Ne3 
+Ke6 26. Kd2 f6 27. Bf4 g5 28. Bg3 h4 29. Bxe5 fxe5 30. g3 hxg3 31. hxg3 Be8 
+32. a3 Bh5 33. Ke2 b5 34. Nd5 c6 35. Nb4 Kd6 36. Nd3 1/2-1/2
+
+[Event "FIDE World Cup Gp A"]
+[Site "Shenyang CHN"]
+[Date "2000.09.03"]
+[Round "3"]
+[White "Aleksandrov, A."]
+[Black "Milos, G."]
+[Result "0-1"]
+[ECO "E42"]
+[WhiteElo "2591"]
+[BlackElo "2633"]
+[PlyCount "81"]
+[EventDate "2000.08.01"]
+
+1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. e3 b6 5. Nge2 c5 6. a3 Ba5 7. Rb1 Na6 8. f3
+O-O 9. d5 exd5 10. cxd5 b5 11. Kf2 b4 12. Nb5 d6 13. axb4 Nxb4 14. Nec3 Bb6 15.
+Bc4 Nd7 16. Ne4 Ne5 17. b3 f5 18. Nexd6 a6 19. Nxc8 axb5 20. Nxb6 Qxb6 21. Be2

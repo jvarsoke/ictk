@@ -1,0 +1,44 @@
+<html>
+<body>
+This is the implementation of the Chess game model.  It contains
+all the elements necessary to determine legal moves on the 
+chess board.  By using History in conjunction with a ChessBoard
+you can play moves on the board, take them back and create 
+variations to the normal course of play.<br>
+<p>
+The model works by having each of the pieces determine their own
+legal moves.  Because of this overtly OOP approach this library is
+not well suited for computationally intensive tasks such as 
+chess engines.  It was not designed for that purpose.
+<p>
+The following is an a quick example of how to use the this package:
+<pre>
+
+   ChessGame game = new ChessGame();
+   ChessBoard board = (ChessBoard) game.getBoard();
+   History history = game.getHistory();
+   ChessMove move = null;
+   SAN san = new SAN();
+
+   try {
+      move = san.stringToMove(board, "e4");
+      history.add(move);
+      move = san.stringToMove(board, "e5");
+      history.add(move);
+   }
+   catch (AmbiguousChessMoveException e) {
+      System.err.println(e);
+   }
+   catch (IllegalMoveException e) {
+      System.err.println(e);
+   }
+   
+</pre>
+There are many ways to do this.  For example you don't need to use the 
+SAN (Standard Algebraic Notation) object to create moves, instead you can
+use the constructor of ChessMove.  Also you don't need to use the History
+object to play the moves on the board, but you should read ChessBoard's
+comments on the side-effects of that method.
+</body>
+</html>
+

@@ -1,0 +1,71 @@
+/*
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+package ictk.boardgame.io;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.io.Writer;
+
+import ictk.boardgame.Game;
+import ictk.boardgame.GameInfo;
+import ictk.boardgame.Board;
+import ictk.boardgame.History;
+
+/* ChessWriter *************************************************************/
+/** ChessWriter is an abstract class that writer game files
+ */
+public abstract class GameWriter extends PrintWriter {
+   public GameWriter (OutputStream _out) {
+      super(_out, true);
+   }
+
+   public GameWriter (Writer _out) {
+      super(_out);
+   }
+
+   /** write the full game (GameInfo, History & Board) to the 
+    *  output buffer.
+    */
+   public abstract void writeGame (Game g)
+          throws IOException;
+
+   /** write the GameInfo to the output buffer
+    */
+   public abstract void writeGameInfo (GameInfo gi)
+          throws IOException;
+
+   /** write the game History to the output buffer
+    */
+   public abstract void writeHistory (History h)
+          throws IOException;
+
+   /** write the current Board to the output buffer
+    */
+   public abstract void writeBoard (Board b)
+          throws IOException;
+
+}

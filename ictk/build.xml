@@ -1,0 +1,157 @@
+
+<project name="ictk" default="compile">
+   <description>
+      Internet Chess ToolKit project build file
+   </description>
+
+   <!-- global properties -->
+   <property name="version" value="0.1"/>
+   <property name="source.dir" value="src"/>
+   <property name="test.dir" value="test"/>
+   <property name="build.dir" value="build"/>
+   <property name="docs.dir" value="docs"/>
+   <property name="output.jar" value="ictk-${version}.jar"/>
+
+   <property name="junit.home"  value="/home/jvarsoke/lib/java"/>
+
+   <!-- source files to compile for distro -->
+   <fileset dir="${source.dir}" casesensitive="yes">
+      <patternset id="non.test.sources">
+         <include name="**/*.java"/>
+	 <exclude name="**/junk/**"/>
+	 <exclude name="**/net/**"/>
+      </patternset>
+   </fileset>
+
+   <!-- source files to compile for testing -->
+   <fileset dir="${test.dir}" casesensitive="yes">
+      <patternset id="test.sources">
+         <include name="**/*.java"/>
+	 <exclude name="**/junk/**"/>
+	 <exclude name="**/net/**"/>
+      </patternset>
+   </fileset>
+
+   <path id="compile.class.path">
+      <fileset dir="${junit.home}">
+         <include name="*.jar"/>
+      </fileset>
+      <dirset dir="${build.dir}">
+      </dirset>
+   </path>
+
+   <!-- tasks -->
+   <target name="init">
+      <!-- Generate time stamp -->
+      <tstamp/>
+   </target>
+
+   <target name="dist" depends="jar" />
+
+   <!-- compile targets -->
+   <target name="compile" depends="init"
+           description="compiling the source">
+      <mkdir dir="${build.dir}"/>
+      <javac 
+         source="1.4"
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+	 debug="yes"
+	 optimize="no"
+	 classpathref="compile.class.path">
+	 <patternset refid="non.test.sources"/>
+      </javac>
+   </target>
+
+   <!-- compile targets -->
+   <target name="optimize" depends="init"
+           description="compiling the optimized source">
+      <mkdir dir="${build.dir}"/>
+      <javac 
+         source="1.4"
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+	 debug="no"
+	 optimize="yes"
+	 classpathref="compile.class.path">
+	 <patternset refid="non.test.sources"/>
+      </javac>
+   </target>
+
+   <!--test targets -->
+   <target name="compile_test" depends="compile"
+           description="compiling the regression testing source">
+      <mkdir dir="${build.dir}"/>
+      <javac 
+         source="1.4"
+         srcdir="${test.dir}"
+         destdir="${build.dir}"
+	 debug="yes"
+	 optimize="no"
+	 classpathref="compile.class.path">
+	 <patternset refid="test.sources"/>
+      </javac>
+   </target>
+
+
+   <!-- test suite -->
+   <target name="test" depends="compile_test"
+           description="performing JUnit test battery">
+      <java
+         classname="ictk.AllTests"
+	 classpathref="compile.class.path">
+	 <sysproperty 
+	    key="ictk.boardgame.chess.io.dataDir" 
+	    value="test/ictk/boardgame/chess/io/"
+	 />
+      </java>
+   </target>
+
+
+   <!--distro targets -->
+   <target name="jar" depends="compile"
+           description="building the jar file">
+      <jar 
+         jarfile="${output.jar}"
+         basedir="${build.dir}"
+	 compress="no"
+      />
+	<!-- manifest="manifest.txt" -->
+   </target>
+
+   <target name="optimized-jar" depends="clean, optimize"
+           description="building the optimized jar file">
+      <jar 
+         jarfile="${output.jar}"
+         basedir="${build.dir}"
+	 compress="no"
+      />
+	<!-- manifest="manifest.txt" -->
+   </target>
+
+   <!-- documentation -->
+   <target name="docs" depends="compile"
+           description="building the javadoc documentation">
+      <mkdir dir="${docs.dir}"/>
+
+      <javadoc 
+	 source="1.4"
+	 packagenames="ictk.*"
+	 author="false"
+	 destdir="${docs.dir}"
+	 windowtitle="ICTK API"
+	 classpathref="compile.class.path">
+	 <fileset dir="${source.dir}" casesensitive="yes">
+	    <patternset refid="non.test.sources"/>
+	 </fileset>
+      </javadoc>
+   </target>
+
+   <!-- clean -->
+   <target name="clean"
+           description="clean up">
+      <delete dir="${build.dir}" />
+      <delete dir="${docs.dir}" />
+      <delete file="${output.jar}" />
+   </target>
+</project>
