@@ -569,20 +569,44 @@ public class PGNWriter extends ChessWriter {
       //if starting a variation with indent
       if (indentVariations 
           && type == _VARIATION_BEGIN 
-	  && variationsDeep == 1) {
+	  && variationsDeep > 0) {
          println(buffer.toString());
 	 buffer.delete(0, buffer.length());
-	 buffer.append(this.indentStr).append(str);
+
+	 if (variationsDeep == 1)
+	    buffer.append(this.indentStr);
+	 else
+	    buffer.append(indentStr).append(indentStr);
+
+	 buffer.append(str);
       }
 
       //ending a variation with indents
       else if (indentVariations 
                && type == _VARIATION_END
-	       && variationsDeep == 1) {
-         print(buffer.toString());
-	 print(" ");
-	 print(str);
-	 buffer.delete(0, buffer.length());
+	       && variationsDeep > 0) {
+
+         if (buffer.length() == 0) {
+	    if (variationsDeep == 1) {
+	       print(indentStr);
+	       println(str);
+	    }
+	    else {
+	       print(indentStr);
+	       print(indentStr);
+	       println(str);
+	       if (variationsDeep == 2)
+	          buffer.append(indentStr);
+	       else
+	          buffer.append(indentStr).append(indentStr);
+	    }
+	 }
+	 else {
+	    print(buffer.toString());
+	    print(" ");
+	    println(str);
+	    buffer.delete(0, buffer.length());
+	 }
       }
 
       else if (indentComments && type == _COMMENT && variationsDeep == 0) {
@@ -655,8 +679,16 @@ public class PGNWriter extends ChessWriter {
 
 	    buffer.delete(0, buffer.length());
 
-	    if (indentComments && variationsDeep == 0)
-	       buffer.append(indentStr);
+	    if (indentComments) {
+	       if (variationsDeep == 0)
+	          buffer.append(indentStr);
+	       else if (indentVariations && variationsDeep > 0) {
+	          if (variationsDeep == 1)
+		     buffer.append(indentStr);
+		  else
+		     buffer.append(indentStr).append(indentStr);
+	       }
+	    }
 
 	    buffer.append(tok);
 	    len = buffer.length();
