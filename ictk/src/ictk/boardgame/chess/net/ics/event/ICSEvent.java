@@ -66,7 +66,8 @@ public abstract class ICSEvent {
 			      PLAYER_CONNECTION_EVENT      = 28,
 			      GAME_CREATED_EVENT           = 29,
 			      HISTORY_EVENT                = 30,
-			      NUM_EVENTS		   = 31;
+			      TOURNAMENT_CHANNEL_EVENT     = 31,
+			      NUM_EVENTS		   = 32;
 
       /** each event has a type for easy casting */
    protected int eventType = UNKNOWN_EVENT;

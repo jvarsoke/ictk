@@ -37,42 +37,144 @@ public class FICSChannelEventParserTest extends ParserTest {
    ICSChannelEvent evt;
 
    public FICSChannelEventParserTest () throws IOException {
-//      debug = true;
+      super("ictk.boardgame.chess.net.ics.fics.event");
    }
 
    public void setUp () {
-      parser = new FICSChannelEventParser();
+      parser = FICSChannelEventParser.getInstance();
+      //debug = true;
    }
 
    public void tearDown () {
+      evt = null;
+      parser = null;
    }
 
-   //tests///////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////
    public void testMessage0 () {
-      evt = (ICSChannelEvent) parser.createICSEvent(mesg[0]);
-      assertTrue(evt != null);
-      assertTrue("Gorgonian".equals(evt.getPlayer()));
-      assertTrue(evt.getChannel() == 50);
-      assertTrue("da".equals(evt.getMessage()));
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+
+         evt = (ICSChannelEvent) parser.createICSEvent(mesg[0]);
+	 assertTrue(evt != null);
+
+         //begin test
+	 assertTrue("Gorgonian".equals(evt.getPlayer()));
+	 assertTrue(evt.getChannel() == 50);
+	 assertTrue("da".equals(evt.getMessage()));
+	 //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
    }
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage1 () {
-      evt = (ICSChannelEvent) parser.createICSEvent(mesg[1]);
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
 
-      assertTrue(evt != null);
-      assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
+         evt = (ICSChannelEvent) parser.createICSEvent(mesg[1]);
+	 assertTrue(evt != null);
+
+         //begin test
+	 assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
+         //end test
+
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
    }
 
    //////////////////////////////////////////////////////////////////////
    public void testMessage3 () {
-      evt = (ICSChannelEvent) parser.createICSEvent(mesg[3]);
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
 
-      assertTrue(evt != null);
-      assertTrue(evt.getAccountType().is(ICSAccountType.ADMIN));
-      assertTrue(evt.getAccountType().is(ICSAccountType.SERVICE_REP));
-      assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
-      assertTrue(evt.getAccountType().is(ICSAccountType.TOURNAMENT_MANAGER));
-      assertTrue(evt.getChannel() == 49);
+         evt = (ICSChannelEvent) parser.createICSEvent(mesg[3]);
+	 assertTrue(evt != null);
+
+         //begin test
+	 assertTrue(evt.getAccountType().is(ICSAccountType.ADMIN));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.SERVICE_REP));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
+	 assertTrue(evt.getAccountType().is(ICSAccountType.TOURNAMENT_MANAGER));
+	 assertTrue(evt.getChannel() == 49);
+         //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testMessage4Tournament () {
+      //debug = true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+
+         evt = (ICSChannelEvent) parser.createICSEvent(mesg[4]);
+	 assertTrue(evt != null);
+
+         //begin test
+	 assertTrue(evt.getEventType() == ICSEvent.TOURNAMENT_CHANNEL_EVENT);
+	 assertTrue(evt.getChannel() == 50);
+         //end test
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //inherited///////////////////////////////////////////////////////////
+   public void testParseAll () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testParseAll();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testNative () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testNative();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
    }
 }

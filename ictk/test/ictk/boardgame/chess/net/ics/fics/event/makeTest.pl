@@ -42,26 +42,37 @@ else {
 
 $javaFile = $parserTestClass . ".java";
 
-open (TEMPLATE, $template) or die "can't open $template";
-open (JAVAFILE, ">$javaFile") or die "can't open $javaFile";
+if (-x $javaFile) {
+   print "Writing: $javaFile already exists\n";
 
-{ 
-   local $/;
-   $_ = <TEMPLATE>;
-   close (TEMPLATE);
+   open (TEMPLATE, $template) or die "can't open $template";
+   open (JAVAFILE, ">$javaFile") or die "can't open $javaFile";
 
-   s/$tagParserClass/$parserClass/g;
-   s/$tagParserTestClass/$parserTestClass/g;
-   s/$tagEventClass/$eventClass/g;
+   { 
+      local $/;
+      $_ = <TEMPLATE>;
+      close (TEMPLATE);
 
-   print JAVAFILE $_;
-   close (JAVAFILE);
+      s/$tagParserClass/$parserClass/g;
+      s/$tagParserTestClass/$parserTestClass/g;
+      s/$tagEventClass/$eventClass/g;
+
+      print JAVAFILE $_;
+      close (JAVAFILE);
+   }
+}
+else {
+   print "Exists: $javaFile\n";
 }
 
-$dataFile = $parserTestClass . ".data";
-if (! -x $dataFile) {
+$dataFile = "data/" . $parserTestClass . ".data";
+if (-x $dataFile) {
+   print "Writing: $dataFile\n";
    open (DATAFILE, ">$dataFile") or die "can't create $dataFile";
    print DATAFILE "##$parserTestClass Data file\n";
-   print DATAFILE "##\$Id$\n";
+   print DATAFILE "##\$" . "Id:" . "\$\n";
    close (DATAFILE);
+}
+else {
+   print "Exists: $dataFile\n";
 }

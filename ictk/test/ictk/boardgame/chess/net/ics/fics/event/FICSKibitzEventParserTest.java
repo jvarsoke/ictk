@@ -43,6 +43,7 @@ public class FICSKibitzEventParserTest extends ParserTest {
 
    public void setUp () {
       parser = FICSKibitzEventParser.getInstance();
+      //debug = true;
    }
 
    public void tearDown () {
@@ -59,14 +60,49 @@ public class FICSKibitzEventParserTest extends ParserTest {
 	 evt = (ICSKibitzEvent) parser.createICSEvent(mesg[0]);
 	 assertTrue(evt != null);
 
+         //begin test
 	 assertTrue(evt.getPlayer().equals("Handle"));
 	 assertFalse(evt.getAccountType().is(ICSAccountType.UNREGISTERED));
 	 assertTrue(evt.getRating().get() == 1902);
 	 assertTrue(evt.getBoardNumber() == 7);
 	 assertTrue(evt.getMessage().equals("hey"));
+         //end test
       }
       finally {
          Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //inherited///////////////////////////////////////////////////////////
+   public void testParseAll () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testParseAll();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
+      }
+   }
+
+   //////////////////////////////////////////////////////////////////////
+   public void testNative () {
+      //debug=true;
+      if (debug) {
+         Log.addMask(ICSEventParser.DEBUG);
+         parser.setDebug(true);
+      }
+      try {
+         super.testNative();
+      }
+      finally {
+         Log.removeMask(ICSEventParser.DEBUG);
+	 debug = false;
       }
    }
 }

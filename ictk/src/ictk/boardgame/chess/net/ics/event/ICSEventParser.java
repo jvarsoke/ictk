@@ -102,10 +102,16 @@ public abstract class ICSEventParser {
    public Matcher match (CharSequence s) {
       Matcher m = pattern.matcher(s);
 
-      if (m.find())
+      if (m.find()) {
+         if (Log.debug && debug) 
+	    Log.debug(DEBUG, "matched: " + s, m);
          return m;
-      else
+      }
+      else {
+         if (Log.debug && debug) 
+	    Log.debug(DEBUG, "failed: " + s);
          return null;
+      }
    }
 
    /* createICSEvent ********************************************************/

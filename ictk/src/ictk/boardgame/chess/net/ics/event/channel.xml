@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE icsevtml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- kibitz ............................................................-->
+   <event id="channel" 
+          class="Channel"
+	  enum="CHANNEL"
+	  extends="ICSMessageEvent">
+
+      <description>
+         This coorisponds to Channel tells, Shouts, Emote Shouts, 
+	 T-Shouts, C-Shouts, S-Shouts, T-Channel tells, etc.
+      </description>
+
+      <member id="channel:player"      typeref="player"/>
+      <member id="channel:accountType" typeref="accountType"/>
+      <member id="channel:channel"     
+              typeref="int"
+	      varname="channel"
+	      functname="Channel"
+	      />
+      <member id="channel:message"     typeref="message"     inherit="both"/>
+
+      <!--parser-->
+      <parser id="channel:parser"
+              name="Channel"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      detectFake="yes">
+
+         <!-- regex -->
+	 <regex>
+	    <regexref ref="regex:fics:player"/>
+	    <regexref ref="regex:fics:accountType"/>
+	    \(
+	    ([T])?   <!--for tournament channel tells -->
+	    (\d+)    <!--channel number -->
+	    \)
+	    :\s
+	    <regexref ref="regex:fics:message"/>
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches>
+	    <regexgroup num="2" memberref="channel:player"/>
+	    <regexgroup num="3" memberref="channel:accountType"/>
+	    <regexgroup num="5" memberref="channel:channel"/>
+	    <regexgroup num="6" memberref="channel:message"/>
+	    <code format="java">
+      if (m.group(4) != null)
+         if ("T".equals(m.group(4))) {
+            evt.setEventType(ICSEvent.TOURNAMENT_CHANNEL_EVENT);
+      }
+	    </code>
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="80">
+	    <code format="java">
+      String str = null;
+
+      sb.append(evt.getPlayer())
+        .append(evt.getAccountType());
+      
+      sb.append("(");
+
+      if (evt.getEventType() == ICSEvent.TOURNAMENT_CHANNEL_EVENT)
+         sb.append("T");
+
+      sb.append(evt.getChannel())
+        .append("): ");
+
+      sb.append(evt.getMessage());
+	    </code>
+
+	 </toNative>
+      </parser>
+   </event>
+   &common;
+</icsevtml>
