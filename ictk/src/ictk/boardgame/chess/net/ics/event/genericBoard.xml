@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE ictkml SYSTEM "icsevtml.dtd" [
+   <!ENTITY common SYSTEM "parserCommon.xml">
+   ]>
+
+<icsevtml>
+   <!-- generic board event ...............................................-->
+   <event id="genericBoard" 
+          class="GenericBoard"
+	  enum="UNKNOWN"
+	  extends="ICSEvent">
+
+      <description>
+         A flexible class that hosts data from various board events.  This
+	 class was created to limit needless proliferation of trivial classes.
+	 The data in this cass is thus context dependent.  You should check
+	 the EventType before understanding what to do with the data.
+      </description>
+
+      <implements idref="board"/>
+
+      <member id="genericBoard:player"       typeref="player"/>
+      <member id="genericBoard:boardNumber"  typeref="boardNumber"
+                                             inherit="method"/>
+      <member id="genericBoard:data "        typeref="int"
+                                             varname="data"
+					     functname="Data"/>
+
+
+      <!--Examine Navigation parser ........................................-->
+      <parser id="examineNavigation:parser"
+              name="ExamineNavigation"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINE_NAVIGATION"
+	      detectFake="no">
+         <description>
+	    The Data field refers to the number of moves from the current
+	    move.  A negative Data number means to traverse the history
+	    list in reverse.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    Game\s(\d+):\s
+	    <regexref ref="regex:fics:player"/>
+	    \s
+	    (goes\sforward|backs\sup)
+	    \s(\d+)\smoves?.
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="genericBoard:boardNumber"/>
+	    <regexgroup num="3" memberref="genericBoard:player"/>
+	    <regexgroup num="5" memberref="genericBoard:data"/>
+      if ("backs up".equals(m.group(4))) {
+	 evt.setData(evt.getData() * -1);
+      }
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="46">
+	    <code format="java">
+      sb.append("Game ")
+        .append(evt.getBoardNumber())
+	.append(": ")
+	.append(evt.getPlayer());
+      if (evt.getData() > 0) {
+	 sb.append(" goes forward ")
+	   .append(evt.getData());
+      }
+      else {
+	 sb.append(" backs up ")
+	   .append(evt.getData() * -1);
+      }
+
+      if (evt.getData() == 1 || evt.getData() == -1)
+         sb.append(" move.");
+      else
+         sb.append(" moves.");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!--Examine Revert parser ............................................-->
+      <parser id="examineRevert:parser"
+              name="ExamineRevert"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINE_REVERT"
+	      detectFake="no">
+         <description>
+	    The Data field refers to the mainline move number that revert
+	    has returned us to.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    Game\s(\d+):\s
+	    <regexref ref="regex:fics:player"/>
+	    \sreverts\sto\smain\sline\smove\s
+	    (\d+)\.
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="2" memberref="genericBoard:boardNumber"/>
+	    <regexgroup num="3" memberref="genericBoard:player"/>
+	    <regexgroup num="4" memberref="genericBoard:data"/>
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="46">
+	    <code format="java">
+      sb.append("Game ")
+        .append(evt.getBoardNumber())
+	.append(": ")
+	.append(evt.getPlayer())
+	.append(" reverts to main line move ")
+	.append(evt.getData())
+	.append(".");
+	    </code>
+	 </toNative>
+      </parser>
+
+   </event>
+   &common;
+</icsevtml>
