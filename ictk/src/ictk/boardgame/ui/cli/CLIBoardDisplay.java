@@ -47,7 +47,7 @@ public interface CLIBoardDisplay extends BoardDisplay {
    /** checks to see if the display is assuming the foreground is darker than
     *  the background.  For example, on a Black on White display.
     *
-    *  @returns true if the display assumes the foreground is darker.
+    *  @return true if the display assumes the foreground is darker.
     */
    public boolean isInverse ();
 
