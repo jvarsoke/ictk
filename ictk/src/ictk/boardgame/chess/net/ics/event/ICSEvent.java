@@ -59,28 +59,30 @@ public abstract class ICSEvent {
 
 			      TELL_EVENT                   =  9,
 			      SAY_EVENT                    = 10,
+			      
+			      CHALLENGE_EVENT		   = 11,
 
-   			      SEEK_AD_EVENT                = 11,
-			      SEEK_REMOVE_EVENT            = 12,
-   			      SEEK_AD_READABLE_EVENT       = 13,
-			      SEEK_REMOVE_READABLE_EVENT   = 14,
-			      SEEK_CLEAR_EVENT             = 15,
+   			      SEEK_AD_EVENT                = 12,
+			      SEEK_REMOVE_EVENT            = 13,
+   			      SEEK_AD_READABLE_EVENT       = 14,
+			      SEEK_REMOVE_READABLE_EVENT   = 15,
+			      SEEK_CLEAR_EVENT             = 16,
 
-			      KIBITZ_EVENT                 = 16,
-			      WHISPER_EVENT                = 17,
-			      BOARD_SAY_EVENT              = 18, 
+			      KIBITZ_EVENT                 = 17,
+			      WHISPER_EVENT                = 18,
+			      BOARD_SAY_EVENT              = 19, 
 
-			      QTELL_EVENT                  = 19,
-			      AUTO_SALUTE_EVENT            = 20,
-			      MOVE_LIST_EVENT              = 21,
-			      MATCH_REQUEST_EVENT          = 22,
-			      PLAYER_NOTIFICATION_EVENT    = 23,
-			      AVAIL_INFO_EVENT             = 24,
-			      USER_DEFINED_EVENT           = 25,
+			      QTELL_EVENT                  = 20,
+			      AUTO_SALUTE_EVENT            = 21,
+			      MOVE_LIST_EVENT              = 22,
+			      MATCH_REQUEST_EVENT          = 23,
+			      PLAYER_NOTIFICATION_EVENT    = 24,
+			      AVAIL_INFO_EVENT             = 25,
+			      USER_DEFINED_EVENT           = 26,
 
-			      PLAYER_CONNECTION_EVENT      = 26,
-			      HISTORY_EVENT                = 27,
-			      NUM_EVENTS		   = 28;
+			      PLAYER_CONNECTION_EVENT      = 27,
+			      HISTORY_EVENT                = 28,
+			      NUM_EVENTS		   = 29;
 
       /** each event has a type for easy casting */
    protected int eventType = UNKNOWN_EVENT;

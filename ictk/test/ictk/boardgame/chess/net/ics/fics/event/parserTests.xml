@@ -199,17 +199,10 @@
 	 >
    </unit>
 
-<!--
-   <unit id="tell"
-         class="Tell"
-	 event="Tell"
+   <!-- challenge .........................................................-->
+   <unit id="challenge"
+         class="Challenge"
+	 event="Challenge"
 	 >
-      <test name="Message0"
-            iochunk="0"
-	    >
-         <code format="java">
-	 </code>
-      </test>
    </unit>
--->
 </unitTest>

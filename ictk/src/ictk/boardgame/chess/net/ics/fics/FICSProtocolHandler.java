@@ -93,8 +93,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 			      PLAIN = "[0;m";
 
    static final protected Pattern 
-                                  seekRemovedPattern,
-				  autosalutePattern,
 				  matchPattern,
 				  takebackPattern,
 				  availInfoPattern;
@@ -118,23 +116,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
    //constructor//////////////////////////////////////////////////////////
    static {
       //patterns
-      seekRemovedPattern = Pattern.compile(
-                                    "^(Ads removed:\\s"
-                                  + "([\\d ]+)"          //ad numbers
-				  + ")"
-          , Pattern.MULTILINE);
-
-      autosalutePattern  = Pattern.compile("^("            //begin full match
-                                  + "-->\\s"
-				  + REGEX_handle
-				  + REGEX_acct_type
-				  + ">\\s"
-				  + "\\(ics-auto-salutes '"
-				  + "(\\w+)\\)"            //message
-				  + "((.|\\s+\\\\)*)"     //message
-				  + ")"                    //end
-          , Pattern.MULTILINE);
-
       matchPattern = Pattern.compile("^("                   //beginning
                                     + "Challenge:\\s"
 				    + REGEX_handle          //challenger
@@ -703,9 +684,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       }
 
       if (found) { /*no-op*/ }
-      else if ((matcher = match(seekRemovedPattern, str)) != null)
-         sendSeekRemovedEvent(matcher);
-
       else if ((matcher = match(matchPattern, str)) != null)
          sendMatchEvent(matcher);
 
@@ -789,21 +767,8 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
       System.out.println(ESC + BOLD_RED + m.group() + ESC + PLAIN);
    }
 
-   protected void sendSeekRemovedEvent (Matcher m) {
-      System.out.println(ESC + BLUE + m.group() + ESC + PLAIN);
-   }
-
-
    protected void sendTakeBackEvent (Matcher m) {
       System.out.println(ESC + RED + m.group() + ESC + PLAIN);
-   }
-
-   protected void sendAutoSaluteEvent (Matcher m) {
-      System.out.println(ESC + BOLD_BLACK + m.group(1) + ESC + PLAIN);
-      //1 - message (without trailing prompt letter)
-      //2 - handle
-      //3 - account type
-      //4 - who is being saluted
    }
 
    protected void sendAvailInfoEvent (Matcher m) {
