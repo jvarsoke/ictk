@@ -25,6 +25,8 @@
 
 package ictk.boardgame.chess.io;
 
+import ictk.util.Log;
+
 import java.io.IOException;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -125,12 +127,16 @@ public class NAG {
          //scid specific
 	 else if ("D".equals(str))   nag = 201;
 
-	 else if (str.charAt(0) == '$')
+	 else if (str.charAt(0) == '$') {
 	    try {
 	       nag = Short.parseShort(str.substring(1));
 	    }
 	    catch (NumberFormatException e) {
+	       if (Log.debug)
+	          Log.error(Log.USER_WARNING, "NAG parsed a bad token: " 
+	          + str.substring(1));
 	    }
+	 }
 
       return nag;
    }
@@ -195,6 +201,8 @@ public class NAG {
    }
 
    /* shortToString *********************************************************/
+   /** @return null if there is no non-numeric representation of this NAG.
+    */
    public static String shortToString (short nag) {
       String s = null;
       s = shortToSuffix(nag);

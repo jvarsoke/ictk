@@ -25,6 +25,7 @@
 
 package ictk.boardgame.chess.net.ics;
 import ictk.boardgame.chess.net.ics.event.*;
+import java.util.HashMap;
 
 public class ICSEventRouter {
       /** the default router receives all events that aren't sent elsewhere*/
@@ -79,7 +80,7 @@ public class ICSEventRouter {
     *  NOTE: all types must be registered independently
     */
    public void addBoardListener (ICSEventListener eh,
-                                 int boardNumber
+                                 int boardNumber,
 				 int type) {
    }
 

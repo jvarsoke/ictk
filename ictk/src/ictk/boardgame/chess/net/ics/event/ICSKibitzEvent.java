@@ -31,83 +31,68 @@ import ictk.util.Log;
 import java.util.regex.*;
 import java.io.IOException;
 
-
-/**This cooresponds to Kibits messages and Whisper messages.  A flag
- * descerns which one it is.
+/**
+ * This cooresponds to Kibitz, Whisper, and Board Say messages. The   
+ * EventType tells which one it is. this is a really long description 
+ * and I'm hoping to see the text wrap so I can test the new function 
+ * I got from the book with all the new features this should look     
+ * really good.                                                       
  */
-public class ICSKibitzEvent extends ICSMessageEvent 
+public class ICSKibitzEvent extends ICSMessageEvent
                             implements ICSBoardEvent {
 
    //static initializer/////////////////////////////////////////////////////
-   protected static final int KIBITZ_EVENT =  ICSEvent.KIBITZ_EVENT,
-                              WHISPER_EVENT = ICSEvent.WHISPER_EVENT,
-			      BOARD_SAY_EVENT = ICSEvent.BOARD_SAY_EVENT;
+   protected static final int KIBITZ_EVENT =  ICSEvent.KIBITZ_EVENT;
 
    //instance vars//////////////////////////////////////////////////////////
-   protected int boardNumber;
-   protected ICSAccountType accountType;
+   protected String player;
+   protected ICSAccountType acctType;
    protected ICSRating rating;
+   protected int boardNumber;
+
 
    //constructors///////////////////////////////////////////////////////////
    public ICSKibitzEvent () {
       super(KIBITZ_EVENT);
    }
 
+   //assessors/////////////////////////////////////////////////////////////
+   public String getPlayer () {
+      return player;
+   }
+
    public ICSAccountType getAccountType () {
-      return accountType;
+      return acctType;
    }
 
-   public void setAccountType (ICSAccountType acct) {
-      accountType = acct;
-   }
-
-   /** BOARD_SAY_EVENTs have no rating associated with them
-    */
    public ICSRating getRating () {
       return rating;
    }
 
-   /** BOARD_SAY_EVENTs have no rating associated with them
-    */
+   //mutators//////////////////////////////////////////////////////////////
+   public void setPlayer (String player) {
+      this.player = player;
+   }
+
+   public void setAccountType (ICSAccountType acctType) {
+      this.acctType = acctType;
+   }
+
    public void setRating (ICSRating rating) {
       this.rating = rating;
    }
 
-   //ICSBoardEvent Interface//////////////////////////////////////////////////
-   public void setBoardNumber (int board) {
-      boardNumber = board;
+   //ICSBoardEvent////////////////////////////////////////////////////
+   public int getBoardNumber () { 
+      return boardNumber; 
    }
-
-   public int getBoardNumber () {
-      return boardNumber;
+	 
+   public void setBoardNumber (int board) { 
+      this.boardNumber = board; 
    }
-
+	 
+   //readable//////////////////////////////////////////////////////////////
    public String getReadable () {
-      StringBuffer sb = new StringBuffer(20);
-
-      sb.append(getPlayer());
-
-      sb.append(getAccountType());
-
-      if (getRating() != null)
-         sb.append("(").append(getRating()).append(")");
-
-      sb.append("[").append(getBoardNumber()).append("]");
-
-      switch (eventType) {
-         case ICSEvent.WHISPER_EVENT:
-            sb.append(" whispers: "); break;
-	 case ICSEvent.KIBITZ_EVENT:
-            sb.append(" kibitzes: "); break;
-	 case ICSEvent.BOARD_SAY_EVENT:
-            sb.append(" says: "); break;
-	 default:
-	    Log.error(Log.PROG_ERROR, 
-	       "Received bad eventType: " + eventType);
-      }
-
-      sb.append(getMessage());
-
-      return sb.toString();
+      return FICSKibitzEventParser.toNative(this);
    }
 }

@@ -60,6 +60,13 @@ public class NAGTest extends TestCase {
    }
 
    //////////////////////////////////////////////////////////////////////
+   public void testStringReverse () {
+      nags = nag.stringToShortArray("$9");
+      assertTrue(nags.length == 1);
+      assertTrue(nags[0] == 9);
+   }
+
+   //////////////////////////////////////////////////////////////////////
    public void testSuffixToShort () {
       assertTrue(nag.suffixToShort("N") == 146);
    }

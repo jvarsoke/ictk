@@ -36,8 +36,6 @@ public class ChessAnnotation implements Annotation {
    protected String comment;
       /** NumericAnnotationGlyphs*/
    protected short[] nags;
-      /** suffix is a subset of NAG.  Only ?,!!,??,!?,?! */
-   protected short   suffix;
 
    public ChessAnnotation () {
    }
@@ -59,7 +57,7 @@ public class ChessAnnotation implements Annotation {
          return 0;
    }
 
-   /* addNAG()  **************************************************************/
+   /* addNAG *****************************************************************/
    /** add a new NumericAnnotationGlyph (NAG) to the annotation.  There is no 
     * theoretical limit on the max number of NAGs for a particular annotation.
     */
@@ -101,7 +99,7 @@ public class ChessAnnotation implements Annotation {
       return nags[i];
    }
 
-   /* getNAGs() *************************************************************/
+   /* getNAGs ***************************************************************/
    /** returns a short array of NAGs for this annotation.
     *
     *  NOTE: this is a reference to the original array, not a copy.
@@ -133,14 +131,16 @@ public class ChessAnnotation implements Annotation {
       return nags;
    }
 
-   /* getNAGString() ********************************************************/
-   /** returns the array of NAGs as a string delimited by <space>
-    *  Only those NAGs that have a Suffix form will be added to the 
-    *  string.
+   /* getNAGString **********************************************************/
+   /** returns the array of NAGs as a string delimited by <space>.  This will
+    *  include suffixes and numeric NAGs.  Those NAGs that have a non-numeric
+    *  notation will be represented as such.
+    *  
+    *  @param allNumeric represents all NAGs numerically.
     *
     *  @return null if there are no NAGs associated with this annotation
     */
-   public String getNAGString () {
+   public String getNAGString (boolean allNumeric) {
       if (nags == null) return null;
 
       StringBuffer sb = new StringBuffer();
@@ -148,17 +148,29 @@ public class ChessAnnotation implements Annotation {
       int count = 0;
 
          for (int i=0; i<nags.length; i++) {
-	    suff = NAG.shortToString(nags[i]);
-	    if (suff != null) {
-	       if (count++ > 0)
-	          sb.append(" ");
+	    if (!allNumeric)
+	       suff = NAG.shortToString(nags[i]);
+
+	    if (count++ > 0)
+	       sb.append(" ");
+
+	    if (suff != null)
 	       sb.append(suff);
-	    }
+	    else
+	       sb.append("$").append(nags[i]);
 	 }
       return sb.toString();
    }
 
-   /* removeNAG() ***********************************************************/
+
+   /* getNAGString ***********************************************************/
+   /** calls getNAGString(false)
+    */
+   public String getNAGString () {
+      return getNAGString(false);
+   }
+
+   /* removeNAG *************************************************************/
    /** removes the NAG from the NAG list.
     */
    public void removeNAG (int i) {

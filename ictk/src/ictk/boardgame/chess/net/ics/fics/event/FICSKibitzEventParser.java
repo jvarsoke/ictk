@@ -24,6 +24,7 @@
  */
 
 package ictk.boardgame.chess.net.ics.fics.event;
+
 import ictk.boardgame.chess.net.ics.event.*;
 import ictk.boardgame.chess.net.ics.*;
 import ictk.util.Log;
@@ -31,25 +32,29 @@ import ictk.util.Log;
 import java.util.regex.*;
 import java.io.IOException;
 
-
+/**
+ * This cooresponds to Kibitz, Whisper, and Board Say messages. The   
+ * EventType tells which one it is. this is a really long description 
+ * and I'm hoping to see the text wrap so I can test the new function 
+ * I got from the book with all the new features this should look     
+ * really good.                                                       
+ */
 public class FICSKibitzEventParser extends ICSEventParser {
+
    //static/////////////////////////////////////////////////////////////////
    public static final Pattern masterPattern;
 
    static {
       masterPattern  = Pattern.compile(
-         "^:?("
-//<template function=regex>
-	 + REGEX_handle
-	 + REGEX_acct_type
-	 + "(" 
-	 + REGEX_rating
-	 + ")?"
-	 + "\\[(\\d+)\\]"        //game number
-	 + "\\s(kibitzes|whispers|says):\\s"
-	 + "((.|\\s+\\\\)*)"     //message
-//</template>
-	 + ")"
+         "^:?(" //begin
+         + "([\\w]+)"
+         + "((?:\\([A-Z*]+\\))*)"
+         + "\\(\\s*([0-9+-]+[EP]?)\\)"
+         + "\\[(\\d+)\\]"
+         + "\\s(kibitzes|whispers|says):\\s"
+         + "((.|\\s+\\\\|\\s+:)*)"
+
+         + ")"  //end
          , Pattern.MULTILINE);
    }
 
@@ -69,82 +74,79 @@ public class FICSKibitzEventParser extends ICSEventParser {
    /* assignMatches *********************************************************/
    public void assignMatches (Matcher m, ICSEvent event) {
       ICSKibitzEvent evt = (ICSKibitzEvent) event;
-
+      
       evt.setFake(detectFake(m.group(0)));
-
-//<template function=assignMatches>
+      
       evt.setPlayer(m.group(2));
-
-      evt.setAccountType(parseAccountType(m, 3));
-
-      if (m.group(4) != null)
-         evt.setRating(parseRating(m, 5));
-
+      
+      evt.setAccountType(parseICSAccountType(m, 3));
+      
+      evt.setRating(parseICSRating(m, 5));
+      
       try {
          evt.setBoardNumber(Integer.parseInt(m.group(6)));
       }
       catch (NumberFormatException e) {
          Log.error(Log.PROG_WARNING,
-	    "Can't parse board number for: "
-            + m.group(6) + " of " + m.group(0));
-	 evt.setEventType(ICSEvent.UNKNOWN_EVENT);
-	 evt.setMessage(m.group(0));
-	 return;
+            "Can't parse boardNumber for: "
+            + m.group(6) 
+            + " of " + m.group(0));
+         evt.setEventType(ICSEvent.UNKNOWN_EVENT);
+         evt.setMessage(m.group(0));
+         return;
       }
-
+      
+      evt.setMessage(m.group(8));
+      
       if ("whispers".equals(m.group(7))) {
          evt.setEventType(ICSEvent.WHISPER_EVENT);
       }
       else if ("says".equals(m.group(7))) {
          evt.setEventType(ICSEvent.BOARD_SAY_EVENT);
       }
-
-      evt.setMessage(m.group(8));
-//</template>
+	    
    }
 
    /* toNative ***************************************************************/
-   public String toNative (ICSEvent event) {
+   public static String toNative (ICSEvent event) {
 
       if (event.getEventType() == ICSEvent.UNKNOWN_EVENT)
          return event.getMessage();
 
       ICSKibitzEvent evt = (ICSKibitzEvent) event;
       StringBuffer sb = new StringBuffer(20);
-
+      
       if (evt.isFake()) sb.append(":");
-//<template function=toNative>
+      
       sb.append(evt.getPlayer())
         .append(evt.getAccountType());
 
       if (evt.getEventType() != ICSEvent.BOARD_SAY_EVENT)
-         sb.append("(")
-	   .append(evt.getRating())
-	   .append(")");
+         sb.apped("(")
+           .append(evt.getRating())
+           .append(")");
 
       sb.append("[")
         .append(evt.getBoardNumber())
-	.append("]");
+        .append("]");
 
       switch (evt.getEventType()) {
          case ICSEvent.KIBITZ_EVENT:
-	    sb.append(" kibitzes: ");
-	    break;
+            sb.append(" kibitzes: ");
+            break;
 
          case ICSEvent.WHISPER_EVENT:
-	    sb.append(" whispers: ");
-	    break;
+            sb.append(" whispers: ");
+            break;
 
          case ICSEvent.BOARD_SAY_EVENT:
-	    sb.append(" says: ");
-	    break;
+            sb.append(" says: ");
+            break;
       }
 
       sb.append(evt.getMessage());
+	    
 
       return sb.toString();
-//</template>
    }
 }
-
-

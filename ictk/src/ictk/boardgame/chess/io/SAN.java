@@ -246,8 +246,10 @@ public class SAN extends ChessMoveNotation {
    //Writing//////////////////////////////////////////////////////////////////
 
    /* moveToString ***********************************************************/
+   /** calls moveToString(false) and thus only returns the move.
+    */
    public String moveToString (Move move) {
-      return moveToString(move, true);
+      return moveToString(move, false);
    }
 
    /* moveToString ***********************************************************/

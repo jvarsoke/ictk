@@ -260,6 +260,8 @@ public class PGNWriter extends ChessWriter {
 					    StringBuffer sb) {
       ChessMove m = null;
       boolean isBlackMove = true;
+      String strtmp = null;
+      ChessAnnotation anno = null;
 
          if (Log.debug)
 	    Log.debug(DEBUG, "continuations(" + cont.size() + ")"
@@ -306,14 +308,34 @@ public class PGNWriter extends ChessWriter {
 	       //add move
 	       sb.append(notation.moveToString(m));
 
-	       //add annotation in "{anno}"
-	       if (m.getAnnotation() != null
-	          && (m.getAnnotation().getComment() 
-		       != null)) {
-		  sb.append(" {")
-		    .append(m.getAnnotation().getComment())
-		    .append("}");
-	          needNumber = true;
+               anno = (ChessAnnotation) m.getAnnotation();
+	       //add NAG and annotation in "{anno}"
+	       if (anno != null) {
+
+                  //NAG
+	          if (anno.getNAGs() != null
+		      && anno.getNAGs().length > 0) {
+		     strtmp = anno.getNAGString();
+
+                     //if no suffix then need a space
+		     if (anno.getSuffix() == 0) {
+		        sb.append(" ");
+			needNumber = true;
+		     }
+		     //need number if more than one NAG but 1st is suffix
+		     else if (anno.getNAGs().length > 1)
+		        needNumber = true;
+
+		     sb.append(strtmp);
+		  }
+
+		  //comment
+	          if (anno.getComment() != null) {
+		     sb.append(" {")
+		       .append(anno.getComment())
+		       .append("}");
+	             needNumber = true;
+		  }
 	       }
 	    }
 

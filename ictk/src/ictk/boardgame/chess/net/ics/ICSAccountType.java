@@ -54,7 +54,7 @@ public class ICSAccountType {
 			   IM                  = 14,
 			   WGM                 = 15,
 			   GM                  = 16,
-			   DEMO                = 17
+			   DEMO                = 17,
 			   NUM_FLAGS	       = 18;
 
    //FIXME: this could be a long mask instead.  But coding for this was quicker

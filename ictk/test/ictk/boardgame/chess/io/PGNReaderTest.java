@@ -482,6 +482,31 @@ public class PGNReaderTest extends TestCase {
    }
 
    ///////////////////////////////////////////////////////////////////////////
+   public void testNAGOver8 () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_annotation, false, 14);
+
+	 game = (Game) games.get(14);
+	 assertTrue(game != null);
+	 History history = game.getHistory();
+
+	 history.rewind();
+	 history.next();
+
+	 assertTrue(history.getCurrentMove() != null);
+
+	 anno = (ChessAnnotation) history.getCurrentMove().getAnnotation();
+
+	 assertTrue(anno != null);
+	 assertTrue(anno.getNAG(0) == (short) 9);
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
    public void testBadPGNs () 
           throws FileNotFoundException,
 	         InvalidGameFormatException,

@@ -373,6 +373,9 @@ public class PGNReader extends ChessReader {
          //NAG
 	 else if (tok.charAt(0) == '$') {
 	    try {
+	       if (Log.debug)
+	          Log.debug(DEBUG, "NAG Token: " + tok);
+
 	       if (lastMove != null) {
 		  anno = (ChessAnnotation) lastMove.getAnnotation();
 		  if (anno == null)
@@ -382,7 +385,9 @@ public class PGNReader extends ChessReader {
 	       }
 	    }
 	    catch (NumberFormatException e) {
-	       //just move along
+	       if (Log.debug)
+	          Log.error(Log.USER_WARNING, "didn't understand this NAG: " 
+		     + tok);
 	    }
 	 }
 

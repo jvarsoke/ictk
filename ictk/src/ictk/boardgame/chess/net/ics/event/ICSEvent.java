@@ -41,8 +41,10 @@ public abstract class ICSEvent {
 
    			      SEEK_AD_EVENT                =  4,
 			      SEEK_REMOVE_EVENT            =  5,
+
 			      TELL_EVENT                   =  6,
 			      SAY_EVENT                    =  7,
+
 			      KIBITZ_EVENT                 =  8,
 			      WHISPER_EVENT                =  9,
 
@@ -63,7 +65,7 @@ public abstract class ICSEvent {
 			      PLAYER_CONNECTION_EVENT      = 28,
 			      GAME_CREATED_EVENT           = 29,
 			      HISTORY_EVENT                = 30,
-			      NUM_EVENT			   = 31;
+			      NUM_EVENTS		   = 31;
 
       /** each event has a type for easy casting */
    protected int eventType = UNKNOWN_EVENT;
@@ -87,7 +89,6 @@ public abstract class ICSEvent {
        ** the server thought it sent the event, as transmission time
        ** is involved. */
    protected Date timestamp;
-
 
       /** this is used by many of the events for a human readable 
        ** message of some kind.  It also doubles as a repository for

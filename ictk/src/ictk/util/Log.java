@@ -131,6 +131,13 @@ public class Log {
       mask_level &= ~mask;
    }
 
+   /* isDebug ***********************************************************/
+   /** are we debugging this mask?
+    */
+   public static boolean isDebug (long mask) {
+      return (mask_level & mask) == mask;
+   }
+
    /* debug **************************************************************/
    /** prints out debug information to the log if the mask is 
     *  found in the current mask setting.  The message is prefaced

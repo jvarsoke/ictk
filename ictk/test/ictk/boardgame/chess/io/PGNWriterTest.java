@@ -48,6 +48,7 @@ public class PGNWriterTest extends TestCase {
    StringWriter sw;
    StringReader sr;
    PGNReader spgnin;
+   ChessAnnotation anno;
 
    public PGNWriterTest (String name) {
       super(name);
@@ -69,6 +70,7 @@ public class PGNWriterTest extends TestCase {
       game = null;
       game2 = null;
       in = null;
+      anno = null;
       Log.removeMask(san.DEBUG);
       Log.removeMask(ChessBoard.DEBUG);
       Log.removeMask(ChessGameInfo.DEBUG);
@@ -299,6 +301,49 @@ public class PGNWriterTest extends TestCase {
       move = (ChessMove) game.getHistory().getCurrentMove();
       move2 = (ChessMove) game2.getHistory().getCurrentMove();
       assertTrue(move.getPrenotation().equals(move2.getPrenotation()));
+
+      Log.removeMask(PGNWriter.DEBUG);
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testNAGSymetry () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+
+      //Log.addMask(PGNWriter.DEBUG);
+
+      game = new ChessGame();
+      board = (ChessBoard) ((ChessGame) game).getBoard();
+
+      move = (ChessMove) san.stringToMove(board, "e4");
+      anno = new ChessAnnotation();
+      anno.addNAG((short) 1);   // !
+      anno.addNAG((short) 123); // $123
+      move.setAnnotation(anno);
+      game.getHistory().add(move);
+
+      move = (ChessMove) san.stringToMove(board, "e5");
+      game.getHistory().add(move);
+
+      writer = new PGNWriter(sw = new StringWriter()); 
+
+      writer.writeGame(game);
+
+      if (Log.isDebug(PGNWriter.DEBUG)) {
+         writer = new PGNWriter(System.out);
+	 writer.writeGame(game);
+      }
+
+      spgnin = new PGNReader(new StringReader(sw.toString()));
+      game2 = spgnin.readGame();
+
+      assertTrue(game.getHistory().equals(game2.getHistory()));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
+      assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
 
       Log.removeMask(PGNWriter.DEBUG);
    }

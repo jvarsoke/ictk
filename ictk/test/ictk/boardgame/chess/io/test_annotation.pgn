@@ -144,3 +144,11 @@ Bxf2+ 6. Kf1 Qe7 7. Nxh8 d5 8. exd5 Nd4 9. h3 Bg3
 [Result "*"] 
 
 1.e4 e5 (1...c6 {post} {repost}) 2.Nf3 *
+
+##testing NAG over $8
+[White "?"]
+[Black "?"]
+
+1. e4 $9 *
+
+

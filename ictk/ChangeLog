@@ -43,6 +43,8 @@ Legend:
    [chess]  fixed 776369 - NAG followed by comment set as prenotation
             {thanks: Jerome Zago for the bug report}
    [chess]  fixed 776408 - double annotation do not respect variation bounds
+   [chess]  fixed 777732 - PGNWriter not writing numeric NAGs
+            {thanks: Jerome Zago for the bug report}
 
 0.1.1 - 2003-07-20 bug fixes
    [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.

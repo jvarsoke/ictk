@@ -266,6 +266,21 @@ public class SANTest extends TestCase {
    }
 
    //////////////////////////////////////////////////////////////////////
+   public void testNAGNumeric () 
+          throws IllegalMoveException,
+                 AmbiguousChessMoveException {
+      //Log.addMask(SAN.DEBUG);
+      ChessAnnotation anno = null;
+
+      board = new ChessBoard();
+      move = (ChessMove) san.stringToMove(board, "e4 $9");
+      assertTrue (move != null);
+      anno = (ChessAnnotation) move.getAnnotation();
+      assertTrue (anno != null);
+      assertTrue (anno.getNAGString().equals("$9"));
+   }
+
+   //////////////////////////////////////////////////////////////////////
    public void testFileToChar ()  {
       assertTrue (san.fileToChar(1) == 'a');
       assertTrue (san.fileToChar(8) == 'h');

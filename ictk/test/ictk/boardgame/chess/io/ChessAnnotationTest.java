@@ -129,4 +129,14 @@ public class ChessAnnotationTest extends TestCase {
 
       assertFalse(anno.equals(anno2));
    }
+
+   ///////////////////////////////////////////////////////////////////////////
+   public void testNAGStoString () {
+      anno.addNAG((short) 123);
+      anno.addNAG((short) 2);
+      assertTrue(anno.getNAGs().length == 2);
+
+      assertTrue(anno.getNAGString().equals("$123 ?"));
+   }
+
 }

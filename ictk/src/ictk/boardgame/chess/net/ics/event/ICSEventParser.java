@@ -183,5 +183,3 @@ public abstract class ICSEventParser {
       return rating;
    }
 }
-
-
