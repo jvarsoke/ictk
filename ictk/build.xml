@@ -1,6 +1,7 @@
 <project name="ictk" default="compile">
    <description>
-      -=[ ictk ]=- Internet Chess ToolKit: project build file
+      -=[ ictk ]=- Internet Chess ToolKit
+                   http://ictk.sourceforge.net
    </description>
 
    <!-- global properties -->
@@ -23,9 +24,8 @@
    <property name="release.dir"       value="release"/>
    <property name="staging.dir"       value="release/${cvs.tag}"/>
 
-   <!-- 3rd party jar locations -->
    <!-- these are jar files distributed with ictk -->
-   <property name="3rdparty.libs.dir" value="lib"/>
+   <property name="lib.dir" value="lib"/>
 
    <!-- environment properties  -->
    <!-- might need to change this if your platform isn't supported by Ant -->
@@ -53,7 +53,7 @@
    <!-- compile path for library -->
    <path id="compile.class.path">
       <!--
-      <fileset dir="${3rdparty.libs.dir}">
+      <fileset dir="${lib.dir}">
          <include name="*.jar"/>
       </fileset>
       -->
@@ -67,7 +67,7 @@
          <include name="*.jar"/>
       </fileset>
       <!--
-      <fileset dir="${3rdparty.libs.dir}">
+      <fileset dir="${lib.dir}">
          <include name="*.jar"/>
       </fileset>
       -->
@@ -79,7 +79,10 @@
    <!-- display version information -->
    <target name="version"
            description="display version information">
-      <echo message="Current version is: ictk-${version}"/>
+      <echo message="   ictk: ictk-${version}"/>
+      <echo message="cvs tag: ${cvs.tag}"/>
+      <echo message="    Ant: ${ant.version}"/>
+      <echo message="   Java: ${ant.java.version}"/>
    </target>
 
    <!-- initialization and error checking .................................-->
@@ -110,7 +113,7 @@
 
    <!-- compile targets -->
    <target name="compile" depends="init"
-           description="compiling the source (w/ debug info)">
+           description="compiles the source (w/ debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
          source="1.4"
@@ -198,7 +201,7 @@
 
    <!-- documentation -->
    <target name="docs" depends="compile"
-           description="building the javadoc documentation">
+           description="builds the javadoc documentation">
       <mkdir dir="${docs.dir}"/>
 
       <javadoc 
@@ -206,7 +209,7 @@
 	 packagenames="ictk.*"
 	 author="false"
 	 destdir="${docs.dir}"
-	 windowtitle="ICTK API"
+	 windowtitle="-=[ ictk ]=- API Documentation"
 	 classpathref="compile.class.path">
 	 <fileset dir="${source.dir}" casesensitive="yes">
 	    <patternset refid="non.test.sources"/>
@@ -228,7 +231,7 @@
       <property name="bin.include"
            value="
 	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO 
-	   docs/** 
+	   ${docs.dir}/**
 	   ${output.jar}
 	   "
 	   />
@@ -257,10 +260,10 @@
            value="
 	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO
 	   build.xml
-	   docs/**
-	   src/**
-	   test/**
-	   lib/**
+	   ${docs.dir}/**
+	   ${source.dir}/**
+	   ${test.dir}/**
+	   ${lib.dir}/**
 	   "
 	   />
 
@@ -336,30 +339,11 @@
 
    <!-- ..................................................................-->
 
-   <!-- permissions -->
-   <target name="permissions"
-           description="sets all files and directories world/group readable">
-      <!-- nice to open access for all files -->
-      <chmod dir="."
-             perm="ugo+rx"
-	     type="dir"
-	     includes="**"
-	     />
-      <chmod dir="."
-             perm="ugo+r"
-	     type="file"
-	     includes="**"
-	     />
-   </target>
-
-   <!-- ..................................................................-->
-
    <!-- clean -->
    <target name="clean"
            description="delete all built files and documentation">
       <delete dir="${build.dir}" />
       <delete dir="${docs.dir}" />
       <delete file="${output.jar}" />
-      <delete dir="${staging.dir}" /> <!-- but leave the compressed files-->
    </target>
 </project>
