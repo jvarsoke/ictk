@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!ELEMENT icsevtml (event*, class*, interface*, membertype*)>
+<!ATTLIST icsevtml
+	  xmlns:icsevt	CDATA		"http://ictk.sourceforge.net/ics/evt"
+	  >
+
+<!ELEMENT event (description?, 
+		 implements*,
+		 member*,
+		 parser+)>
+<!ATTLIST event
+          id		ID		#REQUIRED
+	  class		NMTOKEN		#REQUIRED
+	  enum		NMTOKEN		#REQUIRED
+	  extends	IDREF 		"ICSEvent"
+	  >
+
+<!ELEMENT description (#PCDATA)*>
+<!ATTLIST description
+	  xml:space	(default | preserve)	'preserve'
+	  >
+
+<!ELEMENT implements EMPTY>
+<!ATTLIST implements
+	  idref		IDREF		#REQUIRED
+	  >
+
+<!ELEMENT member EMPTY>
+<!ATTLIST member 
+	  id		ID		#REQUIRED
+	  typeref	IDREF		#REQUIRED
+	  varname	NMTOKEN		#IMPLIED
+	  functname	NMTOKEN		#IMPLIED
+	  inherit	(both | member | method | none)	"none"
+	  >
+
+<!ELEMENT parser (regex+, assignMatches, toNative)>
+<!ATTLIST parser
+	  id		ID		#REQUIRED
+	  name		NMTOKEN		#REQUIRED
+	  protocol	(FICS | ICC)	#REQUIRED
+	  extends	NMTOKEN		"ICSEventParser"
+	  detectFake	(yes | no)	"yes"
+	  >
+
+<!ELEMENT regex (#PCDATA | regexref)*>
+<!ATTLIST regex
+	  id		ID		#IMPLIED
+	  >
+
+<!ELEMENT regexref EMPTY>
+<!ATTLIST regexref
+	  ref		IDREF		#REQUIRED
+	  >
+
+<!ELEMENT code (#PCDATA)>
+<!ATTLIST code
+	  format	NOTATION (java)	#REQUIRED
+	  xml:space	(default | preserve)	'preserve'
+	  >
+<!NOTATION java		SYSTEM "http://java.sun.com"> <!-- ? -->
+
+<!ELEMENT assignMatches (attr*, code*)>
+
+<!ELEMENT toNative (code+)>
+<!ATTLIST toNative
+	  avgLength	NMTOKEN		#REQUIRED
+	  >
+
+<!--membertypes -->
+
+<!ELEMENT membertype (regex*)>
+<!ATTLIST membertype
+	  id		ID		#REQUIRED
+	  type		NMTOKEN		#REQUIRED
+	  varname	NMTOKEN		#REQUIRED
+	  functname	NMTOKEN		#REQUIRED
+	  >
+
+<!ELEMENT class EMPTY>
+<!ATTLIST class
+          id		ID		#REQUIRED
+	  type		NMTOKEN		#REQUIRED
+	  >
+
+<!ELEMENT interface (attributes*, method*)>
+<!ATTLIST interface
+	  id		ID		#REQUIRED
+	  type		NMTOKEN		#REQUIRED
+	  >
+<!ELEMENT method (code+)>
