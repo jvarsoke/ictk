@@ -203,6 +203,7 @@ public class PGNWriterTest extends TestCase {
       //Log.addMask(PGNReader.DEBUG);
       //Log.addMask(ChessGameInfo.DEBUG);
       //Log.addMask(PGNWriter.DEBUG);
+      //Log.addMask(History.DEBUG);
 
       int count = 0;
       try {
@@ -223,6 +224,7 @@ public class PGNWriterTest extends TestCase {
 	    assertTrue(game.getHistory().equals(game2.getHistory()));
 	    assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
 	    assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
+	    count++;
 	 }
       }
       catch (Exception e) {
@@ -238,6 +240,7 @@ public class PGNWriterTest extends TestCase {
           Log.removeMask(PGNReader.DEBUG);
           Log.removeMask(ChessGameInfo.DEBUG);
           Log.removeMask(PGNWriter.DEBUG);
+          Log.removeMask(History.DEBUG);
       }
    }
 
@@ -272,38 +275,46 @@ public class PGNWriterTest extends TestCase {
 		 Exception {
 
       //Log.addMask(PGNWriter.DEBUG);
+      //Log.addMask(History.DEBUG);
 
-      game = new ChessGame();
-      board = (ChessBoard) ((ChessGame) game).getBoard();
+      try {
+	 game = new ChessGame();
+	 board = (ChessBoard) ((ChessGame) game).getBoard();
 
-      move = (ChessMove) san.stringToMove(board, "e4");
+	 move = (ChessMove) san.stringToMove(board, "e4");
 
-      game.getHistory().add(move);
-      move.setPrenotation(new ChessAnnotation("before1"));
+	 game.getHistory().add(move);
+	 move.setPrenotation(new ChessAnnotation("before1"));
 
-      writer = new PGNWriter(sw = new StringWriter()); 
+	 writer = new PGNWriter(sw = new StringWriter()); 
 
-      writer.writeGame(game);
+	 writer.writeGame(game);
 
-      spgnin = new PGNReader(new StringReader(sw.toString()));
-      game2 = spgnin.readGame();
+	 spgnin = new PGNReader(new StringReader(sw.toString()));
+	 game2 = spgnin.readGame();
 
-      assertTrue(game.getHistory().equals(game2.getHistory()));
-      assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
-      assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
+	 assertTrue(game.getHistory().equals(game2.getHistory()));
+	 assertTrue(game.getHistory().deepEquals(game2.getHistory(),false));
+	 assertTrue(game.getHistory().deepEquals(game2.getHistory(),true));
 
-      game.getHistory().next();
-      game2.getHistory().next();
+	 game.getHistory().next();
+	 game2.getHistory().next();
 
-      assertTrue(game.getHistory().getCurrentMove().equals(
-         game2.getHistory().getCurrentMove()));
+	 assertTrue(game.getHistory().getCurrentMove().equals(
+	    game2.getHistory().getCurrentMove()));
 
-      //the prenotation test
-      move = (ChessMove) game.getHistory().getCurrentMove();
-      move2 = (ChessMove) game2.getHistory().getCurrentMove();
-      assertTrue(move.getPrenotation().equals(move2.getPrenotation()));
-
-      Log.removeMask(PGNWriter.DEBUG);
+	 //the prenotation test
+	 move = (ChessMove) game.getHistory().getCurrentMove();
+	 move2 = (ChessMove) game2.getHistory().getCurrentMove();
+	 assertTrue(move.getPrenotation().equals(move2.getPrenotation()));
+      }
+      catch (Exception e) {
+         throw e;
+      }
+      finally {
+         Log.removeMask(PGNWriter.DEBUG);
+	 Log.removeMask(History.DEBUG);
+      }
    }
 
    ///////////////////////////////////////////////////////////////////////////

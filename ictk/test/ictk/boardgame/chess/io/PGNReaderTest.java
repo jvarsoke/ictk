@@ -76,6 +76,9 @@ public class PGNReaderTest extends TestCase {
       Log.removeMask(san.DEBUG);
       Log.removeMask(ChessBoard.DEBUG);
    }
+
+   //DEBUG SECTION////////////////////////////////////////////////////////////
+
    ///////////////////////////////////////////////////////////////////////////
    /** this is used for testing new PGNs that have revealed bugs.
     *  After the bug is squashed the PGN should be moved to another
@@ -93,6 +96,7 @@ public class PGNReaderTest extends TestCase {
       //assertTrue(games.size() > 0);
    }
 
+   //NON-VARIATION SECTION////////////////////////////////////////////////////
 
    ///////////////////////////////////////////////////////////////////////////
    public void testBulkNonVariation () 
@@ -107,6 +111,8 @@ public class PGNReaderTest extends TestCase {
       
    }
 
+   //VARIATION SECTION////////////////////////////////////////////////////////
+
    ///////////////////////////////////////////////////////////////////////////
    public void testBulkVariation () 
           throws FileNotFoundException,
@@ -118,6 +124,54 @@ public class PGNReaderTest extends TestCase {
       games = loadGames(dataDir + pgn_variation, false, -1);
       assertTrue(games.size() > 0);
    }
+
+   ///////////////////////////////////////////////////////////////////////////
+   /** History.add() used to disallow duplicate continuations.
+    *  That isn't the case anymore.
+    *  bug: 779762 - not allowing duplicate continuations.
+    */
+   public void testDuplicateContinuation () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_variation, false, 7);
+      assertTrue(games.size() > 0);
+      game = (ChessGame) games.get(7);
+      game.getHistory().fastforward(50);
+      ContinuationList cont = game.getHistory()
+                                  .getCurrentMove()
+				  .getContinuationList();
+      assertTrue(cont.size() == 2);
+   }
+
+   ///////////////////////////////////////////////////////////////////////////
+   /** bug: 780102 - result being assigned to variation instead of main line.
+    */
+   public void testMainLineResultOnVariationBugTest () 
+          throws FileNotFoundException,
+	  	 IOException, 
+	         InvalidGameFormatException,
+		 IllegalMoveException,
+		 AmbiguousMoveException,
+		 Exception {
+      games = loadGames(dataDir + pgn_variation, false, 8);
+      assertTrue(games.size() > 0);
+      game = (ChessGame) games.get(8);
+
+      ChessResult res1 = (ChessResult) game.getResult();
+      ChessResult res2 = (ChessResult) game.getHistory()
+                                           .getFinalMove(true).getResult();
+
+      assertTrue(res1 != null);
+      assertTrue(res2 != null);
+      assertTrue(res1.equals(res2));
+      assertTrue(res1.equals(new ChessResult(ChessResult.DRAW)));
+   }
+
+   //ANNOTAITON SECTION///////////////////////////////////////////////////////
 
    ///////////////////////////////////////////////////////////////////////////
    public void testBulkAnnotation () 
@@ -556,6 +610,8 @@ public class PGNReaderTest extends TestCase {
 	 assertTrue(anno.getNAG(0) == 145 );
    }
 
+   //BAD PGNs SECTION/////////////////////////////////////////////////////////
+
    ///////////////////////////////////////////////////////////////////////////
    public void testBadPGNs () 
           throws FileNotFoundException,
@@ -590,6 +646,7 @@ public class PGNReaderTest extends TestCase {
    }
 
    //Helper///////////////////////////////////////////////////////////////////
+
    /** loads the games into a list so aspects of the games can be tested */
    protected List loadGames (String file, boolean debug, int gameToDebug)
           throws FileNotFoundException,
@@ -613,8 +670,14 @@ public class PGNReaderTest extends TestCase {
 		    new FileReader(
 		       new File(file)));
 
+	    //turn on single game debugging for next read
+	    if (debug && gameToDebug == count) {
+	       System.out.println("turing logs on");
+	       Log.addMask(SAN.DEBUG);
+	       Log.addMask(PGNReader.DEBUG);
+	    }
+
 	    while ((game = in.readGame()) != null) {
-	       game.getHistory().goToEnd();
 	       list.add(game);
 
                //turn off single game debugging

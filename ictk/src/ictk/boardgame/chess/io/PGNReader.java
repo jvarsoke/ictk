@@ -330,8 +330,13 @@ public class PGNReader extends ChessReader {
 	       done = true;
 	       if (lastMove != null) {
 		  lastMove.setResult(res);
-		  if (Log.debug)
-		     Log.debug(DEBUG, "Result set: " + res);
+		  if (Log.debug) {
+		     Log.debug(DEBUG, "Result set(" + lastMove + "): " + res);
+		     ChessMove prevTmp = (ChessMove) lastMove.getPrev();
+		     if (prevTmp != null)
+		     Log.debug(DEBUG, "Result set(" + lastMove + "): " + res + " prev move: " + lastMove.getPrev().dump());
+
+		  }
 	       }
 	       else
 	          if (Log.debug)
@@ -406,6 +411,10 @@ public class PGNReader extends ChessReader {
 	    history.prev();  
 	    forks.push(history.getCurrentMove());
 
+	    if (Log.debug)
+	       Log.debug(DEBUG, "starting variation from " 
+	          + history.getCurrentMove());
+
             //if we still have a comment that has no home it must go
 	    //with the last move outside the variation, not the prenotation
 	    //of the first move in the variation.
@@ -424,8 +433,14 @@ public class PGNReader extends ChessReader {
 
          //end of a variation
 	 else if (tok.charAt(0) == ')') {
+
 	    ChessMove fork = (ChessMove) forks.pop();
 	    history.goTo(fork);
+
+	    if (Log.debug)
+	       Log.debug(DEBUG, "ending variation from " 
+	          + fork);
+
 	    history.next();
 
             //if we still have a comment that has no home it must go
@@ -442,6 +457,9 @@ public class PGNReader extends ChessReader {
 	          anno.appendComment(" " + savedComment);
 	       savedComment = null;
 	    }
+
+            //make sure we set lastMove to the mainline again
+	    lastMove = (ChessMove) history.getCurrentMove();
 	 }
 
          //undecided result of game

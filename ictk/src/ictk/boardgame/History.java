@@ -26,6 +26,8 @@
 package ictk.boardgame;
 
 import ictk.boardgame.io.MoveNotation;
+import ictk.util.Log;
+
 import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.ArrayList;
@@ -86,6 +88,8 @@ import java.util.ListIterator;
  *  Moves are played and verified when they are added to the History.
  */
 public class History {
+   public static final long DEBUG = Log.History;
+
       /**the array of first moves entire list.  This move is only used because
          of its access to the variation operations*/
    protected ContinuationList head;
@@ -144,13 +148,8 @@ public class History {
     *  variations) the mainLine will be null and the move added will be the
     *  first variation.
     *  <p>
-    *  If the move already exists as the main line or as one of the variations 
-    *  then it will not be added again.  However, if it was once a variation 
-    *  and the parameter asMainLine is true, then the variation will be moved 
-    *  to the main line and all other moves will be shifted down the list.
-    *  <p>
-    *  Whether the move is added or not (it previously existed) History.next() 
-    *  is called on the move and the move is played.
+    *  When the move is added History.next() is called on the move and the 
+    *  move is played.
     */
    public void add (Move _move, boolean asMainLine) 
           throws IllegalMoveException,
@@ -168,20 +167,7 @@ public class History {
       else
          cont = head;
         
-      //is move currently in the list?
-      for (int i = 0; i < cont.sizeOfVariations() +1 && !found; i++) {
-	 next = cont.get(i);
-	 if (next != null && next.equals(_move)) 
-	    found = true;
-      }
-
-      if (found) {
-	 if (asMainLine) 
-	    cont.promote(_move, 0);
-	 //else don't move it around.
-      }
-      else
-	 cont.add(_move, asMainLine);
+      cont.add(_move, asMainLine);
 
       try {
          _next(_move);  //executes next move (we just added)
@@ -706,13 +692,30 @@ public class History {
 
    /* deepEquals ***********************************************************/
    /** this compares all moves on the main-line, and all variations.
-    *  note, the order of the variations will not matter (not even the 
-    *  main line) only that they are indeed a continuation.
+    *  The order of the variations will not matter (not even the 
+    *  main line) only that they are indeed a continuation. If results
+    *  are being checked then a null result is considered the same
+    *  as isUndecided();
     *
-    * @param checkAnno will compare the annotations as well.
+    * @param checkAnno true will compare the annotations, prenotations, and 
+    * variation results as well.
+    *
+    * @param checkAnno false the results will also not be checked.
     */
    public boolean deepEquals (History hist, boolean checkAnno) {
-      return probeDeepEquals(head, hist.head, checkAnno);
+      boolean t = false;
+
+      if (Log.debug)
+         Log.debug(DEBUG, "beginning probe:" 
+	    + ((checkAnno) ? "" : " not") + " checking Annotations");
+
+      t = probeDeepEquals(head, hist.head, checkAnno);
+
+      if (Log.debug)
+         Log.debug(DEBUG, "histories: " 
+	    + ((t) ? "same" : "different"));
+
+      return t;
    }
 
    /* probeDeepEquals ******************************************************/
@@ -721,39 +724,147 @@ public class History {
    protected boolean probeDeepEquals (ContinuationList cont, 
                                       ContinuationList cont2,
                                       boolean checkAnno) {
-      Move move1 = null, move2 = null;
-      boolean t = true;
-         if (cont.isTerminal() && cont2.isTerminal())
+      Move    move1   = null,   //game 1
+              move2   = null;   //game 2
+      Move[]  possibleMatches = null;
+      boolean t       = true,   //equals
+              found   = false,  //possibleMatche found
+	      isMatch = true;   //possibleMatch truth
+      int     j       = 0;      //possibleMatch counter
+
+         //are they both terminal?
+         if (cont.isTerminal() && cont2.isTerminal()) {
+	    if (Log.debug)
+	       Log.debug(DEBUG, "+ both histories terminate");
 	    return t;
+         }
 	 else
+	    //check all moves in the game1 continuation list
 	    for (int i=0; t && i< cont.size(); i++) {
 	       move1 = cont.get(i);
+
+	       //are both mainlines null?
 	       if (i == 0 && move1 == null && cont2.get(0) == null) {
+	          Log.debug(DEBUG, "+ both mainlines are null");
 	          t = true;
 	       }
-	       else if (cont2.getIndex(move1) == -1) {
+
+	       //stop if move from game1 isn't found in the continuation list
+	       else if ((possibleMatches = cont2.find(move1)) == null) {
+	          if (Log.debug) 
+		     Log.debug(DEBUG, "- move (" + move1 
+		        + ") not found in continuation list of game 2");
 	          t = false;
 	       }
+
+	       //check all possible continuation lines that match
+	       //the first move.
 	       else {
-	          move2 = cont2.get(cont2.getIndex(move1));
-		  t = move2 != null;
+	          found = false;
 
-		  t = t &&
-		      (!checkAnno
-		      || (move1.getAnnotation() == null
-		          && move2.getAnnotation() == null)
-		      || (move1.getAnnotation() != null 
-		          && move2.getAnnotation() != null
-			  && move1.getAnnotation()
-			     .equals(move2.getAnnotation())
-			 )
-		      );
+		  if (Log.debug)
+		     Log.debug(DEBUG,
+		        "+ (" + possibleMatches.length 
+			+ ") possible matches of (" + move1 
+			+ ")");
 
-	          t = t && probeDeepEquals(move1.getContinuationList(),
-		              move2.getContinuationList(),
-		              checkAnno);
+	          for (j=0; j < possibleMatches.length && !found; j++) {
+		     move2 = possibleMatches[j];
+
+		     isMatch = move2 != null;
+
+		     if (Log.debug && !isMatch)
+		        Log.error(Log.PROG_ERROR, 
+			   "- hmm, possible match was null?");
+
+                     //check annotations
+                     if (isMatch && checkAnno) {
+			isMatch = (move1.getAnnotation()
+			           == move2.getAnnotation())
+			          || (move1.getAnnotation() != null 
+				     && move2.getAnnotation() != null
+				     && move1.getAnnotation()
+				             .equals(move2.getAnnotation())
+			             );
+
+			if (Log.debug)
+			   Log.debug(DEBUG, 
+			      ((isMatch) ? "+" : "-")
+			      + " [" + (j+1) + "/" + possibleMatches.length 
+			      + "] (" + move1 + ") annotation: "
+			      + ((isMatch) ? "same" : "different")
+			      );
+		     }
+
+                     //check prenotations
+		     if (isMatch && checkAnno) {
+			isMatch = (move1.getPrenotation()
+			           == move2.getPrenotation())
+			          || (move1.getPrenotation() != null 
+				     && move2.getPrenotation() != null
+				     && move1.getPrenotation()
+				             .equals(move2.getPrenotation())
+			 	     );
+
+			if (Log.debug)
+			   Log.debug(DEBUG, 
+			      ((isMatch) ? "+" : "-")
+			      + " [" + (j+1) + "/" + possibleMatches.length 
+			      + "] (" + move1 + ") prenotation: "
+			      + ((isMatch) ? "same" : "different")
+			      );
+		     }
+
+                     //check results only if checking annotations
+		     //since a result in a variation line is basically 
+		     //an annotation.
+		     if (isMatch && checkAnno) {
+		        isMatch = ((move1.getResult() == null 
+			              || move1.getResult().isUndecided())
+				   && move2.getResult() == null
+				      || move2.getResult().isUndecided())
+				  || (move1.getResult() != null
+				        && move2.getResult() != null
+					&& move1.getResult()
+					        .equals(move2.getResult())
+				     );
+
+			if (Log.debug)
+			   if (move1.getResult() != null 
+			       || move2.getResult() != null)
+			      Log.debug(DEBUG,
+				 ((isMatch) ? "+" : "-")
+				 + " [" + (j+1) + "/" + possibleMatches.length 
+				 + "] (" + move1 + ") result: "
+				 + ((isMatch) ? "same" : "different")
+				 + ((move1.getResult() == null 
+				     || move2.getResult() == null) 
+				        ? " {" + ((move1.getResult() == null) 
+					          ? "null/undecided"
+						  : "undecided/null"
+					         )
+					  + "}"
+					: "")
+				 );
+		     }
+
+	             isMatch = isMatch 
+		               && probeDeepEquals(move1.getContinuationList(),
+		                  move2.getContinuationList(),
+		                  checkAnno);
+		     found = isMatch;
 	       }
+
+	       if (Log.debug)
+	          Log.debug(DEBUG, "("
+		     + move1 + ") continuation: "
+		     + ((found) ? "[" + j 
+		                  + "/" + possibleMatches.length 
+		                  + "] matched"
+		                : "no match found"));
+	       t = found;
 	    }
+         }
       return t;
    }
 

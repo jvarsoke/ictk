@@ -191,14 +191,34 @@ public interface ContinuationList {
    public void add (Move m);
 
    /* getIndex() *********************************************************/
-   /** compares Move m with the moves in branches.  If there is a hit
-    *  then it returns the index of that hit.  Otherwise it will 
-    *  return -1.
+   /** gets the index of this Move object in the variation branches.
+    *  To search for equavilant moves in the variation list you should
+    *  use find(Move) or findIndex(Move) since there could be more than
+    *  one possible match.
     *
     *  @return n if move is found
     *  @return -1 if not found
     */
    public int getIndex (Move m);
+
+   /* find ***************************************************************/
+   /** searches the continuation list for moves that are equal to the
+    *  move submitted.  It is enough for their coordinates to be equal.
+    *  Each move that matches will be returned in the Move array.
+    *
+    *  @return null if no moves match the inputed move.
+    */
+   public Move[] find (Move m);
+
+   /* findIndex **********************************************************/
+   /** searches the continuation list for moves that are equal to the
+    *  move submitted.  It is enough for their coordinates to be equal.
+    *  Each move that matches will have its index returned in the int 
+    *  array.
+    *
+    *  @return null if no moves match the inputed move.
+    */
+   public int[] findIndex (Move m);
 
    /* remove *************************************************************/
    /** removes a variation from the continuation list.

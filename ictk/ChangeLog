@@ -59,9 +59,25 @@ Legend:
    [chess]  fixed 778731 - non-numeric NAG "RR" and "N" not parsed by PGNReader.
    [chess]  fixed 778408 - PGNWriter groups unrelated variations
             {thanks: Jermone Zago for the bug report}
+   [chess]  fixed 779762 - PGNReader ignores duplicate continuation
+            This is actually by design; History.add() did not allow duplicate
+	    continuations to be added in hopes of trimming the tree.  But
+	    the body of PGNs out sometimes take advantage of duplicate
+	    continuations to extend games past resignation, or have different
+	    annotations.  Thus, History.add() now allows duplicate
+	    continuations.
+	    {thanks: Jermone Zago for the bug report}
+   [chess]  fixed 780102 - PGNReader thinks result is for variation
+	    {thanks: Jermone Zago for the bug report}
    [chess]  changed NAG object methods to no longer insist on 'short'.  Also
             changed the names of the methods to fit this change.  Several
 	    new methods also added.
+   [chess]  added ContinuationList.find(Move) and findIndex(Move).  These
+            find continuations with the same coordinates as the input move.
+	    Both methods return an array of matches.
+   [chess]  added History.deepEquals(history, true) now checks prenotations
+            and Results for all continuation lines.  A null result is treated
+	    as equal to isUndecided()
 
 0.1.1 - 2003-07-20 bug fixes
    [dev]    fixed 758852 - build.xml needed manual doodling for JUNIT to work.

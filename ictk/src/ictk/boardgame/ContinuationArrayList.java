@@ -222,18 +222,63 @@ public class ContinuationArrayList implements ContinuationList {
       m.prev = departureMove;
    }
 
-   /* getIndex () ********************************************************/
+  /* getIndex () ********************************************************/
    public int getIndex (Move m) {
       int i = 0;
 
-         for (i=0; i < branches.length ; i++) { 
-	    if (branches[i] != null && branches[i].equals(m))
-	       break;
-	 }
-	 if (i < branches.length)
-	    return i;
-	 else
+         if (branches == null)
 	    return -1;
+
+         for (i=0; i < branches.length ; i++) { 
+             if (branches[i] == m)
+                break;
+         }
+         if (i < branches.length)
+            return i;
+         else
+            return -1;
+   }
+
+   /* find ***************************************************************/
+   public Move[] find (Move m) {
+      Move[] moves = null;
+      int[] idx = findIndex(m);
+
+	 if (idx != null) {
+	    moves = new Move[idx.length];
+	    for (int i = 0; i < idx.length; i++)
+	       moves[i] = branches[idx[i]];
+	 }
+	 return moves;
+   }
+
+   /* findIndex **********************************************************/
+   public int[] findIndex (Move m) {
+      int i        = 0;
+      int count    = 0; //found
+      int[] rvalue = null,
+            tmp    = null;
+
+	 if (branches == null) 
+	    return null;
+	 else {
+	    tmp = new int[branches.length];
+
+	    for (i=0; i < branches.length ; i++) { 
+	       if (branches[i] != null && branches[i].equals(m))
+		  tmp[count++] = i;
+	    }
+
+	    if (count == 0)
+	       return null;
+	    else if (count == branches.length)
+	       return tmp;
+	    else {
+	       rvalue = new int[count];
+	       System.arraycopy(tmp, 0, rvalue, 0, rvalue.length);
+	       return rvalue;
+	    }
+         }
    }
 
    /* protected boolean compressVariations () ***************************/
@@ -274,6 +319,10 @@ public class ContinuationArrayList implements ContinuationList {
    public void remove (int i) {
       if (branches == null)
          throw new ArrayIndexOutOfBoundsException("no moves to remove");
+
+      if (i == -1)
+         throw new ArrayIndexOutOfBoundsException(
+	    "move does not exist in continuation list");
 
       if (branches[i] != null) {
          //must rewind first to not but board in bad state
