@@ -53,6 +53,11 @@ public class ICSRating {
     */
    public int get () { return rating; }
 
+   public boolean isNotSet () { return  isNotSet; }
+   public boolean isNotApplicable () { return  isNotApplicable; }
+   public boolean isProvisional () { return  isProvisional; }
+   public boolean isEstimated () { return  isEstimated; }
+
    public void setNotApplicable (boolean t) {
       isNotApplicable = t;
    }

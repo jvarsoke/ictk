@@ -184,15 +184,28 @@ public class <xsl:value-of select="$classname"/> extends <xsl:value-of select="@
 
 <!-- REGEX - process the regex to java code format -->
 <xsl:template match="regex" mode="java">
+
    <xsl:call-template name="text:regex-format">
       <xsl:with-param name="input">
+
+      <!-- change all "  to \" -->
       <xsl:call-template name="str:search-and-replace">
 	 <xsl:with-param name="input">
-	    <xsl:apply-templates select="."/>
+
+	    <!-- convert all \ to \\ -->
+	    <xsl:call-template name="str:search-and-replace">
+	       <xsl:with-param name="input">
+		  <xsl:apply-templates select="."/>
+	       </xsl:with-param>
+	       <xsl:with-param name="search" select="'\'"/>
+	       <xsl:with-param name="replace" select="'\\'"/>
+	    </xsl:call-template>
+
 	 </xsl:with-param>
-	 <xsl:with-param name="search" select="'\'"/>
-	 <xsl:with-param name="replace" select="'\\'"/>
+	 <xsl:with-param name="search" select="'&quot;'"/>
+	 <xsl:with-param name="replace" select="'\&quot;'"/>
       </xsl:call-template>
+
       </xsl:with-param>
       <xsl:with-param name="indent" select="9"/>
    </xsl:call-template>
