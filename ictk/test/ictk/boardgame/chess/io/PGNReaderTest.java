@@ -231,22 +231,30 @@ public class PGNReaderTest extends TestCase {
         Log.addMask(SAN.DEBUG);
         Log.addMask(PGNReader.DEBUG);
       }
-      int count = 0;
 
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(file)));
+      try {
+	 int count = 0;
 
-	 while ((game = in.readGame()) != null) {
-	    game.getHistory().goToEnd();
-	    list.add(game);
-	    count++;
-	    game = null;
+	    Log.debug(PGNReader.DEBUG, "Reading file: " + file);
+	    in = new PGNReader(
+		    new FileReader(
+		       new File(file)));
+
+	    while ((game = in.readGame()) != null) {
+	       game.getHistory().goToEnd();
+	       list.add(game);
+	       count++;
+	       game = null;
+	    }
+      }
+      catch (Exception e) {
+         throw e;
+      }
+      finally {
+	 if (debug) {
+	    Log.removeMask(SAN.DEBUG);
+	    Log.removeMask(PGNReader.DEBUG);
 	 }
-
-      if (debug) {
-         Log.removeMask(SAN.DEBUG);
-	 Log.removeMask(PGNReader.DEBUG);
       }
       return list;
    }

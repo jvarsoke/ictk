@@ -48,6 +48,8 @@ In progress
             {thanks: Jerome Zago and David Spencer for reporting the bug}
    [chess]  added ChessBoard.isDoubleCheck() and changed isCheck() to be
             true when double-check is true.
+   [chess]  fixed 773597 - annotation w/o space between delimeters caused error
+            {thanks: Jerome Zago for the bug report}
 
 0.1.0 - 2003-03-25 first public release
    [all]    fixed equals()

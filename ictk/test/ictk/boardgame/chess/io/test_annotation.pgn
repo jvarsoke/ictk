@@ -1,3 +1,4 @@
+##normal comment after a move
 [Event "?"]
 [Site "?"]
 [Date "????.??.??"]
@@ -8,6 +9,7 @@
 
 1.e4 {Best by test} e5! *
 
+##exclaimation mark
 [Event "?"]
 [Site "?"]
 [Date "????.??.??"]
@@ -16,4 +18,38 @@
 [Black "?"]
 [Result "*"]
 
-{Comment Before Game} 1.e4 {Best by test} e5! *
+1.e4 e5! *
+
+##comment before a game
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "*"]
+
+{Comment Before Game} 1.e4 e5 *
+
+##comment before and after a move (from ChessBase export)
+##Note: ChessBase8 itself reads in this PGN and merges the two comments.
+#[Event "?"]
+#[Site "?"]
+#[Date "????.??.??"]
+#[Round "?"]
+#[White "?"]
+#[Black "?"]
+#[Result "*"]
+
+#1.e4 {after1} {before2} 1...e5 {after2} 2.f4 exf4 *
+
+#comment with no spaces between delimeters
+[White "Estrin, Y."] 
+[Black "Nun, Jo"] 
+[Result "0-1"] 
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 Bc5 5. Nxf7 
+Bxf2+ 6. Kf1 Qe7 7. Nxh8 d5 8. exd5 Nd4 9. h3 Bg3 
+10. c3 Nf5 {N} 11. d4 Bd7 12. Qe2 Bh2 13. Kf2 Ng3 
+14. Qe1 Nfe4+ 15. Kf3 (15. Ke3 Nxh1 {according to 
+Crafty}) 15... Nd2+ 16. Nxd2 Qf6+ 0-1 

@@ -186,7 +186,7 @@ public class PGNReader extends ChessReader {
       }
 
       //now we have whole move list in the sb
-      st = new StringTokenizer(sb.toString(), " .()\n", true);
+      st = new StringTokenizer(sb.toString(), " .(){}\n", true);
 
       String tok2 = null;
       while (st != null && st.hasMoreTokens()) {
