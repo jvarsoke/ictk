@@ -661,8 +661,13 @@ public class ChessMove extends Move {
       check = t;
    }
 
+   /** sets double check to the specificed boolean value.  if the value is
+    *  True, then isCheck() will also be true.
+    */
    protected void setDoubleCheck (boolean t) {
       doublecheck = t;
+      if (t)
+         check = t;
    }
 
    protected void setCheckmate (boolean t) {

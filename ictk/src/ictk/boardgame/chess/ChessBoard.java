@@ -291,8 +291,10 @@ public class ChessBoard implements Board {
 
 	       case 2:
 	          //only valid moves are king moves
-		  for (byte i=1; i < movingTeam.size(); i++) {
-		      ((ChessPiece) movingTeam.get(i)).removeLegalDests();
+		  for (byte i=0; i < movingTeam.size(); i++) {
+		      ChessPiece p = ((ChessPiece) movingTeam.get(i));
+		      if (p != movingKing)
+		         p.removeLegalDests();
 		  }
 		  if (lastMove != null)
 		     lastMove.setDoubleCheck(true);
@@ -734,6 +736,7 @@ public class ChessBoard implements Board {
 
    /* isCheck ************************************************************/
    /** returns true if the King in the side to move is in check
+    *  or double-check.
     */
    public boolean isCheck () {
       boolean check = false;
@@ -751,6 +754,24 @@ public class ChessBoard implements Board {
          Log.debug(ChessBoard.DEBUG, "the King in check: " + check);
 
       return check;
+   }
+
+   /* isDoubleCheck *****************************************************/
+   /** returns true if the King on the side to move is threatened by 
+    *  two pieces.
+    */
+   public boolean isDoubleCheck () {
+      boolean dcheck = false;
+
+      if (lastMove != null)
+         return lastMove.isDoubleCheck();
+
+      if (staleLegalDests)
+         genLegalDests();
+
+      dcheck = getThreats( ((isBlackMove) ? blackKing : whiteKing)).length == 2;
+
+      return dcheck;
    }
 
    /* isStalemate ***********************************************************/
