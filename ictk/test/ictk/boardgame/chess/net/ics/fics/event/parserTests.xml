@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+ *  ICTK - Internet Chess ToolKit
+ *  More information is available at http://ictk.sourceforge.net
+ *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
+ *  All rights reserved.
+ *
+ *  $Id$
+ *
+ *  This file is part of ICTK.
+ *
+ *  ICTK is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  ICTK is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with ICTK; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+<!DOCTYPE ictkml SYSTEM "unitTest.dtd" [
+   ]>
+
+<unitTest>
+   <!-- kibitz ............................................................-->
+   <unit id="kibitz"
+         class="Kibitz"
+	 event="Kibitz"
+	 >
+      <test name="Message0"
+            iochunk="0"
+	    >
+         <code format="java">
+         assertTrue(evt.getPlayer().equals("Handle"));
+         assertFalse(evt.getAccountType().is(ICSAccountType.UNREGISTERED));
+         assertTrue(evt.getRating().get() == 1902);
+         assertTrue(evt.getBoardNumber() == 7);
+         assertTrue(evt.getMessage().equals("hey"));
+	 </code>
+      </test>
+   </unit>
+
+   <!-- channel ...........................................................-->
+   <unit id="channel"
+         class="Channel"
+	 event="Channel"
+	 >
+
+      <test name="Message0"
+            iochunk="0"
+	    >
+         <code format="java">
+         assertTrue("Gorgonian".equals(evt.getPlayer()));
+         assertTrue(evt.getChannel() == 50);
+         assertTrue("da".equals(evt.getMessage()));
+	 </code>
+      </test>
+
+      <test name="Message1"
+            iochunk="1"
+	    >
+         <code format="java">
+         assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
+	 </code>
+      </test>
+
+      <test name="Message3"
+            iochunk="3"
+	    >
+         <code format="java">
+         assertTrue(evt.getAccountType().is(ICSAccountType.ADMIN));
+         assertTrue(evt.getAccountType().is(ICSAccountType.SERVICE_REP));
+         assertTrue(evt.getAccountType().is(ICSAccountType.CHESS_ADVISOR));
+         assertTrue(evt.getAccountType().is(ICSAccountType.TOURNAMENT_MANAGER));
+         assertTrue(evt.getChannel() == 49);
+	 </code>
+      </test>
+   </unit>
+
+   <!-- shout .............................................................-->
+   <unit id="shout"
+         class="Shout"
+	 event="Channel"
+	 >
+   </unit>
+
+   <!-- tell ..............................................................-->
+   <unit id="tell"
+         class="Tell"
+	 event="Tell"
+	 >
+      <test name="Message0"
+            iochunk="0"
+	    >
+         <code format="java">
+         assertTrue(evt.getPlayer().equals("Handle"));
+         assertTrue(evt.getMessage().equals("Hey"));
+         assertFalse(evt.isFake());
+         assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
+
+         assertFalse(evt.getMessage().equals("hey"));
+	 </code>
+      </test>
+
+      <test name="Message1"
+            iochunk="1"
+	    >
+         <code format="java">
+         assertTrue(evt.getPlayer().equals("Handle"));
+         assertTrue(evt.getAccountType().is(ICSAccountType.COMPUTER));
+         assertTrue(evt.getMessage().equals("Hey"));
+         assertFalse(evt.isFake());
+         assertTrue(evt.getEventType() == ICSEvent.TELL_EVENT);
+
+         assertFalse(evt.getMessage().equals("hey"));
+	 </code>
+      </test>
+   </unit>
+
+   <!-- player connection..................................................-->
+   <unit id="pin"
+         class="PlayerConnection"
+	 event="PlayerConnection"
+	 >
+   </unit>
+
+   <!-- player notification................................................-->
+   <unit id="pnot"
+         class="PlayerNotification"
+	 event="PlayerConnection"
+	 >
+   </unit>
+
+   <!-- game created ......................................................-->
+   <unit id="gin"
+         class="GameCreated"
+	 event="GameCreated"
+	 >
+   </unit>
+
+   <!-- game notification..................................................-->
+   <unit id="gnot"
+         class="GameNotification"
+	 event="GameNotification"
+	 >
+   </unit>
+
+   <!-- game result .......................................................-->
+   <unit id="game_result"
+         class="GameResult"
+	 event="GameResult"
+	 >
+   </unit>
+
+   <!-- seek ad ...........................................................-->
+   <unit id="seekad"
+         class="SeekAd"
+	 event="SeekAd"
+	 >
+   </unit>
+
+   <!-- seek ad readable ..................................................-->
+   <unit id="seekadreadable"
+         class="SeekAdReadable"
+	 event="SeekAd"
+	 >
+   </unit>
+
+   <!-- seek clear ........................................................-->
+   <unit id="seek_clear"
+         class="SeekClear"
+	 event="SeekClear"
+	 >
+   </unit>
+
+   <!-- seek remove .......................................................-->
+   <unit id="seek_remove"
+         class="SeekRemove"
+	 event="SeekRemove"
+	 >
+   </unit>
+
+   <!-- board update style 12 .............................................-->
+   <unit id="style12"
+         class="BoardUpdateStyle12"
+	 event="BoardUpdate"
+	 >
+   </unit>
+
+   <!-- move list .........................................................-->
+   <unit id="movelist"
+         class="MoveList"
+	 event="MoveList"
+	 >
+   </unit>
+
+<!--
+   <unit id="tell"
+         class="Tell"
+	 event="Tell"
+	 >
+      <test name="Message0"
+            iochunk="0"
+	    >
+         <code format="java">
+	 </code>
+      </test>
+   </unit>
+-->
+</unitTest>

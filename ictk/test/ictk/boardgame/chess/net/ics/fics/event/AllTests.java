@@ -44,11 +44,9 @@ public class AllTests {
       suite.addTest(new TestSuite(FICSPlayerConnectionParserTest.class));
       suite.addTest(new TestSuite(FICSPlayerNotificationParserTest.class));
       suite.addTest(new TestSuite(FICSSeekAdParserTest.class));
-      /*
       suite.addTest(new TestSuite(FICSSeekAdReadableParserTest.class));
       suite.addTest(new TestSuite(FICSSeekClearParserTest.class));
       suite.addTest(new TestSuite(FICSSeekRemoveParserTest.class));
-      */
       suite.addTest(new TestSuite(FICSShoutParserTest.class));
       suite.addTest(new TestSuite(FICSTellParserTest.class));
 

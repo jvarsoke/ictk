@@ -126,7 +126,7 @@
 	    c=([BW\?])     <!-- color request -->
 	    \s
 	    rr=(\d+)       <!-- low range -->
-	    -(\d+)        <!-- high range -->
+	    -(\d+)         <!-- high range -->
 	    \s
 	    a=([tf])       <!-- automatic / manual -->
 	    \s
@@ -171,7 +171,7 @@
       }
 
       //automatic/manual
-      evt.setManual(m.group(14).charAt(0) == 't');
+      evt.setManual(m.group(14).charAt(0) == 'f');
 
       //restricted by formula
       evt.setRestrictedByFormula(m.group(15).charAt(0) == 't');
