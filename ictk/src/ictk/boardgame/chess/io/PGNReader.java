@@ -175,16 +175,14 @@ public class PGNReader extends ChessReader {
 		   * This is only true for { } annotations. */
       String       savedComment = null;
       short        nag = 0;
-      
 
-//NEED: should read all move data into one string (eliminate \n) until \n\n
-//NEED: ^ problem with ; comment
-         //should detect '\n' and stop there. so can throw on bad move format
       if (Log.debug)
          Log.debug(DEBUG, "reading History");
 
       StringBuffer sb = new StringBuffer();
 
+//FIXME: by spec, move list does not end with \n\n. But with final result
+//FIXME: might need to use a StreamTokenizer here.
       while (!done && (line = readLine()) != null) {
          if (Log.debug) 
 	    Log.debug(DEBUG, "line in: " + line);
