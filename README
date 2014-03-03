@@ -14,13 +14,38 @@ on.
    Aside from proof of concept and general OOD exercises, this library 
 strives to be extensible, feature rich and easy to use.  How well it 
 achieves those goals are in the eye of the coder that's using it.  But the 
-whole reason this is a library of instead of an application is because too 
+whole reason this is a library instead of an application is because too 
 many people are re-writing the wheel.  This causes a lot of projects to 
-get swamped in very common tasks of modeling the games, reading standard 
+get swamped in very common tasks of modeling the game, reading standard 
 file notations and screen scraping internet server protocols.  Hopefully, 
 ictk will foster quicker development of better tools and applications.  
 And hopefully they'll be OS independent and open source.
 
+CURRENT STATUS
+--------------
+   2012-03-03 - I'm migrating this library from its longtime home at
+                Sourceforge.net where it has been hosted since 2002
+		to GitHub.com.  Obviously, version control will be 
+		swapped from SVN to GIT.  During this time I'm going
+		to re-verify the tools work with current versions
+		of Java and dependent libraries.
+
+FEATURES
+--------
+
+   o Object oriented Chess game model (MVC based)
+   o Legal move generation
+   o Game history with variation support (alternative move suggestions)
+   o Move comment support in text and Numeric Annotation Glyphs (NAG)
+   o Standard Algebraic Notation (SAN) read/write support (internationalized
+     for presentation in 16 languages)
+   o Portable Game Notation (PGN) read/write support (including move 
+     variations, and FEN)
+   o Forsyth-Edwards Notation (FEN) read/write support
+   o True MVC structure with board displays driven by game model events
+   o Command-line Board display
+   o Well documented. Sample code also provided.
+   o FICS support (circa 2003)
 
 REQUIREMENTS
 ------------
@@ -52,14 +77,7 @@ LICENSE
 this license is available in the file named COPYING, which should have
 been included with this distribution.  
 
-    The author has every intention of upgrading the license to one that
-plugs the "server loophole," which will compel developers to make their
-source and changes public even if they use this toolkit in a server
-fashion (where the binaries aren't distributed) when such a license
-becomes available.
-
-   If you wish to use this library for propriety purposes you must contact
-the author.
+   If you would like a more liberal license, please contact the author.
 
 INSTALLATION
 ------------
@@ -142,12 +160,5 @@ choking on a PGN file or ictk code, you can do so through ant and JUnit:
 This will run the full battery of tests, and is only available through the
 source distro.
 
-FINAL WORD
-----------
-   If you find bugs or have feature requests please post them on 
-http://www.sourceforge.net/projects/ictk . You will also find the latest
-version there, as well as the CVS (which is highly unstable).  Enjoy 
-the library.
-
 ---
-Last Updated: 2003-10-01 by jvarsoke
+Last Updated: 2012-03-03 by jvarsoke
