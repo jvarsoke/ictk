@@ -65,18 +65,20 @@
 
    <!-- XSLT -->
    <!-- XSLT used for generation of code from XML files -->
-   <property name="xslt.home"         value="${env.XALAN_HOME}"/>
+   <!-- <property name="xslt.home"         value="${env.XALAN_HOME}"/> -->
    <property name="xslt.ics.event.dir" 
              value="${source.dir}/ictk/boardgame/chess/net/ics/event"/>
    <property name="xslt.ics.event.parser.test.dir" 
              value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event"/>
 
       <!-- compile path for XSLT -->
+      <!--
    <path id="xslt.class.path">
       <fileset dir="${xslt.home}/bin">
 	 <include name="*.jar"/>
       </fileset>
    </path>
+   -->
 
 
    <!-- libs -->
@@ -146,14 +148,11 @@
 
    <!-- code generation targets -->
    <target name="generate"
-           depends="check_xalan,error_xalan" 
-	   if="xalan_is_good"
            description="generates source code from XML files">
       <!-- event and parsers -->
       <xslt 
          basedir="${xslt.ics.event.dir}"
 	 destdir="${xslt.ics.event.dir}"
-	 classpathref="xslt.class.path"
 	 style="${xslt.ics.event.dir}/event.xsl"
 	 includes="*.xml"
 	 excludes="*Common.xml"
@@ -172,7 +171,6 @@
       <xslt 
          basedir="${xslt.ics.event.parser.test.dir}"
 	 destdir="${xslt.ics.event.parser.test.dir}"
-	 classpathref="xslt.class.path"
 	 style="${xslt.ics.event.parser.test.dir}/templateParser.xsl"
 	 includes="parserTests.xml"
 	 extension=".tmp.log"
@@ -198,7 +196,6 @@
       <xslt 
          basedir="${xslt.ics.event.parser.test.dir}"
 	 destdir="${xslt.ics.event.parser.test.dir}"
-	 classpathref="xslt.class.path"
 	 style="${xslt.ics.event.parser.test.dir}/allTests.xsl"
 	 in="${xslt.ics.event.parser.test.dir}/parserTests.xml"
 	 out="${xslt.ics.event.parser.test.dir}/AllTests.java"
@@ -231,12 +228,12 @@
            description="compiles the source (w/ debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
-         source="1.4"
          srcdir="${source.dir}"
          destdir="${build.dir}"
 	 debug="yes"
 	 optimize="no"
 	 excludes="**/_*.java"
+	 includeantruntime="false"
 	 classpathref="compile.class.path">
 	 <patternset refid="non.test.sources"/>
       </javac>
@@ -247,7 +244,6 @@
            description="compiles the optimized source (w/o debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
-         source="1.4"
          srcdir="${source.dir}"
          destdir="${build.dir}"
 	 debug="no"
@@ -268,7 +264,6 @@
            description="compiles the regression testing source">
       <mkdir dir="${build.dir}"/>
       <javac 
-         source="1.4"
          srcdir="${test.dir}"
          destdir="${build.dir}"
 	 debug="yes"
@@ -372,7 +367,6 @@
 
       <javadoc 
          access="${docs.access}"
-	 source="1.4"
 	 packagenames="ictk.*"
 	 author="false"
 	 destdir="${docs.dir}"
@@ -562,9 +556,11 @@
    </target>
 
    <!-- check to make sure the XALAN environment variable could be read -->
+	      <!--
    <target name="check_xalan">
       <condition property="xalan_is_good">
          <and>
+
             <isset property="env.XALAN_HOME"/>
          </and>
       </condition>
@@ -578,5 +574,6 @@
       <echo message="from you'll need to set it manually.  Check in "/>
       <echo message="the environment properties section of this build file."/>
    </target>
+	 -->
 
 </project>

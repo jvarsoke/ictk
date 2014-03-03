@@ -57,7 +57,7 @@
    <xsl:value-of select="$filename"/><xsl:text>
 </xsl:text>
 
-   <redirect:write select="$filename">/*
+   <redirect:write file="{$filename}">/*
  *  ICTK - Internet Chess ToolKit
  *  More information is available at http://ictk.sourceforge.net
  *  Copyright (C) 2003 J. Varsoke &lt;jvarsoke@ghostmanonfirst.com&gt;
