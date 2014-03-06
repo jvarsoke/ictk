@@ -195,10 +195,10 @@ public class ChessGameInfo extends GameInfo {
       if (props == null)
          sb.append("None");
       else {
-         Enumeration enum = props.propertyNames();
+         Enumeration e = props.propertyNames();
 	 String key = null;
-	 while (enum.hasMoreElements()) {
-	    key = (String) enum.nextElement();
+	 while (e.hasMoreElements()) {
+	    key = (String) e.nextElement();
 	    sb.append(key).append(" = ")
 	      .append(props.getProperty(key, null));
 	 }
