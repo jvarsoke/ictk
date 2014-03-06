@@ -66,9 +66,10 @@ REQUIREMENTS
 
    o Xalan-Java 2.5.0 or better            http://xml.apache.org/xalan-j/
      this is only necessary if you wish to generate the net events and
-     parsers from their XML source.  Really, any XSLT processor
-     should work, but Xalan-Java is integrated into the Ant build tool
-     configuration files.
+     parsers from their XML source.  The default JDK XSLT processor will
+     work, but unfortunately dumps all the resulting files in the working
+     directory because it doesn't support redirect:write.  You could
+     copy them into the correct directories, if you like.
 
 LICENSE
 -------
