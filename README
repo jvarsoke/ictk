@@ -23,6 +23,10 @@ And hopefully they'll be OS independent and open source.
 
 CURRENT STATUS
 --------------
+   2012-03-06 - UNSTABLE/Broke.  Use the binaries from sf.net
+   		I am currently bringing the library into working order
+		for changes in Java since 1.4.
+
    2012-03-03 - I'm migrating this library from its longtime home at
                 Sourceforge.net where it has been hosted since 2002
 		to GitHub.com.  Obviously, version control will be 
