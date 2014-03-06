@@ -65,21 +65,11 @@
 
    <!-- XSLT -->
    <!-- XSLT used for generation of code from XML files -->
-   <!-- <property name="xslt.home"         value="${env.XALAN_HOME}"/> -->
+   <property name="xslt.home"         value="${env.XALAN_HOME}"/>
    <property name="xslt.ics.event.dir" 
              value="${source.dir}/ictk/boardgame/chess/net/ics/event"/>
    <property name="xslt.ics.event.parser.test.dir" 
              value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event"/>
-
-      <!-- compile path for XSLT -->
-      <!--
-   <path id="xslt.class.path">
-      <fileset dir="${xslt.home}/bin">
-	 <include name="*.jar"/>
-      </fileset>
-   </path>
-   -->
-
 
    <!-- libs -->
    <!-- these are jar files distributed with ictk -->
@@ -159,7 +149,9 @@
 	 extension=".tmp.log"
 	 force="yes"
 	 >
+	 <param name="destpath" expression="${xslt.ics.event.dir}" />
       </xslt>
+
       <!-- genfiles.log can be used to later delete the generated files -->
       <concat destfile="${xslt.ics.event.dir}/genfiles.log">
          <fileset dir="${xslt.ics.event.dir}"
@@ -176,6 +168,7 @@
 	 extension=".tmp.log"
 	 force="yes"
 	 >
+	 <param name="destpath" expression="${xslt.ics.event.parser.test.dir}" />
       </xslt>
       <concat destfile="${xslt.ics.event.parser.test.dir}/genfiles.log">
          <fileset dir="${xslt.ics.event.parser.test.dir}"
@@ -413,7 +406,7 @@
            description="create the binary release file">
       <property name="bin.include"
            value="
-	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO 
+	   AUTHORS COPYING ChangeLog NEWS README TODO 
 	   ${docs.dir}/**
 	   ${output.jar}
 	   ${samples.dir}/**
@@ -443,7 +436,7 @@
 
       <property name="src.include"
            value="
-	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO
+	   AUTHORS COPYING ChangeLog NEWS README TODO
 	   build.xml
 	   ${source.dir}/**
 	   ${test.dir}/**
@@ -554,26 +547,5 @@
       <echo message="from you'll need to set it manually.  Check in "/>
       <echo message="the environment properties section of this build file."/>
    </target>
-
-   <!-- check to make sure the XALAN environment variable could be read -->
-	      <!--
-   <target name="check_xalan">
-      <condition property="xalan_is_good">
-         <and>
-
-            <isset property="env.XALAN_HOME"/>
-         </and>
-      </condition>
-   </target>
-
-   <target name="error_xalan" depends="check_xalan" unless="xalan_is_good">
-      <echo message="Error: Ant couldn't read your Xalan environment variable."/>
-      <echo message="If you're in a UNIX make sure the XALAN_HOME variable"/>
-      <echo message="is correctly exported.  If you're on a platform that Ant"/>
-      <echo message="doesn't yet know how to glean environment variables"/>
-      <echo message="from you'll need to set it manually.  Check in "/>
-      <echo message="the environment properties section of this build file."/>
-   </target>
-	 -->
 
 </project>
