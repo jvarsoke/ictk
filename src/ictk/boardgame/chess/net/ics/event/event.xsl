@@ -91,7 +91,7 @@ package ictk.boardgame.chess.net.ics.event;
 
 /*--------------------------------------------------------------------------*
  * This file was auto-generated 
- * by $Id$
+ * by $Id$ 
  * on <xsl:value-of select="java:util.Date.new()"/>
  *--------------------------------------------------------------------------*/
 

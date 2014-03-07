@@ -57,6 +57,7 @@
 						$rel-filename)"
 />
 
+
    <!-- show the filename so we can capture in a log and delete later -->
    <xsl:value-of select="$rel-filename"/><xsl:text>
 </xsl:text>

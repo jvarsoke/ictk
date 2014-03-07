@@ -32,6 +32,7 @@
 		extension-element-prefixes="redirect"
 		>
 
+
 <!-- necessary because XSLTC redirect:write does not respect Ant:destdir -->
 <xsl:param name="destpath"/>
 
