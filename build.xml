@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id: build.xml,v 1.29 2004/01/30 08:50:38 jvarsoke Exp $
+ *  $Id$
  *
  *  This file is part of ICTK.
  *
@@ -33,7 +33,7 @@
    <!-- global properties -->
    <property name="version"           value="0.2.0"/>
    <property name="cvs.tag"           value="ictk-v0_2_0-Release"/>
-   <property name="build.file.id"     value="$Id: build.xml,v 1.29 2004/01/30 08:50:38 jvarsoke Exp $"/>
+   <property name="build.file.id"     value="$Id$"/>
    <!-- if you want 'protected' docs, you should set this variable 
 	on the command line -->
    <property name="docs.access"       value="public"/>
@@ -53,7 +53,6 @@
    <property name="junit.print.results" value="yes"/>
    <property name="junit.results.dir"   value="results"/>
 
-   <property name="clover.home"          value="${env.CLOVER_HOME}"/>
    <!-- CVS -->
    <!-- for latest CVS version use -Dcvs.tag=HEAD on the command line -->
    <property name="cvs.anon"
@@ -71,14 +70,6 @@
              value="${source.dir}/ictk/boardgame/chess/net/ics/event"/>
    <property name="xslt.ics.event.parser.test.dir" 
              value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event"/>
-
-      <!-- compile path for XSLT -->
-   <path id="xslt.class.path">
-      <fileset dir="${xslt.home}/bin">
-	 <include name="*.jar"/>
-      </fileset>
-   </path>
-
 
    <!-- libs -->
    <!-- these are jar files distributed with ictk -->
@@ -116,9 +107,6 @@
       <fileset dir="${junit.home}">
          <include name="*.jar"/>
       </fileset>
-      <fileset dir="${clover.home}">
-         <include name="*.jar"/>
-      </fileset>
       <fileset dir="${lib.dir}">
          <include name="*.jar"/>
       </fileset>
@@ -150,21 +138,20 @@
 
    <!-- code generation targets -->
    <target name="generate"
-           depends="check_xalan,error_xalan" 
-	   if="xalan_is_good"
            description="generates source code from XML files">
       <!-- event and parsers -->
       <xslt 
          basedir="${xslt.ics.event.dir}"
 	 destdir="${xslt.ics.event.dir}"
-	 classpathref="xslt.class.path"
 	 style="${xslt.ics.event.dir}/event.xsl"
 	 includes="*.xml"
 	 excludes="*Common.xml"
 	 extension=".tmp.log"
 	 force="yes"
 	 >
+	 <param name="destpath" expression="${xslt.ics.event.dir}" />
       </xslt>
+
       <!-- genfiles.log can be used to later delete the generated files -->
       <concat destfile="${xslt.ics.event.dir}/genfiles.log">
          <fileset dir="${xslt.ics.event.dir}"
@@ -176,12 +163,12 @@
       <xslt 
          basedir="${xslt.ics.event.parser.test.dir}"
 	 destdir="${xslt.ics.event.parser.test.dir}"
-	 classpathref="xslt.class.path"
 	 style="${xslt.ics.event.parser.test.dir}/templateParser.xsl"
 	 includes="parserTests.xml"
 	 extension=".tmp.log"
 	 force="yes"
 	 >
+	 <param name="destpath" expression="${xslt.ics.event.parser.test.dir}" />
       </xslt>
       <concat destfile="${xslt.ics.event.parser.test.dir}/genfiles.log">
          <fileset dir="${xslt.ics.event.parser.test.dir}"
@@ -202,7 +189,6 @@
       <xslt 
          basedir="${xslt.ics.event.parser.test.dir}"
 	 destdir="${xslt.ics.event.parser.test.dir}"
-	 classpathref="xslt.class.path"
 	 style="${xslt.ics.event.parser.test.dir}/allTests.xsl"
 	 in="${xslt.ics.event.parser.test.dir}/parserTests.xml"
 	 out="${xslt.ics.event.parser.test.dir}/AllTests.java"
@@ -235,15 +221,15 @@
            description="compiles the source (w/ debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
-         includeantruntime="false"
-         source="1.4"
          srcdir="${source.dir}"
          destdir="${build.dir}"
-	      debug="yes"
-	      optimize="no"
-	      excludes="**/_*.java"
-	      classpathref="compile.class.path">
-	      <patternset refid="non.test.sources"/>
+	 debug="yes"
+	 optimize="no"
+	 excludes="**/_*.java"
+	 includeantruntime="false"
+	 classpathref="compile.class.path">
+	 <patternset refid="non.test.sources"/>
+         <compilerarg value="-Xlint"/>
       </javac>
    </target>
 
@@ -252,15 +238,13 @@
            description="compiles the optimized source (w/o debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
-         includeantruntime="false"
-         source="1.4"
          srcdir="${source.dir}"
          destdir="${build.dir}"
-         debug="no"
-         optimize="yes"
-         excludes="**/_*.java"
-         classpathref="compile.class.path">
-	      <patternset refid="non.test.sources"/>
+	 debug="no"
+	 optimize="yes"
+	 excludes="**/_*.java"
+	 classpathref="compile.class.path">
+	 <patternset refid="non.test.sources"/>
       </javac>
    </target>
 
@@ -274,16 +258,14 @@
            description="compiles the regression testing source">
       <mkdir dir="${build.dir}"/>
       <javac 
-         includeantruntime="false"
-         source="1.4"
          srcdir="${test.dir}"
          destdir="${build.dir}"
-         debug="yes"
-         optimize="no"
-         verbose="no"
-         classpathref="compile_test.class.path"
-         excludes="**/_*.java">
-	      <patternset refid="test.sources"/>
+	 debug="yes"
+	 optimize="no"
+	 verbose="no"
+	 classpathref="compile_test.class.path"
+	 excludes="**/_*.java">
+	 <patternset refid="test.sources"/>
       </javac>
    </target>
 
@@ -300,18 +282,19 @@
       -->
       <junit fork="no"
              haltonerror="yes"
-	          haltonfailure="yes"
-	          printsummary="${junit.print.results}">
+	     haltonfailure="yes"
+	     printsummary="${junit.print.results}"
+	     >
 
          <classpath refid="compile_test.class.path"/>
 
-	      <sysproperty 
-	          key="ictk.boardgame.chess.io.dataDir" 
-	          value="test/ictk/boardgame/chess/io/"
-	      />
-	      <sysproperty 
-	          key="ictk.boardgame.chess.net.ics.fics.event.dataDir" 
-	          value="test/ictk/boardgame/chess/net/ics/fics/event/data"
+	 <sysproperty 
+	    key="ictk.boardgame.chess.io.dataDir" 
+	    value="test/ictk/boardgame/chess/io/"
+	 />
+	 <sysproperty 
+	    key="ictk.boardgame.chess.net.ics.fics.event.dataDir" 
+	    value="test/ictk/boardgame/chess/net/ics/fics/event/data"
 	 />
 
 
@@ -321,17 +304,18 @@
 		    />
 -->
 
-	      <batchtest fork="no"
-	            todir="${junit.results.dir}" >
-	            <fileset dir="${test.dir}">
-	            <include name="**/*Test.java"/>
-               <exclude name="**/AllTests.java"/>
-               <exclude name="**/junk/**"/>
-               <exclude name="**/ParserTest.java"/>
-               <!-- <exclude name="**/net/**"/>
-               -->
-               </fileset>
-	      </batchtest>
+	 <batchtest fork="no"
+	            todir="${junit.results.dir}"
+	            >
+	    <fileset dir="${test.dir}">
+	       <include name="**/*Test.java"/>
+	       <exclude name="**/AllTests.java"/>
+	       <exclude name="**/junk/**"/>
+	       <exclude name="**/ParserTest.java"/>
+	      <!-- <exclude name="**/net/**"/>
+	      -->
+            </fileset>
+	 </batchtest>
       </junit>
    </target>
 
@@ -377,7 +361,6 @@
 
       <javadoc 
          access="${docs.access}"
-	 source="1.4"
 	 packagenames="ictk.*"
 	 author="false"
 	 destdir="${docs.dir}"
@@ -424,7 +407,7 @@
            description="create the binary release file">
       <property name="bin.include"
            value="
-	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO 
+	   AUTHORS COPYING ChangeLog NEWS README TODO 
 	   ${docs.dir}/**
 	   ${output.jar}
 	   ${samples.dir}/**
@@ -454,7 +437,7 @@
 
       <property name="src.include"
            value="
-	   AUTHORS COPYING ChangeLog HACKING NEWS README TODO
+	   AUTHORS COPYING ChangeLog NEWS README TODO
 	   build.xml
 	   ${source.dir}/**
 	   ${test.dir}/**
@@ -565,43 +548,5 @@
       <echo message="from you'll need to set it manually.  Check in "/>
       <echo message="the environment properties section of this build file."/>
    </target>
-
-   <!-- check to make sure the XALAN environment variable could be read -->
-   <target name="check_xalan">
-      <condition property="xalan_is_good">
-         <and>
-            <isset property="env.XALAN_HOME"/>
-         </and>
-      </condition>
-   </target>
-
-   <target name="error_xalan" depends="check_xalan" unless="xalan_is_good">
-      <echo message="Error: Ant couldn't read your Xalan environment variable."/>
-      <echo message="If you're in a UNIX make sure the XALAN_HOME variable"/>
-      <echo message="is correctly exported.  If you're on a platform that Ant"/>
-      <echo message="doesn't yet know how to glean environment variables"/>
-      <echo message="from you'll need to set it manually.  Check in "/>
-      <echo message="the environment properties section of this build file."/>
-   </target>
-
-        <!-- clover tasks -->
-        <taskdef resource="clovertasks"/>
-
-        <target name="with.clover">
-                <clover-setup initString="mycoverage.db"/>
-        </target>
-
-        <target name="clover.html" depends="with.clover">
-                <clover-report>
-                        <current outfile="clover_html">
-                                <format type="html"/>
-                        </current>
-                </clover-report>
-        </target>
-
-        <target name="clover.swing" depends="with.clover">
-                <clover-view/>
-        </target>
-
 
 </project>

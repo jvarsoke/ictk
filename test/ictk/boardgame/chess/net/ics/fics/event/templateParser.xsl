@@ -5,7 +5,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id: templateParser.xsl,v 1.2 2004/01/30 08:50:38 jvarsoke Exp $
+ *  $Id$
  *
  *  This file is part of ICTK.
  *
@@ -37,6 +37,9 @@
    <xsl:apply-templates select="unit"/>
 </xsl:template>
 
+<!-- necessary because XSLTC redirect:write does not respect Ant:destdir -->
+<xsl:param name="destpath"/>
+
 <!-- main event -->
 <xsl:template match="unit">
    <xsl:variable name="parserclassname" select="concat('FICS',
@@ -46,15 +49,20 @@
    <xsl:variable name="classname"  select="concat($parserclassname,
                                           'Test')"
                                           />
-   <xsl:variable name="filename" select="concat($classname,
+   <xsl:variable name="rel-filename" select="concat($classname,
                                                 '.java')"
                                                  />
+   <xsl:variable name="filename" select="concat($destpath,
+						'/',
+						$rel-filename)"
+/>
+
 
    <!-- show the filename so we can capture in a log and delete later -->
-   <xsl:value-of select="$filename"/><xsl:text>
+   <xsl:value-of select="$rel-filename"/><xsl:text>
 </xsl:text>
 
-   <redirect:write select="$filename">/*
+   <redirect:write file="{$filename}">/*
 /*
  *  ICTK - Internet Chess ToolKit
  *  More information is available at http://ictk.sourceforge.net
@@ -82,7 +90,7 @@ package ictk.boardgame.chess.net.ics.fics.event;
 
 /*--------------------------------------------------------------------------*
  * This file was auto-generated
- * by $Id: templateParser.xsl,v 1.2 2004/01/30 08:50:38 jvarsoke Exp $
+ * by $Id$
  * on <xsl:value-of select="java:util.Date.new()"/>
  *--------------------------------------------------------------------------*/
 

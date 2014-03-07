@@ -27,6 +27,7 @@
    <!ENTITY common SYSTEM "parserCommon.xml">
    ]>
 
+
 <icsevtml>
    <!-- generic event .....................................................-->
    <event id="generic" 
@@ -351,58 +352,6 @@
          <toNative avgLength="34">
 	    <code format="java">
 	 sb.append("You are already examining a game.");
-	    </code>
-	 </toNative>
-      </parser>
-
-      <!-- Examiner Other..................................................-->
-      <!-- guesttick is now an examiner of game 29.-->
-      <!-- guesttick stopped examining game 29.-->
-      <parser id="examinerOther:parser"
-              name="ExaminerOther"
-              protocol="FICS"
-              extends="ICSEventParser"
-	      enum="EXAMINER_OTHER"
-	      detectFake="no">
-         <description>
-	    This event is issued when someone else becomes or stops
-	    being an examiner of a game the user is observing or 
-	    examining.
-	    The isTrue() method indicates whether the user has become (true)
-	    or has stopped (false).
-	 </description>
-
-         <!-- regex -->
-	 <regex>
-	    <regexref ref="regex:fics:player"/>\s
-	    ((is\snow\san\sexaminer\sof\sgame)
-	    |
-	    (stopped\sexamining\sgame))
-	    \s(\d+)\.
-	 </regex>
-
-         <!-- assignMatches -->
-	 <assignMatches format="java">
-	    <regexgroup num="2" memberref="genericBoard:player"/>
-	    <regexgroup num="6" memberref="genericBoard:boardNumber"/>
-      if (m.group(5) != null) {
-	 evt.setData(-1);
-      }
-      else {
-         evt.setData(1);
-      }
-	 </assignMatches>
-
-         <!-- toNative -->
-         <toNative avgLength="50">
-	    <code format="java">
-         sb.append(evt.getPlayer());
-      if (evt.isTrue())
-	 sb.append(" is now an examiner of game ");
-      else
-         sb.append(" stopped examining game ");
-      sb.append(evt.getBoardNumber())
-        .append(".");
 	    </code>
 	 </toNative>
       </parser>
