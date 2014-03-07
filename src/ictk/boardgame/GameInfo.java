@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: GameInfo.java,v 1.2 2003/08/02 17:38:43 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -342,10 +342,10 @@ public abstract class GameInfo {
       if (props == null)
          sb.append("None");
       else {
-         Enumeration e = props.propertyNames();
+         Enumeration enu = props.propertyNames();
 	 String key = null;
-	 while (e.hasMoreElements()) {
-	    key = (String) e.nextElement();
+	 while (enu.hasMoreElements()) {
+	    key = (String) enu.nextElement();
 	    sb.append(key).append(" = ")
 	      .append(props.getProperty(key, null));
 	 }

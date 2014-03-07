@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ANSIConsole.java,v 1.12 2003/09/30 17:27:37 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

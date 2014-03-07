@@ -5,7 +5,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: text.xsl,v 1.2 2004/02/16 21:20:00 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

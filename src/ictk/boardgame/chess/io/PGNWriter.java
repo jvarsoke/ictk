@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: PGNWriter.java,v 1.9 2003/09/29 08:19:05 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

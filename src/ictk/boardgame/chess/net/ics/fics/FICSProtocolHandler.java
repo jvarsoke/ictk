@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: FICSProtocolHandler.java,v 1.24 2004/04/07 19:56:24 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -172,7 +172,6 @@ public class FICSProtocolHandler extends ICSProtocolHandler {
 	  }
 	  else {
 	     Log.error(Log.USER_ERROR, "unsuccessful login");
-	  //close socket etc
 	  }
 	  //end thread
 	  if (socket != null && !socket.isClosed()) {}

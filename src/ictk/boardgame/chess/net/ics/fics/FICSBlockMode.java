@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: FICSBlockMode.java,v 1.1 2003/04/10 20:46:06 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

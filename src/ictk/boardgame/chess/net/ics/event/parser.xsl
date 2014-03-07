@@ -5,7 +5,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: parser.xsl,v 1.12 2004/01/30 08:50:38 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -32,9 +32,6 @@
 		extension-element-prefixes="redirect"
 		>
 
-<!-- necessary because XSLTC redirect:write does not respect Ant:destdir -->
-<xsl:param name="destpath"/>
-
 <xsl:import href="string.xsl"/>
 <xsl:import href="text.xsl"/>
 
@@ -60,23 +57,17 @@
           <xsl:with-param name="input" select="@protocol"/>
        </xsl:call-template>
    </xsl:variable>
-
-   <xsl:variable name="rel-filename" select="concat('../',
+   <xsl:variable name="filename" select="concat('../',
                                                 $lc_protocol,
                                                 '/event/',
                                                 $classname,
 					        '.java')"
 						/>
 
-   <xsl:variable name="filename" select="concat($destpath,
-	   					'/',
-	   					$rel-filename)"
-						 />
    <!-- write out the filename so we can delete it later -->
-   <xsl:value-of select="$rel-filename"/><xsl:text>
+   <xsl:value-of select="$filename"/><xsl:text>
 </xsl:text>
-
-<redirect:write file="{$filename}">/*
+   <redirect:write select="$filename">/*
  *  ICTK - Internet Chess ToolKit
  *  More information is available at http://ictk.sourceforge.net
  *  Copyright (C) 2002 J. Varsoke &lt;jvarsoke@ghostmanonfirst.com&gt;
@@ -105,7 +96,7 @@ package ictk.boardgame.chess.net.ics.<xsl:call-template name="str:toLower">
 
 /*--------------------------------------------------------------------------*
  * This file was auto-generated 
- * by $Id$
+ * by $Id: parser.xsl,v 1.12 2004/01/30 08:50:38 jvarsoke Exp $
  * on <xsl:value-of select="java:util.Date.new()"/>
  *--------------------------------------------------------------------------*/
 

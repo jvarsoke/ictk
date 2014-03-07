@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSRating.java,v 1.4 2003/08/24 09:53:00 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: Move.java,v 1.5 2003/08/18 02:31:25 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: HistoryTest.java,v 1.2 2003/07/30 07:18:50 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

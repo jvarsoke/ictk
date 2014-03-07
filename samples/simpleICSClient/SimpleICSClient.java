@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: SimpleICSClient.java,v 1.5 2003/09/11 02:46:43 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -89,6 +89,7 @@ public class SimpleICSClient implements ICSConnectionListener {
        if (!ics.isConnected()) {
           try {
 	     System.out.println("[Client] attempting to connect");
+        ics.setHost("69.36.243.188");
 	     ics.setHandle(handle);
 	     ics.setPassword(passwd);
 	     ics.setLagCompensation(true);

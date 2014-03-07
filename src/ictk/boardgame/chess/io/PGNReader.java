@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: PGNReader.java,v 1.12 2003/09/29 11:28:23 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

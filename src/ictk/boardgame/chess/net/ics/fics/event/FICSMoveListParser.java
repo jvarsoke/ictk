@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: FICSMoveListParser.java,v 1.3 2003/08/26 20:43:09 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

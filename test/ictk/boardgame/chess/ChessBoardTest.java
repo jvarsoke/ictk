@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ChessBoardTest.java,v 1.2 2003/08/13 15:13:59 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: CLIPGNViewer.java,v 1.1 2003/08/18 03:38:42 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

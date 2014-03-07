@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSBoardEvent.java,v 1.4 2004/01/30 15:47:12 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

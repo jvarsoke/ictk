@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: TestChunker.java,v 1.1 2003/05/13 15:38:58 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

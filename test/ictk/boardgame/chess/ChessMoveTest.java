@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ChessMoveTest.java,v 1.2 2003/07/15 01:19:23 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

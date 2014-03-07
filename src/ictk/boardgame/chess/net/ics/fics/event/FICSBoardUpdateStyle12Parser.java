@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: FICSBoardUpdateStyle12Parser.java,v 1.2 2003/09/11 03:33:52 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -177,9 +177,12 @@ public class FICSBoardUpdateStyle12Parser extends ICSEventParser {
       evt.setBlackCastleableKingside(m.group(14).charAt(0) == '1');
       evt.setBlackCastleableQueenside(m.group(15).charAt(0) == '1');
 
-      evt.setVerboseMove(m.group(28));
+      if (!"none".equals(m.group(28)))
+         evt.setVerboseMove(m.group(28));
 
-      evt.setSAN(m.group(32));
+      if (!"none".equals(m.group(32)))
+         evt.setSAN(m.group(32));
+
       evt.setFlipBoard(m.group(33).charAt(0) == '1');
       evt.setClockMoving(m.group(34).charAt(0) == '1');
 
@@ -280,13 +283,23 @@ public class FICSBoardUpdateStyle12Parser extends ICSEventParser {
 	.append(evt.getBlackClock())
 	.append(" ")
 	.append(evt.getMoveNumber())
-	.append(" ")
-	.append(evt.getVerboseMove())
-	.append(" (")
+	.append(" ");
+
+      if (evt.getVerboseMove() == null)
+         sb.append("none");
+      else
+	sb.append(evt.getVerboseMove());
+
+      sb.append(" (")
 	.append(getClockAsString(evt.getMoveTime(), true))
-	.append(") ")
-	.append(evt.getSAN())
-	.append((evt.isFlipBoard()) ? " 1" : " 0")
+	.append(") ");
+
+      if (evt.getSAN() == null) 
+         sb.append("none");
+      else
+         sb.append(evt.getSAN());
+
+      sb.append((evt.isFlipBoard()) ? " 1" : " 0")
 	.append((evt.isClockMoving()) ? " 1 " : " 0 ")
 	.append(evt.getLag());
 

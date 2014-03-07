@@ -1,4 +1,4 @@
-##$Id$
+##$Id: FICSExamineNavigationParserTest.data,v 1.1 2004/01/30 08:50:38 jvarsoke Exp $
 ## forward 1  (forward report, then style12)
 Game 29: TibetianTick goes forward 1 move.
 ## forward N  (forward report, then style12)

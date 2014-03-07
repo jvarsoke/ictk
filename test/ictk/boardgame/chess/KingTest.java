@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: KingTest.java,v 1.3 2003/07/20 15:28:31 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

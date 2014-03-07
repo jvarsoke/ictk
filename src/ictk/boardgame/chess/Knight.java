@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: Knight.java,v 1.1.1.1 2003/03/24 22:38:07 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

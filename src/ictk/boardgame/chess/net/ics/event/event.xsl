@@ -5,7 +5,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: event.xsl,v 1.9 2003/08/24 07:46:52 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -31,12 +31,10 @@
 		xmlns:java="java"
 		extension-element-prefixes="redirect"
 		>
+
 <xsl:import href="string.xsl"/>
 <xsl:import href="text.xsl"/>
 <xsl:import href="parser.xsl"/>
-
-<!-- necessary because XSLTC redirect:write does not respect Ant:destdir -->
-<xsl:param name="destpath"/>
 
 <xsl:output method="text" 
             omit-xml-declaration="yes"/>
@@ -51,20 +49,15 @@
                                                  @class,
 						 'Event')"
 						 />
-   <xsl:variable name="rel-filename" select="concat($classname,
+   <xsl:variable name="filename" select="concat($classname,
                                                 '.java')"
 						 />
 						  
-   <xsl:variable name="filename" select="concat($destpath,
-	   					'/',
-	   					$rel-filename)"
-						 />
-
    <!-- show the filename so we can capture in a log and delete later -->
-   <xsl:value-of select="$rel-filename"/><xsl:text>
+   <xsl:value-of select="$filename"/><xsl:text>
 </xsl:text>
 
-   <redirect:write file="{$filename}">/*
+   <redirect:write select="$filename">/*
  *  ICTK - Internet Chess ToolKit
  *  More information is available at http://ictk.sourceforge.net
  *  Copyright (C) 2003 J. Varsoke &lt;jvarsoke@ghostmanonfirst.com&gt;
@@ -91,7 +84,7 @@ package ictk.boardgame.chess.net.ics.event;
 
 /*--------------------------------------------------------------------------*
  * This file was auto-generated 
- * by $Id$
+ * by $Id: event.xsl,v 1.9 2003/08/24 07:46:52 jvarsoke Exp $
  * on <xsl:value-of select="java:util.Date.new()"/>
  *--------------------------------------------------------------------------*/
 
@@ -147,6 +140,7 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
 	 </xsl:otherwise>
       </xsl:choose>
    }
+<xsl:apply-templates select="code"/>
 }
 </redirect:write>
    <xsl:apply-templates select="parser"/>

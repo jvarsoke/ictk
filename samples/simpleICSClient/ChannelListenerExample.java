@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ChannelListenerExample.java,v 1.2 2004/04/07 19:51:58 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

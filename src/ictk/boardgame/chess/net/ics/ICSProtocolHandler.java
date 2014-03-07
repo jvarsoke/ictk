@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSProtocolHandler.java,v 1.6 2004/04/07 19:56:24 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

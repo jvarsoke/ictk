@@ -5,7 +5,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: genericBoard.xml,v 1.2 2004/01/30 15:47:12 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -49,6 +49,13 @@
       <member id="genericBoard:data "        typeref="int"
                                              varname="data"
 					     functname="Data"/>
+      <code format="java">
+   /* isTrue ****************************************************************/
+   /** this is used by various events to distinquish between two similar
+    *  events, as when one event means Begin and the other means End.
+    */
+   public boolean isTrue() { return (data > 0); }
+      </code>
 
 
       <!--Examine Navigation parser ........................................-->
@@ -293,9 +300,9 @@
 	      detectFake="no">
          <description>
 	    This event is generated when someone has made the user an
-	    examiner of a game.  The Data field indicates whether 
-	    someone else has just made the user and examiner (1), or 
-	    whether the user has stopped examining a game (-1).
+	    examiner of a game.
+	    The isTrue() method indicates whether the user has become (true)
+	    or has stopped (false).
 	    If the user has just been made an examiner, then the
 	    Player field will return who made the user an examiner.
 	    If the user has stopped examining the game the 
@@ -327,13 +334,39 @@
          <!-- toNative -->
          <toNative avgLength="53">
 	    <code format="java">
-      if (evt.getData() == 1)
+      if (evt.isTrue())
          sb.append(evt.getPlayer())
 	   .append(" has made you an examiner of game ");
       else
          sb.append("You are no longer examining game ");
       sb.append(evt.getBoardNumber())
         .append(".");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!-- Examiner Self Already...........................................-->
+      <!-- You are already examining a game.-->
+      <parser id="examinerSelfAlready:parser"
+              name="ExaminerSelfAlready"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="EXAMINER_SELF_ALREADY"
+	      detectFake="no">
+         <description>
+	    This message is issued when the user attempts to enter
+	    examine mode, when already in examine mode.
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    You\sare\salready\sexamining\sa\sgame\.
+	 </regex>
+
+         <!-- toNative -->
+         <toNative avgLength="34">
+	    <code format="java">
+	 sb.append("You are already examining a game.");
 	    </code>
 	 </toNative>
       </parser>
@@ -351,8 +384,8 @@
 	    This event is issued when someone else becomes or stops
 	    being an examiner of a game the user is observing or 
 	    examining.
-	    The Data field indicates whether the user has become (1)
-	    or stopped (-1).
+	    The isTrue() method indicates whether the user has become (true)
+	    or has stopped (false).
 	 </description>
 
          <!-- regex -->
@@ -380,12 +413,62 @@
          <toNative avgLength="50">
 	    <code format="java">
          sb.append(evt.getPlayer());
-      if (evt.getData() == 1)
+      if (evt.isTrue())
 	 sb.append(" is now an examiner of game ");
       else
          sb.append(" stopped examining game ");
       sb.append(evt.getBoardNumber())
         .append(".");
+	    </code>
+	 </toNative>
+      </parser>
+
+      <!-- ObserverSelf....................................................-->
+      <!-- You are now observing game 99.-->
+      <!-- Removing game 99 from observation list.-->
+      <parser id="observerSelf:parser"
+              name="ObserverSelf"
+              protocol="FICS"
+              extends="ICSEventParser"
+	      enum="OBSERVER_SELF"
+	      detectFake="no">
+         <description>
+	     This event is issued when you start observing a game, or
+	     stop obserivng it.  The 
+	 </description>
+
+         <!-- regex -->
+	 <regex>
+	    ((You\sare\snow\sobserving\sgame)
+	    |
+	    (Removing\sgame))
+	    \s(\d+)
+	    (\sfrom\sobservation\slist)?
+	    \.
+	 </regex>
+
+         <!-- assignMatches -->
+	 <assignMatches format="java">
+	    <regexgroup num="5" memberref="genericBoard:boardNumber"/>
+      if (m.group(3) != null) {
+	 evt.setData(1);
+      }
+      else {
+         evt.setData(-1);
+      }
+	 </assignMatches>
+
+         <!-- toNative -->
+         <toNative avgLength="41">
+	    <code format="java">
+      if (evt.isTrue())
+	 sb.append("You are now observing game ")
+	   .append(evt.getBoardNumber())
+	   .append(".");
+      else
+         sb.append("Removing game ")
+	   .append(evt.getBoardNumber())
+           .append(" from observation list.");
 	    </code>
 	 </toNative>
       </parser>

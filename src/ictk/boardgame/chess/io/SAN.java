@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: SAN.java,v 1.5 2003/08/01 22:14:13 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

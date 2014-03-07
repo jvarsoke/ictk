@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: TxChessBoardDisplay.java,v 1.5 2003/08/18 06:04:43 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

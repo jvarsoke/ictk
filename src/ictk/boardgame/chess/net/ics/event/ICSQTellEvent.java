@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSQTellEvent.java,v 1.2 2003/05/13 16:01:39 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSAccountType.java,v 1.4 2003/08/19 21:32:07 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

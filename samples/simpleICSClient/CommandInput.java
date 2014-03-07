@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: CommandInput.java,v 1.1 2003/08/29 08:42:21 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

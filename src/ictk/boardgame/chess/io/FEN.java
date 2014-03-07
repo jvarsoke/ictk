@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: FEN.java,v 1.1.1.1 2003/03/24 22:38:12 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

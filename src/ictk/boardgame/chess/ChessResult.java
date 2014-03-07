@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ChessResult.java,v 1.2 2003/07/28 05:20:07 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ChessAnnotation.java,v 1.4 2003/07/28 16:17:10 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

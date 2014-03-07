@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSResponse.java,v 1.2 2003/08/20 15:42:50 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

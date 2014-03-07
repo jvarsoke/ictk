@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: CLIBoardDisplay.java,v 1.3 2003/08/14 06:40:50 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

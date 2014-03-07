@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: BoardDisplay.java,v 1.2 2003/08/14 01:17:03 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

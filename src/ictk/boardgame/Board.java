@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: Board.java,v 1.3 2003/08/18 01:56:47 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

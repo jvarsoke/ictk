@@ -5,7 +5,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: allTests.xsl,v 1.1 2004/01/30 08:52:38 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -60,7 +60,7 @@ package ictk.boardgame.chess.net.ics.fics.event;
 
 /*--------------------------------------------------------------------------*
  * This file was auto-generated
- * by $Id$
+ * by $Id: allTests.xsl,v 1.1 2004/01/30 08:52:38 jvarsoke Exp $
  * on <xsl:value-of select="java:util.Date.new()"/>
  *--------------------------------------------------------------------------*/
 

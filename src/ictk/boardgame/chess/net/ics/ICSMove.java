@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSMove.java,v 1.2 2003/08/24 05:44:49 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *

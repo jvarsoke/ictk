@@ -4,7 +4,7 @@
  *  Copyright (C) 2002 J. Varsoke <jvarsoke@ghostmanonfirst.com>
  *  All rights reserved.
  *
- *  $Id$
+ *  $Id: ICSEvent.java,v 1.12 2004/01/30 15:47:12 jvarsoke Exp $
  *
  *  This file is part of ICTK.
  *
@@ -91,8 +91,13 @@ public abstract class ICSEvent {
 			      EXAMINE_COMMIT_EVENT             = 34,
 
 			      EXAMINER_SELF_EVENT              = 35,
-			      EXAMINER_OTHER_EVENT             = 36,
-			      NUM_EVENTS		       = 37;
+			      EXAMINER_SELF_ALREADY_EVENT      = 36,
+			      EXAMINER_OTHER_EVENT             = 37,
+
+			      OBSERVER_SELF_EVENT              = 38,
+
+			      OBSERVER_LIST_EVENT              = 39,
+			      NUM_EVENTS		       = 40;
 
       /** each event has a type for easy casting */
    protected int eventType = UNKNOWN_EVENT;
