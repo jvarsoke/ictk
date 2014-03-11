@@ -310,7 +310,7 @@ public class PGNWriter extends ChessWriter {
 	    .append("+").append(gi.getTimeControlIncrement())
 	    .append("\"]\n");
 
-         Enumeration keys = gi.props.propertyNames();
+         Enumeration<?> keys = gi.props.propertyNames();
 	 String key = null, value = null;
 	 while (keys.hasMoreElements()) {
 	    key = (String) keys.nextElement();

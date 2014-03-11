@@ -36,9 +36,9 @@ import java.util.HashMap;
 public class ICSBoardManager implements ICSEventListener {
       /** Hash of boards keyed by Integer(#) where value is an array
        ** of ICSEventListeners */
-   protected Map boardSubscribers;
+   protected Map<Integer, ICSEventListener[]> boardSubscribers;
 
    public void icsEventDispatched (ICSEvent evt) {
-      boardSubscribers = new HashMap();
+      boardSubscribers = new HashMap<>();
    }
 }

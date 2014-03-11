@@ -42,6 +42,7 @@ import ictk.boardgame.Game;
 import ictk.boardgame.History;
 import ictk.boardgame.Board;
 import ictk.boardgame.GameInfo;
+import ictk.boardgame.Move;
 import ictk.boardgame.IllegalMoveException;
 import ictk.boardgame.AmbiguousMoveException;
 import ictk.boardgame.OutOfTurnException;
@@ -168,7 +169,7 @@ public class PGNReader extends ChessReader {
       int         count    = 0;  //move count
       int i = 0;  //used for temp
       ChessResult res      = null;
-      Stack       forks    = new Stack(); //fork for variations to return to
+      Stack<Move> forks    = new Stack<>(); //fork for variations to return to
       ChessAnnotation anno = null;
                   /* this is for when we have two or more annotations
 	           * in a row.  We either need to apply it to the 
@@ -201,7 +202,7 @@ public class PGNReader extends ChessReader {
 
 
       //loop until we hit a result or see the EOF
-      while (!finished && st.nextToken() != st.TT_EOF) {
+      while (!finished && st.nextToken() != StreamTokenizer.TT_EOF) {
          tok = st.sval;
 
          if (Log.debug)
@@ -219,7 +220,7 @@ public class PGNReader extends ChessReader {
 		  sb = new StringBuffer();
 
                   st.ordinaryChar(' ');
-		  while (st.nextToken() != st.TT_EOL) {
+		  while (st.nextToken() != StreamTokenizer.TT_EOL) {
 		     tok2 = st.sval;
 		     if (st.ttype != '\t')
 		        if (tok2 != null)
@@ -268,7 +269,7 @@ public class PGNReader extends ChessReader {
 		  done = false;
 
                   st.ordinaryChar(' ');
-		  while (!done && st.nextToken() != st.TT_EOF) {
+		  while (!done && st.nextToken() != StreamTokenizer.TT_EOF) {
 		     tok2 = st.sval;
 		     switch (st.ttype) {
 			case '}': 

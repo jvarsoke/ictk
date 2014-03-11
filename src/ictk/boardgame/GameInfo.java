@@ -342,7 +342,7 @@ public abstract class GameInfo {
       if (props == null)
          sb.append("None");
       else {
-         Enumeration enu = props.propertyNames();
+         Enumeration<?> enu = props.propertyNames();
 	 String key = null;
 	 while (enu.hasMoreElements()) {
 	    key = (String) enu.nextElement();

@@ -212,8 +212,8 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 	    }
 
             r = 1;
-            for (f=((flipped) ? b.MAX_FILE : 1); 
-	         ((flipped) ? f >= 1 : f <= b.MAX_FILE); 
+            for (f=((flipped) ? ChessBoard.MAX_FILE : 1); 
+	         ((flipped) ? f >= 1 : f <= ChessBoard.MAX_FILE); 
 		 x = ((flipped) ? f-- : f++)) {
 
 	       sq = b.getSquare(f, r);
@@ -225,7 +225,7 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 		  out.print(Character.toUpperCase(
 		     notation.fileToChar(sq.getFile())));
 
-	       if (!compact && f != ((flipped) ? 1 : b.MAX_FILE))
+	       if (!compact && f != ((flipped) ? 1 : ChessBoard.MAX_FILE))
 	          out.print(" ");
 	    }
 	    out.println();
@@ -246,9 +246,9 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 
          //loop through ranks then files
 	 //forward or back, depending on flip
-         for (r=((flipped) ? 1 : b.MAX_RANK), 
-	      f=((flipped) ? b.MAX_FILE : 1); 
-	      ((flipped) ? r <= b.MAX_RANK : r >= 1); 
+         for (r=((flipped) ? 1 : ChessBoard.MAX_RANK), 
+	      f=((flipped) ? ChessBoard.MAX_FILE : 1); 
+	      ((flipped) ? r <= ChessBoard.MAX_RANK : r >= 1); 
 	      x = ((flipped) ? r++ : r--)) {
 
 	    sq = b.getSquare(f, r);
@@ -272,8 +272,8 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 	    }
 
             //loop through the Rank
-            for (f=((flipped) ? b.MAX_FILE : 1); 
-	         ((flipped) ? f >= 1 : f <= b.MAX_FILE); 
+            for (f=((flipped) ? ChessBoard.MAX_FILE : 1); 
+	         ((flipped) ? f >= 1 : f <= ChessBoard.MAX_FILE); 
 		 x = ((flipped) ? f-- : f++)) {
 
 	       sq = b.getSquare(f, r);
@@ -289,10 +289,10 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
                   else
                      out.print(whiteSquare);
 
-	       if (!compact && f != ((flipped) ? 1 : b.MAX_FILE))
+	       if (!compact && f != ((flipped) ? 1 : ChessBoard.MAX_FILE))
 	          out.print(" ");
 
-               if (bottom && r == ((flipped) ? 1 : b.MAX_RANK)) {
+               if (bottom && r == ((flipped) ? 1 : ChessBoard.MAX_RANK)) {
 	          if (lowercaseCoords) 
 		     last_line.append(Character.toLowerCase(
 			notation.fileToChar(sq.getFile())));
@@ -300,7 +300,7 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 		     last_line.append(Character.toUpperCase(
 			notation.fileToChar(sq.getFile())));
 
-		  if (!compact && f != ((flipped) ? 1 : b.MAX_FILE))
+		  if (!compact && f != ((flipped) ? 1 : ChessBoard.MAX_FILE))
 		     last_line.append(" ");
 	       }
 
@@ -324,7 +324,7 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 	    }
 
 	    if (flipped) 
-	       f=b.MAX_FILE;
+	       f=ChessBoard.MAX_FILE;
 	    else
 	       f=1;
 

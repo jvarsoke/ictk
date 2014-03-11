@@ -36,5 +36,5 @@ public interface Team {
 
    public void setTeamName (String team);
 
-   public List getPlayers ();
+   public List<Player> getPlayers ();
 }

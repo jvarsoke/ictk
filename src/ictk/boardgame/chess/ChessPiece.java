@@ -50,7 +50,7 @@ public abstract class ChessPiece extends Piece {
      /** how many times it moved this game */
    protected short     moveCount;
      /** legal destinations for next move */
-   protected List      legalDests,
+   protected List<Square> legalDests,
      /** squares with pieces this piece guards */
                        guardSquares;
      /** origin square */
@@ -99,8 +99,8 @@ public abstract class ChessPiece extends Piece {
       moveCount      = 0;
       orig           = _orig;
       board          = _board;
-      legalDests     = new ArrayList(maxlegaldests);  
-      guardSquares   = new ArrayList(maxguards);  
+      legalDests     = new ArrayList<>(maxlegaldests);  
+      guardSquares   = new ArrayList<>(maxguards);  
    }
 
    //Status//////////////////////////////////////////////////////////////
@@ -163,16 +163,16 @@ public abstract class ChessPiece extends Piece {
    protected void genLegalDestsSaveKing (ChessPiece king, ChessPiece threat) {
       //check if is the square of the threat, or blocks threat from 
       //king square
-      Iterator oldLegals = legalDests.iterator();
+      Iterator<Square> oldLegals = legalDests.iterator();
       Square sq = null;
 
          if (captured) return;
       
          //FIXME: do we really want to create a new array here?
-         legalDests = new ArrayList(3);
+         legalDests = new ArrayList<>(3);
 	  
 	 while (oldLegals.hasNext()) {
-	    sq = (Square) oldLegals.next();
+	    sq = oldLegals.next();
 
 	    //does the destination (sq) block the threat?
             if (threat.isBlockable(sq, king)) 
@@ -211,7 +211,7 @@ public abstract class ChessPiece extends Piece {
    /**sets the pinnedBy piece and modifies the legal moves for this piece
     * to the Union of lineOfSight and current Legal Moves
     */
-   protected void setPinned (ChessPiece pinner, List lineOfSight) {
+   protected void setPinned (ChessPiece pinner, List<Square> lineOfSight) {
       pinnedBy = pinner;
       assert !pinner.isCaptured() : "Captured Pinner: " + pinner.dump();
       legalDests.retainAll(lineOfSight);
@@ -246,7 +246,7 @@ public abstract class ChessPiece extends Piece {
    /* getLegalDests *****************************************************/
    /** returns the Squares that are legal destinations on this piece
     */
-   public List getLegalDests () {
+   public List<Square> getLegalDests () {
       if (board.staleLegalDests)
           board.genLegalDests();
       return legalDests;
@@ -266,7 +266,7 @@ public abstract class ChessPiece extends Piece {
    /** returns the Squares that this piece guards (when it is the other 
     *  sides turn to move.
     */
-   public List getGuardSquares () {
+   public List<Square> getGuardSquares () {
       if (board.staleLegalDests)
           board.genLegalDests();
       return guardSquares;
@@ -430,7 +430,8 @@ public abstract class ChessPiece extends Piece {
    }
 
    /* adjustPinsLegalDests ***********************************************/
-   protected void adjustPinsLegalDests (ChessPiece king, List enemyTeam) {
+   //FIXME: not sure what this function was for
+   protected void adjustPinsLegalDests (ChessPiece king, List<ChessPiece> enemyTeam) {
    }
 
 

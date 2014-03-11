@@ -233,7 +233,7 @@ black to move first (rare case)
 12: 000
 */
       Matcher mvMatch = moveLinePattern.matcher(m.group(20));
-      List tmplist = new LinkedList();
+      List<ICSMove> tmplist = new LinkedList<>();
       ICSMove tmp = null;
       int  min = 0, s = 0, ms = 0;
 
@@ -300,7 +300,7 @@ black to move first (rare case)
       if (tmplist.size() > 0) {
          moves = new ICSMove[tmplist.size()];
 	 for (i = 0; i < tmplist.size(); i++) {
-	    moves[i] = (ICSMove) tmplist.get(i);
+	    moves[i] = tmplist.get(i);
 	 }
       }
       evt.setMoves(moves);

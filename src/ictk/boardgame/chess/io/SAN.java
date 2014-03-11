@@ -52,6 +52,8 @@ public class SAN extends ChessMoveNotation {
 
       /** default regex pattern for matching moves */
    protected static final Pattern defaultMovePattern;
+
+   //FIXME: not sure an instance is necessary
       /** to have access to NumericAnnotationGlyphs for parsing */
    protected static final NAG nag = new NAG();
    
@@ -212,7 +214,7 @@ public class SAN extends ChessMoveNotation {
 	 if (result.end() < s.length()) {
 	    short[] nags = null;
 
-	    nags = nag.stringToNumbers(s.substring(result.end()));
+	    nags = NAG.stringToNumbers(s.substring(result.end()));
 	    if (nags != null) {
 	       anno = new ChessAnnotation();
 	       for (int i=0; i < nags.length; i++)

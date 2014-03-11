@@ -31,6 +31,7 @@ package ictk.boardgame;
  *  heirarchy of exceptions.
  */
 public class BoardGameException extends Exception {
+   public static final long serialVersionUID = 1L;
 
    public BoardGameException ()         { super();  }
    public BoardGameException (String s) { super(s); }

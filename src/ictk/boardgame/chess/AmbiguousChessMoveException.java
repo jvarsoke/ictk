@@ -26,6 +26,7 @@
 package ictk.boardgame.chess;
 
 import java.util.List;
+import ictk.boardgame.Move;
 import ictk.boardgame.AmbiguousMoveException;
 
 /* AmbiguousMoveException ***************************************************/
@@ -37,6 +38,8 @@ import ictk.boardgame.AmbiguousMoveException;
  *  much information as possible to help determine what went wrong.
  */
 public class AmbiguousChessMoveException extends AmbiguousMoveException {
+   public static final long serialVersionUID = 1L;
+
      /** an array of pieces that legally move to this desination */
    protected ChessPiece[] pieces;
 
@@ -65,7 +68,7 @@ public class AmbiguousChessMoveException extends AmbiguousMoveException {
    public AmbiguousChessMoveException (String mesg,
                                    int p,
 				   int of, int or, int df, int dr) {
-      this(mesg, p,of, or, df, dr, (List) null);
+      this(mesg, p,of, or, df, dr, (List<ChessPiece>) null);
    }
 
    /** 
@@ -83,7 +86,7 @@ public class AmbiguousChessMoveException extends AmbiguousMoveException {
 				   int or,
 				   int df,
 				   int dr,
-				   List dupes) {
+				   List<ChessPiece> dupes) {
       super(mesg);
       this.p = p;
       this.of = of;

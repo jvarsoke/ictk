@@ -83,19 +83,19 @@ public class King extends ChessPiece {
    protected int genLegalDestsFinal () {
       Square      dest;
       int         dir;
-      Iterator    perlimMoves;
-      List        tmpLegalDests;
+      Iterator<Square>    perlimMoves;
+      List<Square>        tmpLegalDests;
       ChessPiece  rook;
       boolean     blocked = false;
  
          tmpLegalDests = legalDests;
          perlimMoves = tmpLegalDests.iterator();
 
-         legalDests = new ArrayList (8);
+         legalDests = new ArrayList<> (8);
 
          //make sure the King doesn't move into a kill
          while (perlimMoves.hasNext()) {
-            dest = (Square) perlimMoves.next();
+            dest = perlimMoves.next();
 
             if (!board.isThreatened(dest, !isBlack)
                 && !board.isGuarded(dest, !isBlack))
@@ -257,6 +257,7 @@ public class King extends ChessPiece {
    protected Rook findMyRook (boolean qside) {
       byte file = 1;
       ChessPiece p = null;
+
       if (qside) {
          for (file = 1; p == null && file< orig.file; file++) {
 	    p = board.getSquare(file, orig.rank).piece;
@@ -266,7 +267,7 @@ public class King extends ChessPiece {
       }
       //kside
       else {
-         for (file = board.MAX_FILE; p == null && file > orig.file; file--) {
+         for (file = ChessBoard.MAX_FILE; p == null && file > orig.file; file--) {
 	    p = board.getSquare(file, orig.rank).piece;
 	    if (p == null || !p.isRook() || p.isBlack() != isBlack())
 	       p = null;

@@ -33,6 +33,7 @@ import java.util.List;
  *  then the move is Ambiguous.
  */
 public class AmbiguousMoveException extends MoveException {
+   public static final long serialVersionUID = 1L;
 
    public AmbiguousMoveException () { super(); }
    public AmbiguousMoveException (String mesg) { super(mesg); }

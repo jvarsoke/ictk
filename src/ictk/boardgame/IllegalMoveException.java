@@ -30,6 +30,8 @@ package ictk.boardgame;
  *  game.
  */
 public class IllegalMoveException extends MoveException {
+   public static final long serialVersionUID = 1L;
+
    String moveString;
    public IllegalMoveException ()         { super();  }
    public IllegalMoveException (String s) { super(s); }

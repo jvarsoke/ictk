@@ -420,8 +420,8 @@ public class History {
          throw new IllegalArgumentException (
 	     "Can't goTo() a move that doesn't belong to this history list.");
 
-      LinkedList tracks = new LinkedList();
-      ListIterator li;
+      LinkedList<Move> tracks = new LinkedList<>();
+      ListIterator<Move> li;
       Move walker = m;
 
       do {
@@ -434,7 +434,7 @@ public class History {
 
       li = tracks.listIterator(0);
       while (li.hasNext()) {
-	 walker = (Move) li.next();
+	 walker = li.next();
 	 try {
 	    walker.execute();
 	    currMoveNumber++;
@@ -691,7 +691,7 @@ public class History {
 	       tmp = walker.toString();
 	       for (int j=tmp.length(); j < 9; j++)
 	          tmp += " ";
-	       str += (((int) i/2) +1) + ((i < 19) ? ".  " : ". ");
+	       str += ((i/2) +1) + ((i < 19) ? ".  " : ". ");
 	       str += tmp;
 	    }
 	    else

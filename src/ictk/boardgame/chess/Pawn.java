@@ -145,15 +145,15 @@ public class Pawn extends ChessPiece {
    protected void genLegalDestsSaveKing (ChessPiece king, ChessPiece threat) {
       //check if is the square of the threat, or blocks threat from
       //king square
-      Iterator oldLegals = legalDests.iterator();
+      Iterator<Square> oldLegals = legalDests.iterator();
       Square sq = null;
 
          if (captured) return;
 
-         legalDests = new ArrayList(2);
+         legalDests = new ArrayList<>(2);
 
          while (oldLegals.hasNext()) {
-            sq = (Square) oldLegals.next();
+            sq = oldLegals.next();
 
             //does the destination (sq) block the threat?
             if (threat.isBlockable(sq, king))

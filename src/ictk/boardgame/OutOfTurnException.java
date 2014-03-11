@@ -38,6 +38,7 @@ package ictk.boardgame;
  *  who's turn is wasn't.
  */
 public class OutOfTurnException extends IllegalMoveException {
+   public static final long serialVersionUID = 1L;
 
    public OutOfTurnException ()         { super(); }
    public OutOfTurnException (String s) { super(s); }

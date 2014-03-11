@@ -53,6 +53,7 @@
    <property name="junit.print.results" value="yes"/>
    <property name="junit.results.dir"   value="results"/>
 
+   <property name="clover.home"          value="${env.CLOVER_HOME}"/>
    <!-- CVS -->
    <!-- for latest CVS version use -Dcvs.tag=HEAD on the command line -->
    <property name="cvs.anon"
@@ -105,6 +106,9 @@
    <!-- compile path for test suite -->
    <path id="compile_test.class.path">
       <fileset dir="${junit.home}">
+         <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${clover.home}">
          <include name="*.jar"/>
       </fileset>
       <fileset dir="${lib.dir}">
@@ -238,13 +242,14 @@
            description="compiles the optimized source (w/o debug info)">
       <mkdir dir="${build.dir}"/>
       <javac 
+         includeantruntime="false"
          srcdir="${source.dir}"
          destdir="${build.dir}"
-	 debug="no"
-	 optimize="yes"
-	 excludes="**/_*.java"
-	 classpathref="compile.class.path">
-	 <patternset refid="non.test.sources"/>
+         debug="no"
+         optimize="yes"
+         excludes="**/_*.java"
+         classpathref="compile.class.path">
+	      <patternset refid="non.test.sources"/>
       </javac>
    </target>
 
@@ -258,6 +263,7 @@
            description="compiles the regression testing source">
       <mkdir dir="${build.dir}"/>
       <javac 
+         includeantruntime="false"
          srcdir="${test.dir}"
          destdir="${build.dir}"
 	 debug="yes"
@@ -548,5 +554,25 @@
       <echo message="from you'll need to set it manually.  Check in "/>
       <echo message="the environment properties section of this build file."/>
    </target>
+
+        <!-- clover tasks -->
+        <taskdef resource="clovertasks"/>
+
+        <target name="with.clover">
+                <clover-setup initString="mycoverage.db"/>
+        </target>
+
+        <target name="clover.html" depends="with.clover">
+                <clover-report>
+                        <current outfile="clover_html">
+                                <format type="html"/>
+                        </current>
+                </clover-report>
+        </target>
+
+        <target name="clover.swing" depends="with.clover">
+                <clover-view/>
+        </target>
+
 
 </project>

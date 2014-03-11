@@ -36,15 +36,15 @@ import ictk.boardgame.Team;
  *  team in one game. 
  */
 public class ChessTeam extends ChessPlayer implements Team {
-   List players;
+   List<Player> players;
 
    public ChessTeam () {
-      players = new ArrayList(2);
+      players = new ArrayList<>(2);
    }
 
    public ChessTeam (String n) {
       super(n);
-      players = new ArrayList(2);
+      players = new ArrayList<>(2);
    }
 
    public String getTeamName () {
@@ -58,10 +58,8 @@ public class ChessTeam extends ChessPlayer implements Team {
    /* getPlayers ************************************************************/
    /** returns the List of players that are on this team.  This will
     *  never be null.
-    *  NOTE: if you add anything other than ChessPlayers it will
-    *        break certain methods.
     */
-   public List getPlayers () {
+   public List<Player> getPlayers () {
       return players;
    }
 

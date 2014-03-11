@@ -37,6 +37,8 @@ package ictk.boardgame;
 /** An Exception that occurs due to a move.
  */
 public class MoveException extends BoardGameException {
+   public static final long serialVersionUID = 1L;
+
    protected Move m;
 
    public MoveException ()         { super();  }

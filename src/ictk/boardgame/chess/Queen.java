@@ -59,7 +59,7 @@ public class Queen extends ChessPiece {
  
  //FIXME: change over to board.getLineOfSight()
          //north
-         for (int r=orig.rank+1;r <= board.MAX_RANK && !done; r++) {
+         for (int r=orig.rank+1;r <= ChessBoard.MAX_RANK && !done; r++) {
              dest = board.getSquare(orig.file, r);
              done = !addLegalDest(dest);
              //done = (done || dest.isOccupied());
@@ -72,7 +72,7 @@ public class Queen extends ChessPiece {
          done = false;
  
          for (int f=orig.file+1, r=orig.rank+1;
-              f <= board.MAX_FILE && r <= board.MAX_RANK && !done;
+              f <= ChessBoard.MAX_FILE && r <= ChessBoard.MAX_RANK && !done;
               f++, r++) {
  
              dest = board.getSquare(f, r);
@@ -86,7 +86,7 @@ public class Queen extends ChessPiece {
          //east
          done = false;
  
-         for (int f=orig.file+1;f <= board.MAX_FILE && !done; f++) {
+         for (int f=orig.file+1;f <= ChessBoard.MAX_FILE && !done; f++) {
              dest = board.getSquare(f, orig.rank);
              done = !addLegalDest(dest);
              //done = (done || dest.isOccupied());
@@ -99,7 +99,7 @@ public class Queen extends ChessPiece {
          done = false;
  
          for (int f=orig.file+1, r=orig.rank-1;
-              f <= board.MAX_FILE && r > 0 && !done;
+              f <= ChessBoard.MAX_FILE && r > 0 && !done;
               f++, r--) {
  
              dest = board.getSquare(f, r);
@@ -154,7 +154,7 @@ public class Queen extends ChessPiece {
          done = false;
  
          for (int f=orig.file-1, r=orig.rank+1;
-              f > 0 && r <= board.MAX_RANK && !done;
+              f > 0 && r <= ChessBoard.MAX_RANK && !done;
               f--, r++) {
  
              dest = board.getSquare(f, r);
@@ -169,7 +169,7 @@ public class Queen extends ChessPiece {
    }
 
    /* adjustPinsLegalDests **********************************************/
-   public void adjustPinsLegalDests (ChessPiece king, List enemyTeam) {
+   public void adjustPinsLegalDests (ChessPiece king, List<ChessPiece> enemyTeam) {
       Square[] line = getLineOfSight(king, false);
       ChessPiece pin = null, tmp;
       boolean done = false;
@@ -205,7 +205,7 @@ public class Queen extends ChessPiece {
 
 	 if (pin != null) {
 	    //need to AND moves with line
-	    List maintainPins = Arrays.asList(line); //includes this square
+	    List<Square> maintainPins = Arrays.asList(line); //includes this square
 	    pin.setPinned(this, maintainPins);
 	 }
       }

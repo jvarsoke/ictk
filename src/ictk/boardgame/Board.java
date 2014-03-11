@@ -61,7 +61,7 @@ public interface Board {
    /* getLegalMoves  *****************************************************/
    /** returns a List of all legal moves for the current board state.
     */
-   public List   getLegalMoves();
+   public List<Move> getLegalMoves();
 
    /* getLegalMoveCount **************************************************/
    /** returns the number of legal moves possible on the current board.

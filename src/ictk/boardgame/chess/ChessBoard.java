@@ -78,7 +78,7 @@ public class ChessBoard implements Board {
       /** technically this is the actual board */
    protected Square    squares[][]; //file,rank
       /** the team of white Pieces */
-   protected List      whiteTeam, 
+   protected List<ChessPiece> whiteTeam, 
       /** the team of black Pieces */
                        blackTeam;
       /** the King for the white side */
@@ -121,8 +121,8 @@ public class ChessBoard implements Board {
    public ChessBoard (boolean defaultBoard) {
       squares = new Square[MAX_FILE][MAX_RANK];
 
-         whiteTeam = new ArrayList (16);
-         blackTeam = new ArrayList (16);
+         whiteTeam = new ArrayList<>(16);
+         blackTeam = new ArrayList<>(16);
  
          for (byte f=0, r=0; f < MAX_FILE; f++) 
             for (r=0;r < MAX_RANK; r++) 
@@ -238,7 +238,7 @@ public class ChessBoard implements Board {
       ChessPiece[] threats = null;
       King movingKing = null,
            otherKing  = null;
-      List movingTeam = null,
+      List<ChessPiece> movingTeam = null,
            otherTeam = null;
 
          if (Log.debug)
@@ -266,8 +266,7 @@ public class ChessBoard implements Board {
 	 //illegal because the move puts the king in check (a pin)
 	 //check queens, bishops and rooks
 	 for (byte i=0; i < otherTeam.size(); i++) 
-	     ((ChessPiece) otherTeam.get(i))
-	        .adjustPinsLegalDests(movingKing, movingTeam);
+	     otherTeam.get(i).adjustPinsLegalDests(movingKing, movingTeam);
 	 
 
          //if King is in check then need to modify
@@ -287,15 +286,15 @@ public class ChessBoard implements Board {
 	       case 1:
 	          //only valid moves are king moves, block and counter-attack
 		  for (byte i=0; i < movingTeam.size(); i++) {
-		      ((ChessPiece) movingTeam.get(i))
-		         .genLegalDestsSaveKing(movingKing, threats[0]);
+		      movingTeam.get(i)
+			      .genLegalDestsSaveKing(movingKing, threats[0]);
 		  }
 		  break;
 
 	       case 2:
 	          //only valid moves are king moves
 		  for (byte i=0; i < movingTeam.size(); i++) {
-		      ChessPiece p = ((ChessPiece) movingTeam.get(i));
+		      ChessPiece p = movingTeam.get(i);
 		      if (p != movingKing)
 		         p.removeLegalDests();
 		  }
@@ -364,8 +363,8 @@ public class ChessBoard implements Board {
     * @return null         - if no pieces threaten the square
     */
    public ChessPiece[] getThreats (Square sq, boolean isBlack) {
-      Iterator    team = null;
-      List        attackers = null;
+      Iterator<ChessPiece> team = null;
+      List<ChessPiece> attackers = null;
       ChessPiece       piece = null;
       ChessPiece[]     threats = null;
 
@@ -376,7 +375,7 @@ public class ChessBoard implements Board {
 	 if (staleLegalDests)
 	    genLegalDests();
 
-         attackers = new LinkedList();
+         attackers = new LinkedList<>();
          team = (isBlack) ? blackTeam.iterator() : whiteTeam.iterator();
 	 
 	 if (Log.debug) 
@@ -385,7 +384,7 @@ public class ChessBoard implements Board {
 	       + " attackers on " + sq);
 
          while (team.hasNext()) {
-            piece = (ChessPiece) team.next();
+            piece = team.next();
             if (piece.isLegalAttack(sq)) {
                attackers.add(piece);
 	       if (Log.debug)
@@ -396,7 +395,7 @@ public class ChessBoard implements Board {
          
          if (attackers.size() > 0) {
 	    threats = new ChessPiece[attackers.size()];
-	    threats = (ChessPiece[]) attackers.toArray(threats);
+	    threats = attackers.toArray(threats);
             return threats;
          }
 	 else {
@@ -459,10 +458,10 @@ public class ChessBoard implements Board {
     * @return null     - if no pieces threaten the square
     */
    public ChessPiece[] getGuards (Square sq, boolean isBlack) {
-      Iterator team = null;
-      List     attackers = null;
-      ChessPiece    piece = null;
-      ChessPiece[]  guards = null;
+      Iterator<ChessPiece> team = null;
+      List<ChessPiece>     attackers = null;
+      ChessPiece           piece = null;
+      ChessPiece[]         guards = null;
  
          if (sq == null)
             throw new NullPointerException(
@@ -471,18 +470,18 @@ public class ChessBoard implements Board {
 	 if (staleLegalDests)
 	    genLegalDests();
 
-         attackers = new LinkedList();
+         attackers = new LinkedList<>();
          team = (isBlack) ? blackTeam.iterator() : whiteTeam.iterator();
  
          while (team.hasNext()) {
-            piece = (ChessPiece) team.next();
+            piece = team.next();
             if (piece.isGuarding(sq))
                attackers.add(piece);
          }
  
          if (attackers.size() > 0) {
 	    guards = new ChessPiece[attackers.size()];
-            guards = (ChessPiece[]) attackers.toArray(guards);
+            guards = attackers.toArray(guards);
 	 }
 	 return guards;
    }
@@ -533,13 +532,13 @@ public class ChessBoard implements Board {
     */
    public int getLegalMoveCount () {
       int count = 0;
-      List movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
+      List<ChessPiece> movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
 
 	 if (staleLegalDests)
 	    genLegalDests();
 
 	 for (int i=0; i < movingTeam.size(); i++) 
-	     count += ((ChessPiece) movingTeam.get(i)).getLegalDests().size();
+	     count += movingTeam.get(i).getLegalDests().size();
       
       return count;
    }
@@ -547,10 +546,10 @@ public class ChessBoard implements Board {
    /* getLegalMoves *********************************************************/
    /** returns a list of moves that are legal on the current board.
     */
-   public List getLegalMoves () {
-      List list = new LinkedList(),
-           movingTeam = (isBlackMove) ? blackTeam : whiteTeam,
-           dests = null;
+   public List<Move> getLegalMoves () {
+      List<Move> list = new LinkedList<>();
+      List<ChessPiece> movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
+      List<Square> dests = null;
       ChessPiece piece = null;
       Square orig = null;
       Square dest = null;
@@ -559,11 +558,11 @@ public class ChessBoard implements Board {
 	    genLegalDests();
 
          for (int i=0; i < movingTeam.size(); i++) {
-	    piece = (ChessPiece) movingTeam.get(i);
+	    piece = movingTeam.get(i);
 	    dests = piece.getLegalDests();
 	    orig = piece.orig;
 	    for (int j=0; j < dests.size(); j++) {
-	       dest = (Square) dests.get(j);
+	       dest = dests.get(j);
 	       //dest.piece set for promotion when it is really
 	       //ane expected casualty.  but this allows for the
 	       //communication of a possible caputure. (a hack)
@@ -585,14 +584,14 @@ public class ChessBoard implements Board {
     */
    protected boolean[] isDestUniqueForClass (Square dest, ChessPiece p) {
       boolean[] unique = {true, true}; //file, rank
-      List movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
-      List dests = null;
+      List<ChessPiece> movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
+      List<Square> dests = null;
       ChessPiece   piece = null;
 
       if (p.isKing()) return unique;
 
       for (int i=0; i < movingTeam.size(); i++) {
-         piece = (ChessPiece) movingTeam.get(i);
+         piece = movingTeam.get(i);
 
 	 if (piece != p 
 	     && !piece.isCaptured() 
@@ -640,16 +639,16 @@ public class ChessBoard implements Board {
       byte orig_f = (byte) file,
            orig_r = (byte) rank;
 
-      List movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
-      List  dests = null;
-      List    dupes = new ArrayList(1);
+      List<ChessPiece> movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
+      List<Square> dests = null;
+      List<ChessPiece> dupes = new ArrayList<>(1);
       ChessPiece   piece = null;
       ChessPiece   mover = null;  //piece to move
       boolean found = false;
       int     count = 0;   //how many pieces with this dest?
 
       for (int i=0; i < movingTeam.size(); i++) {
-         piece = (ChessPiece) movingTeam.get(i);
+         piece = movingTeam.get(i);
 
 	 if (((piece.getIndex() % ChessPiece.BLACK_OFFSET) == piece_index) 
 	     && piece.isLegalDest(dest))
@@ -660,7 +659,7 @@ public class ChessBoard implements Board {
 	       found = true;
 	       if (++count > 1) {
 	          if (dupes == null) {
-		     dupes = new ArrayList(2);
+		     dupes = new ArrayList<>(2);
 		     dupes.add(mover);
 		  }
 	          dupes.add(piece);
@@ -847,12 +846,12 @@ public class ChessBoard implements Board {
     */
    protected ChessPiece[] getCaptures (boolean isBlack, boolean isCaptured) {
       ChessPiece[] pows = null;
-      List team = (isBlack) ? blackTeam : whiteTeam;
+      List<ChessPiece> team = (isBlack) ? blackTeam : whiteTeam;
       int count = 0;
       ChessPiece piece = null;
 
          for (int i=0; i < team.size(); i++) {
-	    if (((ChessPiece) team.get(i)).isCaptured() == isCaptured)
+	    if (team.get(i).isCaptured() == isCaptured)
 	       count++;
 	 }
 
@@ -861,7 +860,7 @@ public class ChessBoard implements Board {
 	    count = 0;
 	    //put them into the new array
 	    for (int i=0; i < team.size(); i++) {
-	       piece = (ChessPiece) team.get(i);
+	       piece = team.get(i);
 	       if (piece.isCaptured() == isCaptured)
 	          pows[count++] = piece;
 	          
@@ -884,11 +883,11 @@ public class ChessBoard implements Board {
     */
    public int getMaterialCount (boolean isBlack) {
       int material = 0; 
-      List team = (isBlack) ? blackTeam : whiteTeam;
+      List<ChessPiece> team = (isBlack) ? blackTeam : whiteTeam;
       ChessPiece piece = null;
 
          for (int i=0; i < team.size(); i++) {
-	    piece = (ChessPiece) team.get(i);
+	    piece = team.get(i);
 	    if (!piece.isCaptured()) {
 	       switch (piece.getIndex() % ChessPiece.BLACK_OFFSET) {
 		  case Pawn.INDEX: material   += 1; break;
@@ -1564,7 +1563,7 @@ public class ChessBoard implements Board {
    public String dumpLegalMoves (boolean blacksMoves) {
       StringBuffer sb = new StringBuffer();
       ChessPiece p;
-      List team = (blacksMoves) ? blackTeam : whiteTeam;
+      List<ChessPiece> team = (blacksMoves) ? blackTeam : whiteTeam;
 
       if (blacksMoves) 
          sb.append("Black's team moves-----------------------\n");
@@ -1572,7 +1571,7 @@ public class ChessBoard implements Board {
          sb.append("White's team moves-----------------------\n");
 
       for (int i=0; i < team.size(); i++) {
-         p = (ChessPiece) team.get(i);
+         p = team.get(i);
 	 sb.append( (!p.captured) ? " " : "x");
          sb.append(p) 
 	   .append("(")

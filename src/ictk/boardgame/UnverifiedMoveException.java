@@ -31,6 +31,8 @@ package ictk.boardgame;
  *  for an illegal move.
  */
 public class UnverifiedMoveException extends RuntimeException {
+   public static final long serialVersionUID = 1L;
+
    public UnverifiedMoveException () { super(); }
    public UnverifiedMoveException (String mesg) { super(mesg); }
 }
