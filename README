@@ -23,11 +23,17 @@ And hopefully they'll be OS independent and open source.
 
 CURRENT STATUS
 --------------
-   2012-03-06 - UNSTABLE/Broke.  Use the binaries from sf.net
+   2014-03-12 - Release ICTK V0.3 - Stable.  
+		- Upgraded to JDK 1.7
+		- Removed the Xalan-J dep
+		- Added some new ICS messages
+		- Unit tests and Ad Hoc testing passed
+
+   2014-03-06 - UNSTABLE/Broke.  Use the binaries from sf.net
    		I am currently bringing the library into working order
 		for changes in Java since 1.4.
 
-   2012-03-03 - I'm migrating this library from its longtime home at
+   2014-03-03 - I'm migrating this library from its longtime home at
                 Sourceforge.net where it has been hosted since 2002
 		to GitHub.com.  Obviously, version control will be 
 		swapped from SVN to GIT.  During this time I'm going
@@ -38,7 +44,11 @@ CURRENT STATUS
 REQUIREMENTS
 ------------
 
-   o JDK 1.4 or better                               http://java.sun.com/
+   o JDK 1.7 or better                               http://java.sun.com/
+     Code now uses typed data structures and leverages the <> operator
+     which is a new 1.7 feature.  If you would like to use JDK 1.4-1.6
+     the ICTK v0.2 tag should work.  Otherwise get the jar from sf.net. 
+     
      this is mostly due to the use of "assert" throughout the
      source, the Regex libraries, and java.nio libraries for
      ictk.boardgame.chess.net.
@@ -51,12 +61,6 @@ REQUIREMENTS
    o JUnit 3.8.0 or better                  http://junit.sourceforge.net/
      this is only necessary if you wish to run the regression testing
      suite.
-
-   o Xalan-Java 2.5.0 or better            http://xml.apache.org/xalan-j/
-     this is only necessary if you wish to generate the net events and
-     parsers from their XML source.  Really, any XSLT processor
-     should work, but Xalan-Java is integrated into the Ant build tool
-     configuration files.
 
 LICENSE
 -------

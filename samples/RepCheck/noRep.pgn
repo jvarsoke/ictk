@@ -1,0 +1,234 @@
+Move kibitzes: TibetianTick kibitzes: okay, LogBot is setup. TibetianTick kibitzes: I think. HitMeHard kibitzes: yes, it is observing us at least TibetianTick kibitzes: yes. what else did you want it to log? HitMeHard kibitzes: OK may the best man win TibetianTick kibitzes: et hem!
+
+[Event "PV Training Game"]
+[Site "FICS"]
+[Date "2003.10.16"]
+[Round "-"]
+[White "TibetianTick"]
+[Black "HitMeHard"]
+[Result "0-1"]
+[WhiteElo "1647"]
+[BlackElo "2183"]
+[ECO "C34"]
+[TimeControl "3000+15"]
+
+
+	   1.	e4          	
+
+    {(0:00)}
+
+	   1.	...        	e5          
+
+    {(0:00)}
+
+	   2.	f4          	
+
+    {(0:04)}
+
+	   2.	...        	exf4        
+
+    {(0:03)}
+
+	   3.	Nf3         	
+
+    {(0:01)}
+
+	   3.	...        	h6          
+
+    {(0:05)}
+
+	   4.	b3          	
+
+    {Move kibitzes: HitMeHard kibitzes: we agreed on the Becker defence for this game}
+
+	   4.	...        	Nf6         
+
+    {Move kibitzes: TibetianTick kibitzes: yes, this is becker for White.}
+
+	   5.	e5          	
+
+    {(0:23)}
+
+	   5.	...        	Ne4         
+
+    {Move kibitzes: TibetianTick whispers: book}
+
+	   6.	Qe2         	
+
+    {(0:05)}
+
+	   6.	...        	Ng5         
+
+    {(0:43)}
+
+	   7.	Bb2         	
+
+    {Move kibitzes: TibetianTick whispers: still book. HitMeHard whispers: sticking with Johansson's suggestions so far (I think) TibetianTick whispers: lucky I just looked at this line before we started ;) TibetianTick whispers: didn't get very far. I know the next two moves and not much more.}
+
+	   7.	...        	Nc6         
+
+    {(0:57)}
+
+	   8.	Nc3         	
+
+    {Move kibitzes: TibetianTick whispers: book still}
+
+	   8.	...        	Nxf3+       
+
+    {Move kibitzes: TibetianTick whispers: CM: NxN QxN Q+ g3 fxg}
+
+	   9.	Qxf3        	
+
+    {Move kibitzes: TibetianTick whispers: CM: ...fxg hxg Nd4 O-O-O}
+
+	   9.	...        	Qh4+        
+
+    {Move kibitzes: TibetianTick whispers: ahh, falling into it. Always strange when good players intuit book. TibetianTick whispers: CM: g3 fxg hxg Nxe5 Qg2 HitMeHard whispers: was considering 9...Nd4 but it is no good after 10.Qe4 when Qh4+ is useless b/c the f-pawn is tied up}
+
+	  10.	g3          	
+
+    {Move kibitzes: TibetianTick whispers: still book.}
+
+	  10.	...        	fxg3        
+
+    {(0:33)}
+
+	  11.	hxg3        	
+
+    {Move kibitzes: BugPatzer whispers: hmmm queenside fianchetto in the KGA :-/ scandium whispers: bizarre looking isn't it? BugPatzer whispers: I think it is a bit too slow}
+
+	  11.	...        	Nxe5        
+
+    {Move kibitzes: HitMeHard whispers: PV: 12.Qg2 Qf6}
+
+	  12.	Qg2         	
+
+    {Move kibitzes: TibetianTick whispers: Qg2 CM: (on my own) Qd8 O-O-O TibetianTick whispers: that's the end of book. I think it says this is "unclear" which I'm very happy to have instead of "white is cooked" Saulzar whispers: Why not pin the kn?}
+
+	  12.	...        	Qg5         
+
+    {Move kibitzes: TibetianTick whispers: hmm what does black get for getting chased? HitMeHard whispers: did not like Qf6 after all, looks very suspect after 13.Nd5 HitMeHard whispers: my goal now is to prevent the onslaught that is bound to follow, just wish I had more time Saulzar whispers: Qe3, Qe7? Is there a killer response to Qe3 that I am missing? Seems that white is winning afterwards to me.. Saulzar whispers: Oh I am retarded, excuse me... :) Saulzar whispers: and you claim to have more chess blindness.. pft. BugPatzer whispers: white sure does have a nice lead in development, despite b3 Bb2 Saulzar whispers: Two pawns though.. BugPatzer whispers: yeah Saulzar whispers: But two pawns for two open files on the king surely must not be so much of a bad thing.. Saulzar whispers: Hmm BugPatzer whispers: I would think O-O-O when black cannot play d5 without giving back a pawn so probably Bc5 then d6 for black Saulzar whispers: Ne4 does not seem to lead anywhere great.. Saulzar whispers: Nd5 perhaps however..}
+
+	  13.	O-O-O       	
+
+    {Move kibitzes: TibetianTick whispers: O-O-O CM: Bd6 Re1 Saulzar whispers: CM? TibetianTick whispers: for those easedropping "CM" == Cadidate moves (or Principle Variation). Saulzar whispers: Nd5 last move seemed to force Kd8? Saulzar whispers: Looks very odd now Saulzar whispers: Bc5 Kb1 perhaps..}
+
+	  13.	...        	c6!         
+
+    {Move kibitzes: HitMeHard whispers: PV 14.Re1 Kd8 TibetianTick whispers: Ah, protecting that tender c7 square. Saulzar whispers: Interesting.. Saulzar whispers: Hm, I would still think Kb1 in order to play d4 at some stage would be a good idea.. HitMeHard whispers: Mental note: I am surprised at how much of a distraction having to write down these PV lines are, it takes some getting used to Saulzar whispers: Maybe Re1, Kd8 (His line), Ne4, Qe7?, d4, Ng6, Bd3... TibetianTick whispers: Re1 Bd6 Ne4 Qe7 NxB QxN Bxe5 hmm, that looks too good}
+
+	  14.	Re1         	
+
+    {(4:26)}
+
+	  14.	...        	Kd8         
+
+    {Move kibitzes: HitMeHard whispers: PV 15.Ne4 Qf5 BugPatzer whispers: only 2 ply? Saulzar whispers: I like Ne4 very much.. BugPatzer whispers: the light bishop, white's problem child Saulzar whispers: Qf5? what about the knight? Saulzar whispers: That's why I think d4 would be nice Saulzar whispers: Qf5, d4, Ng6 Bd3 I like... Saulzar whispers: Hm, but Nf3.. Saulzar whispers: But Nf3-Re3 and he's got it trapped.. HitMeHard whispers: I preferred 13...c6 over d6 just before, as it seemed to take many good squares from his knight. Btw, I have to watch for double threat on e5 if he should move that knight to open the b2-e5 diagonal Saulzar whispers: Fixes up the white bishop and nicely prepares Rf1...}
+
+	  15.	Ne4         	
+
+    {Move kibitzes: HitMeHard whispers: sorry for stating the obvious to you guys observing, just thinking out aloud Saulzar whispers: Also Nd6.. hmm TibetianTick whispers: Qe7 g4 Saulzar whispers: Is this a special game of some kind? Saulzar whispers: Yeah, I don't much like Qf5.. Qe7 perhaps, but then he's staring straight at the rook..}
+
+	  15.	...        	Qf5         
+
+    {Move kibitzes: HitMeHard whispers: PV: 16.d4 Ng4 BugPatzer whispers: I dunno if white wants d4 here HitMeHard whispers: once again in a regular game I would have banged out this move in 5 seconds (only reasonable move), but here I have to figure out his most likely response Saulzar whispers: nodes=110; nps=0.4; depth=2; hash hits=99.6% Saulzar whispers: I should say that would help with your calculation if you actually figure out the move sequence Saulzar whispers: I think d4 is nice - fixes up the light bishop problem primarily, otherwise he has no good place of putting it.. TibetianTick whispers: Be2 Bb4 g4}
+
+	  16.	Be2         	
+
+    {Move kibitzes: BugPatzer whispers: one problem is that black can playing the freeing move d5 here BugPatzer whispers: and maintain an iron grip on the center Saulzar whispers: Yeah..}
+
+	  16.	...        	d5          
+
+    {Move kibitzes: HitMeHard whispers: PV: 17.Nc3 Bd6 Saulzar whispers: seems to me that white really needs to get things going being 2 pawns down.. Saulzar whispers: But it's nearly looking comfortable.. BugPatzer whispers: g4 has been prevented TibetianTick whispers: Rh5 Qg6 Ng5}
+
+	  17.	Rh5         	
+
+    {Move kibitzes: Saulzar whispers: Maybe not Saulzar whispers: g4- Qxe4, Bf3.. and he will get the knight back... but hm BugPatzer whispers: I was thinking g4 Nxg4 TibetianTick whispers: hmm didn't even consider QxN}
+
+	  17.	...        	Qxe4        
+
+    {Move kibitzes: HitMeHard whispers: PV: 18.Qxe4 dxe4 19.Rxe5, wonder if g5 would have worked looks too dangerous without closer inspection TibetianTick whispers: heh TibetianTick whispers: considering RxN QxQ Re8+ KxR Bf3+ hmm, that doesn't work out well for me :( TibetianTick whispers: well, QxQ PxQ RxN f5 Nothing really better.}
+
+	  18.	Qxe4        	
+
+    {(4:17)}
+
+	  18.	...        	dxe4        
+
+    {Move kibitzes: HitMeHard whispers: PV: 19.Rxe5 Bd6 20.Rxe4 BugPatzer whispers: the obvious Qxe4 dxe4 Rxe5 Bd6 Rxe4 Bxg3 leaves black with 3 passed kingside pawns BugPatzer whispers: well I guess that does not quite work as g6 would fall}
+
+	  19.	Rxe5        	
+
+    {Move kibitzes: BugPatzer whispers: g7 I mean^ BugPatzer whispers: white's lead in development give him some chances still}
+
+	  19.	...        	Bd6         
+
+    {Move kibitzes: HitMeHard whispers: PV: 20.Rxe4 f6 TibetianTick whispers: RxP BxP Rg1 eyeing the g7 sq.}
+
+	  20.	Rxe4        	
+
+    {(1:06)}
+
+	  20.	...        	f6          
+
+    {Move kibitzes: HitMeHard whispers: PV: 21.g4 Bd7 scandium whispers: Bh5? BugPatzer whispers: white could even try to restrain black's kingside pawns with Bh5 and g4 BugPatzer whispers: while at the same time threatening a rook intrusion into the 8th rank scandium whispers: i'm still finding this whole Bb2 idea in the KG to be really weird BugPatzer whispers: yeah, it sucks :^) scandium whispers: i don't know about 'sucks' but its definitely offbeat TibetianTick whispers: g4 Bd7 Bc4}
+
+	  21.	g4          	
+
+    {Move kibitzes: BugPatzer whispers: Bh5 Bxg4 Re8+ Rxe8 Rxe8+ Kd7 Rg8 and white has a blockade on the h6 pawn and the g pawn or f6 pawn will be falling}
+
+	  21.	...        	Bd7         
+
+    {Move kibitzes: HitMeHard whispers: PV: 22.Bc4 Kc7; Much rather hold on to my extra pawn then play 21...h5!? which looks drawish TibetianTick whispers: heh, actually predicted a move ;) HitMeHard kibitzes: You will have to prive your gambited pawn from my cold dead hands (after I loose on time) TibetianTick kibitzes: lol! BugPatzer whispers: I do not know about white's chances now HitMeHard whispers: finally he is catching up on time, worried me a few moves back TibetianTick whispers: Rh1 Re8 Bd3}
+
+	  22.	Rh1         	
+
+    {Move kibitzes: BugPatzer whispers: white had to play with more energy... g4 did not take advantage of white's only plus.... his lead in development TibetianTick whispers: obviously I'm considering the g-push.}
+
+	  22.	...        	Re8         
+
+    {Move kibitzes: HitMeHard whispers: PV: 23.Rxe8 Bxe8 reasoanblep whispers: I would have played Kc7 here BugPatzer whispers: black can now complete development with Kc7! reasoanblep whispers: to connect the Rs reasoanblep whispers: but I dropped a R out of the blue in my previous game, so I am not entitled to speak :) BugPatzer whispers: Re8, clearly inferior to Kc7! but who can blame black for wanting to trade off pieces here scandium whispers: so much for the g5 push TibetianTick whispers: RxR BxR g5}
+
+	  23.	Rxe8+       	
+
+    {(2:04)}
+
+	  23.	...        	Bxe8        
+
+    {Move kibitzes: HitMeHard whispers: PV: 24.d4 Bg6 TibetianTick whispers: g5 hxg Rh8 Kc7}
+
+	  24.	g5          	
+
+    {Move kibitzes: HitMeHard whispers: I did not consider this at all HitMeHard whispers: seems to give me connected passed pawns with just a little bit of anxiety attached :) TibetianTick whispers: I hope he's just getting a beer, and not thinking up something juicy. TibetianTick whispers: probably just boggled at my plan.}
+
+	  24.	...        	hxg5        
+
+    {Move kibitzes: HitMeHard whispers: PV: 25.Rh7 f5 26.Rxg7 Be7}
+
+	  25.	Rh8         	
+
+    {Move kibitzes: NakedChick whispers: hello TibetianTick whispers: the plan here, of course, is to stiffle his pieces and make mine active before he converts that one pawn (now 2) adv. BugPatzer whispers: hello NakedChick, I am trying not to look, promise}
+
+	  25.	...        	Ke7         
+
+    {Move kibitzes: NakedChick whispers: lol TibetianTick whispers: hmm g6 is nice here. TibetianTick whispers: oh well. HitMeHard whispers: PV: 26.Rg8 g6 NakedChick whispers: So now Re8 as black's next move and everything is fine? NakedChick whispers: Rd8 I mean? TibetianTick whispers: Bh5 hmm what am I missing. Be6 looking to trade?}
+
+	  26.	Bh5         	
+
+    {Move kibitzes: NakedChick whispers: so Rd8 and everything is fine? TibetianTick whispers: need to activate my King next. TibetianTick whispers: woah, crowd. How you guys all fit in this little room?}
+
+	  26.	...        	Rd8         
+
+    {Move kibitzes: HitMeHard whispers: PV: 27.Bf3 Bg6 TibetianTick whispers: look. I'm just amazed I'm not completely dead yet. TibetianTick whispers: anyone. For those of you giving me hell in the peanut gallery -- check out HMH's rating. ;) thompsbj whispers: seems like Bxf6 wins a pawn. HitMeHard whispers: Bf4 is a nice resource now TibetianTick whispers: Kd1 Bf4 d3. scratch that (Bxh5+). TibetianTick whispers: hmm, this isn't good TibetianTick whispers: Kb1 :( Bf4 d3}
+
+	  27.	Kb1         	
+
+    {Move kibitzes: TibetianTick whispers: dont' really want to retreat my K, but can't do with the exchanged Bs. TibetianTick whispers: I guess he can exchange them now anyway. BugPatzer whispers: Bxh5 ought to do it TibetianTick whispers: grumble. What's plan B, Murdock?}
+
+	  27.	...        	Bxh5        
+
+    {TibetianTick resigns}
+
+
+0-1
+

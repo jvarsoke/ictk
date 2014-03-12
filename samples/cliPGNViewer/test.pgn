@@ -1,0 +1,56 @@
+[Event "45-45 League U1600"]
+[Site "FICS, Fremont, California USA"]
+[Date "2003.07.11"]
+[Round "6"]
+[White "Chessface"]
+[Black "TibetianTick"]
+[Result "0-1"]
+[WhiteElo "1592"]
+[BlackElo "1636"]
+[ECO "A24"]
+[Time "14:05:15"]
+[TimeControl "2700+45"]
+[Mode "ICS"]
+
+1.c4 Nf6 2.Nc3 g6 3.g3 Bg7 4.Bg2 O-O 5.e4 d6 6.Nge2 e5 
+    ( 6...c5 {This continuation has a better percentage for Black. } 7.O-O Nc6 
+    8.d3 {three main choices from here.} )
+7.O-O Nc6 8.h3 a5 {first out of book move.} 
+    ( 8...Be6 {the is more common.} 9.d3 Qd7 10.Kh2 = {Ne8 or Nh5 from here.} )
+9.d3 h6 10.Be3 Nh7 11.Qd2 g5 12.Nd5 f5 13.exf5 Bxf5 14.Nec3 Nd4! {This was a 
+really slick move.  He's gotta watch for the fork on Nf3.  The Nd4 knight 
+covers b5 against the knight invasion.  And also allows for the pawn push c6 
+ejecting his Nd5 knight.  Also, the knight doesn't really have anywhere to go.}
+15.Kh2? {Nd5 is vulnerable -- no home.} 15...c6! 16.f4 cxd5 {missed the check 
+here, but probably still would have played it.} 
+    ( 16...gxf4! {This seems really dangerous, but opens the K-side up for 
+    attack.} 17.gxf4 cxd5 18.Bxd5+ Kh8 19.Bxb7 Rb8 20.Bg2 Qh4 21.Ne4 -/+ )
+17.Bxd5+ Kh8 18.Bxb7 Rb8 19.Bg2 Bd7 
+    ( 19...gxf4 {Still an option here.} 20.gxf4 Qh4 21.Ne4 -/+ )
+20.Qf2 Nf5 21.Ba7! {This was a good move, there are very few places for me to 
+put that rook.  I want to open up the a1-h8 diagonal so I can use the b2 sq as 
+a home for my rook (covered by the Bishop).} 21...exf4 {he obviously can't take
+the rook this move.} 22.gxf4 
+    ( {he obviously can't take the rook this move.} 22.Bxb8?? fxg3+!! )
+22...Rb4 23.a3 Rb3 24.Qc2 Rb8?! {very questionable.  But if he takes the Rook 
+with BxRb8 I can fork the Q and Rook for an even exchange.} 
+    ( 24...a4! {missed this!  ugh.  forgot that the bishop would support the 
+    pawn.} )
+25.Bxb8 Ne3 26.Qb3 {He's trying to cover the Bb8 bishop but that doesn't work.}
+26...Nxf1+ 27.Rxf1 Qxb8 28.Qxb8 Rxb8 29.fxg5 Nxg5 
+    ( 29...Rxb2!! {This was the better move.  I considered it because the B 
+    would be pinned and the Nc3 knight would be a target.  Not sure why I 
+    didn't play it though.} )
+30.h4 Be5+ {forcing the King back into the corner.} 31.Kh1 Nh3 {trading off is 
+good for me.} 
+    ( 31...Ne6 {might have been better but I didn't like the prospects of 
+    pinning that knight.} 32.Bh3? {this what I feared but I shouldn't have} 
+    32...Rxb2 33.Bxe6 Bxe6 )
+32.Rf7 Be6 33.Re7 Nf4 -+ {I have all the mobility here.  His rook can't really 
+do much.} 34.Be4 Rxb2! 35.Nd5?? {terrible blunder.  TACTIC!} 35...Rb1+ 36.Kh2 
+Nxd5+ 37.Kg2 Nxe7 38.d4 Bxd4? {dumb, but the game is over now anyway.} 39.Bxb1 
+Bxc4 40.Kf3 Kg7 41.Ke4 Bf2 42.h5 Be2 43.a4 Bxh5 44.Bd3 Bg6+ 45.Kf3 Bxd3 46.Kxf2
+Bc2 47.Ke3 Bxa4 48.Kd4 Bb3 49.Ke4 a4 50.Kd3 h5 51.Ke4 h4 52.Kd3 h3 53.Ke4 h2 
+54.Kd3 h1=Q 55.Kd4 Qd5+ 56.Ke3 Nf5+ 57.Kf4 Nd4 58.Ke3 Nc2+ 59.Kf4 Qe5+ 60.Kg4 
+Be6+ 61.Kh4 Qf4+ 62.Kh5 Qh6# {White checkmated} 0-1
+
