@@ -31,7 +31,7 @@
    <property environment="env"/> 
 
    <!-- global properties -->
-   <property name="version"           value="0.2.1-SNAPSHOT"/>
+   <property name="version"           value="0.3"/>
    <!-- if you want 'protected' docs, you should set this variable 
 	on the command line -->
    <property name="docs.access"       value="public"/>

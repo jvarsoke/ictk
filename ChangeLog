@@ -19,6 +19,13 @@ Legend:
    [xslt]   applies to xslt code generation library functions / files
 
 *IN PROGRESS*
+
+0.3.0 - 2014-04-10 Updated for JDK 1.7
+   [dev]    Updated all java language to fit JDK 1.7.  Breaks JDK 1.4-1.6
+   	    compatibility due to syntax changes -- mostly <> for typing.
+   [xslt]   removed Xalan-J dependency.  Now using XSLTC.  Ignore warnings
+   	    on generation, the are JDK 1.7 defects fixed in JDK 1.8.
+   [fics]   verified still works with FICS server code
    [chess]  fixed 828725 - move counter incremented on Black move rather 
             than White
    [dev]    fixed 821399 - timesealing.jar wasn't added to "bin" distro

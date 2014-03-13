@@ -43,7 +43,7 @@ public class RepCheck {
       SAN san = null;
       FEN fen =  null;
       String fenStr = null;
-      Map hash = null;
+      Map<String,Move[]> hash = null;
       boolean found = false;
 
       //check the command line args
@@ -53,7 +53,7 @@ public class RepCheck {
       }
 
       try {
-         hash = new HashMap();
+         hash = new HashMap<>();
 	 fen = new FEN();
          //establish the reader object
          reader = new PGNReader(new FileReader(new File(args[0])));
@@ -74,7 +74,7 @@ public class RepCheck {
 	       hash.put(fenStr, tmp);
 	    }
 	    else {
-	       tmp = (Move[]) hash.get(fenStr);
+	       tmp = hash.get(fenStr);
 	       if (tmp[1] == null) {
 	          tmp[1] = history.getCurrentMove();
 	       }
