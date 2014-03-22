@@ -126,7 +126,14 @@
    </target>
 
    <!-- ..................................................................-->
+   <!-- run multiple targets -->
+   <target name="build"
+           description="Generates source from XSLT, compiles, creats Docs and makes jar"
+	   depends="generate,compile,docs,jar"
+	   >
+   </target>
 
+   <!-- ..................................................................-->
    <!-- code generation targets -->
    <target name="generate"
            description="generates source code from XML files">

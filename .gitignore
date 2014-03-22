@@ -1,5 +1,7 @@
 *swp
 build
+docs/
+ictk*jar
 notes/
 devutils/
 clover_html/

@@ -10,15 +10,22 @@ into java POJOs for easy use by a client.
    If you're looking for a super fast Java implementation of a chess model 
 to use as a basis for a chess engine you need to look elsewhere.  The 
 design goal of this library has never been speed.  If it were it would 
-create a LOT fewer objects.  This library started out in 1997 as a proof of 
-Object Oriented design concepts.  The chess pieces act as agents and generate
-their own moves after analysis of the board state.  A move object is an 
-implementation of a Command Pattern.  And so on.  ictk turns the game of chess into an easily weildable Object Oriented model that fits with typical Java conventions.
+create a LOT fewer objects.  Instead, the goal of ictk is to render chess
+in a natural object oriented way that is both easy to use and well documented.  
+
+   This library started out in 1997 as a proof of Object Oriented Design 
+concepts.  The chess pieces act as agents and generate their own moves after
+analysis of the board state.  A move object is an implementation of a 
+Command Pattern.  And so on.  
 
    The Internet Chess Server (ICS/FICS) support converts the server's telent
-text into POJOs, implementing a MVC based EventListener model for client code to easily process.  As Java is overly verbose, and the messages are relatively simplistic, the parsing is done in XML and converted to Java POJOs via XSTL.  The approach may seem overly complex to you, but saves a lot of time.
+text into POJOs, implementing a MVC based EventListener model for client code
+to easily process.  As Java is overly verbose, and the messages are relatively
+simplistic, the parsing is done in XML and converted to Java POJOs via XSTL.
+The approach may seem overly complex to you, but saves a lot of time.
 
-   Finally, this is not a graphics library, it is a game modeling library.  It provides for reading and writing standard game notations as well.
+   Finally, this is not a graphics library, it is a game modeling library.
+It provides for reading and writing standard game notations as well.
    
 ## FEATURES
 * Object oriented Chess game model (MVC based)
@@ -61,19 +68,20 @@ the author.
 
 ### From Source
 The following commands will retrieve the latest source, generate the source code through XSLT, compile, create the Java-Doc and make the full jar file.  Just add the jar file to your `CLASSPATH`.
-``` bash
+
     $ git clone https://github.com/jvarsoke/ictk
     $ cd ictk
     $ ant build
-```
 
 ### From Binary (Jar)
 Download the release file jar and add it to your classpath.
 
 ##DEBUGGING
 
-By default the library come with debugging info compiled in.  From the
-command line you can turn the debugging info on by using the `java -D options` to set a system property.  For example:
+By default the library come with debugging info compiled in. (Unfortunately,
+the library pre-dates [Log4j] and similar, so uses its own homegrown version).
+From the command line you can turn the debugging info on by using the 
+`java -D options` to set a system property.  For example:
 
     $ java -DDebug.History=1 Foo.java
 

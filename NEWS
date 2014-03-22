@@ -6,6 +6,14 @@ These are general features, improvements and changes made to
 the suite of classes in ictk.  If you want a more specific
 account of what was changed look at the ChangeLog file.
 
+0.3.0 - 2014-04-10 update code JDK 1.7
+   o FICS - added board events
+     examine, mex, forward, backward, revert, forward at end of game,
+     back at beginning of game, forward on variation, observer
+   o Removed Xalan-J requirement for generated code
+   o Several bugs fixed (see ChangeLog)
+   o Move from SourceForge.net to GitHub.com
+
 0.2.0 - 2003-10-03 FICS Support
    o Limited FICS support
      style12, match request, kibitz, whisper, say, tell, channel tell,
