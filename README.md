@@ -47,10 +47,9 @@ It provides for reading and writing standard game notations as well.
 * [JDK 1.7](http://java.oracle.com) or better - Code now uses typed data
   structures and leverages the <> operator which is a new 1.7 feature.  If
   you would like to use JDK 1.4 - 1.6  the ictk v0.2 tag should work.
-  Otherwise get the jar from [sf.net](http://ictk.sourceforge.net). 
-     
-* [Ant 1.5](http://ant.apache.org) or better - Only required to generate the    
-  source through XSLT and compile the code, of course.
+  Otherwise get the jar from [sf.net](http://ictk.sourceforge.net).
+
+* [Ant 1.5](http://ant.apache.org) or better - Only required to generate the       source through XSLT and compile the code, of course.
 
 * [JUnit 3.8.0](http://junit.org) or better - Only necessary if you wish 
    to run the regression testing suite.
@@ -59,7 +58,7 @@ It provides for reading and writing standard game notations as well.
 
    ictk is distributed under the GNU Public License version 2.  A copy of
 this license is available in the file named COPYING, which should have
-been included with this distribution.  
+been included with this distribution.
 
    If you wish to use this library for propriety purposes you must contact
 the author.
@@ -104,3 +103,9 @@ Or if you wish to create an optimized jar file:
 choking on a PGN file or ictk code, you can do so through ant and JUnit:
 
     $ ant test
+
+##GIVING BACK
+   If you find this library useful, drop me an email just to let me know what
+you're doing with it.  Even if you're just messing around.  Knowing someone is
+using this encourages me to dedicate time toward improving ictk -- otherwise
+I have lots of other things to donate my time to.  Thanks.
