@@ -104,7 +104,7 @@ choking on a PGN file or ictk code, you can do so through ant and JUnit:
 
     $ ant test
 
-##GIVING BACK
+##FEEDBACK
    If you find this library useful, drop me an email just to let me know what
 you're doing with it.  Even if you're just messing around.  Knowing someone is
 using this encourages me to dedicate time toward improving ictk -- otherwise
