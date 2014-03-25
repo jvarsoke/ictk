@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="ictk : Internet Chess ToolKit - a chess library useful for performing common tasks such as reading PGN, FEN, and generating legal moves. The net libraries convert ICS (Internet Chess Server) output into java objects." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>ictk</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jvarsoke/ictk">View on GitHub</a>
+
+          <h1 id="project_title">ictk</h1>
+          <h2 id="project_tagline">Internet Chess ToolKit - a chess library useful for performing common tasks such as reading PGN, FEN, and generating legal moves. The net libraries convert ICS (Internet Chess Server) output into java objects.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jvarsoke/ictk/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jvarsoke/ictk/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="--ictk---internet-chess-toolkit" class="anchor" href="#--ictk---internet-chess-toolkit"><span class="octicon octicon-link"></span></a>-=[ ictk ]=- Internet Chess Toolkit</h1>
+
+<p>Internet Chess ToolKit is a java based set of libraries and widgets useful 
+for performing common tasks such as reading PGN, FEN, and generating 
+legal moves. The net libraries convert ICS (Internet Chess Server) output 
+into java POJOs for easy use by a client.</p>
+
+<h2>
+<a name="specifications--design" class="anchor" href="#specifications--design"><span class="octicon octicon-link"></span></a>SPECIFICATIONS &amp; DESIGN</h2>
+
+<p>If you're looking for a super fast Java implementation of a chess model 
+to use as a basis for a chess engine you need to look elsewhere.  The 
+design goal of this library has never been speed.  If it were it would 
+create a LOT fewer objects.  Instead, the goal of ictk is to render chess
+in a natural object oriented way that is both easy to use and well documented.  </p>
+
+<p>This library started out in 1997 as a proof of Object Oriented Design 
+concepts.  The chess pieces act as agents and generate their own moves after
+analysis of the board state.  A move object is an implementation of a 
+Command Pattern.  And so on.  </p>
+
+<p>The Internet Chess Server (ICS/FICS) support converts the server's telent
+text into POJOs, implementing a MVC based EventListener model for client code
+to easily process.  As Java is overly verbose, and the messages are relatively
+simplistic, the parsing is done in XML and converted to Java POJOs via XSTL.
+The approach may seem overly complex to you, but saves a lot of time.</p>
+
+<p>Finally, this is not a graphics library, it is a game modeling library.
+It provides for reading and writing standard game notations as well.</p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>FEATURES</h2>
+
+<ul>
+<li>Object oriented Chess game model (MVC based)</li>
+<li>Legal move generation</li>
+<li>Game history with variation support (alternative move suggestions)</li>
+<li>Move comment support in text and Numeric Annotation Glyphs (NAG)</li>
+<li>Standard Algebraic Notation (SAN) read/write support (internationalized
+for presentation in 16 languages)</li>
+<li>Portable Game Notation (PGN) read/write support (including move variations,
+and FEN)</li>
+<li>Forsyth-Edwards Notation (FEN) read/write support</li>
+<li>True MVC structure with board displays driven by game model events</li>
+<li>Command-line Board display</li>
+<li>Well documented. Sample code also provided.</li>
+<li>FICS support <a href="http://www.freechess.org">(freechess.org)</a>
+</li>
+</ul><h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>REQUIREMENTS</h2>
+
+<ul>
+<li><p><a href="http://java.oracle.com">JDK 1.7</a> or better - Code now uses typed data
+structures and leverages the &lt;&gt; operator which is a new 1.7 feature.  If
+you would like to use JDK 1.4 - 1.6  the ictk v0.2 tag should work.
+Otherwise get the jar from <a href="http://ictk.sourceforge.net">sf.net</a>.</p></li>
+<li><p><a href="http://ant.apache.org">Ant 1.5</a> or better - Only required to generate the       source through XSLT and compile the code, of course.</p></li>
+<li><p><a href="http://junit.org">JUnit 3.8.0</a> or better - Only necessary if you wish 
+to run the regression testing suite.</p></li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>LICENSE</h2>
+
+<p>ictk is distributed under the GNU Public License version 2.  A copy of
+this license is available in the file named COPYING, which should have
+been included with this distribution.</p>
+
+<p>If you wish to use this library for propriety purposes you must contact
+the author.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>INSTALLATION</h2>
+
+<h3>
+<a name="from-source" class="anchor" href="#from-source"><span class="octicon octicon-link"></span></a>From Source</h3>
+
+<p>The following commands will retrieve the latest source, generate the source code through XSLT, compile, create the Java-Doc and make the full jar file.  Just add the jar file to your <code>CLASSPATH</code>.</p>
+
+<pre><code>$ git clone https://github.com/jvarsoke/ictk
+$ cd ictk
+$ ant build
+</code></pre>
+
+<h3>
+<a name="from-binary-jar" class="anchor" href="#from-binary-jar"><span class="octicon octicon-link"></span></a>From Binary (Jar)</h3>
+
+<p>Download the release file jar and add it to your classpath.</p>
+
+<h2>
+<a name="debugging" class="anchor" href="#debugging"><span class="octicon octicon-link"></span></a>DEBUGGING</h2>
+
+<p>By default the library come with debugging info compiled in. (Unfortunately,
+the library pre-dates [Log4j] and similar, so uses its own homegrown version).
+From the command line you can turn the debugging info on by using the 
+<code>java -D options</code> to set a system property.  For example:</p>
+
+<pre><code>$ java -DDebug.History=1 Foo.java
+</code></pre>
+
+<p>If you really need a little more speed and you don't ever want to 
+see debugging info (if you really think ictk is that stable) you can
+change the <code>itck.util.Log.debug</code> variable to false.  This will make 
+debugging impossible and eliminate all the conditional checks for
+debugging.  Then you need to compile the optimized source (getting rid
+of java internal debugging info).  To do this:</p>
+
+<pre><code>$ ant clean
+$ ant optimize
+</code></pre>
+
+<p>Or if you wish to create an optimized jar file:</p>
+
+<pre><code>$ ant optimized-jar
+</code></pre>
+
+<h2>
+<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>TESTING</h2>
+
+<p>If you wish to run the test suite, perhaps to see if it's your code that's
+choking on a PGN file or ictk code, you can do so through ant and JUnit:</p>
+
+<pre><code>$ ant test
+</code></pre>
+
+<h2>
+<a name="feedback" class="anchor" href="#feedback"><span class="octicon octicon-link"></span></a>FEEDBACK</h2>
+
+<p>If you find this library useful, drop me an email just to let me know what
+you're doing with it.  Even if you're just messing around.  Knowing someone is
+using this encourages me to dedicate time toward improving ictk -- otherwise
+I have lots of other things to donate my time to.  Thanks.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">ictk maintained by <a href="https://github.com/jvarsoke">jvarsoke</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
