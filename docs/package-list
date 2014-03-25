@@ -1,0 +1,14 @@
+ictk.boardgame
+ictk.boardgame.chess
+ictk.boardgame.chess.io
+ictk.boardgame.chess.net.ics
+ictk.boardgame.chess.net.ics.event
+ictk.boardgame.chess.net.ics.fics
+ictk.boardgame.chess.net.ics.fics.event
+ictk.boardgame.chess.net.ics.ui.cli
+ictk.boardgame.chess.ui
+ictk.boardgame.chess.ui.cli
+ictk.boardgame.io
+ictk.boardgame.ui
+ictk.boardgame.ui.cli
+ictk.util
