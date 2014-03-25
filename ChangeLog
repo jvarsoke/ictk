@@ -20,6 +20,11 @@ Legend:
 
 *IN PROGRESS*
 
+1.0.0 - 2014-04-25 Promotion to stable release
+   [all]    Stable - now using Semantic Versioning (http://semver.org/)
+   [all]    Changed the license from GPL V2, to the MIT License.
+   	    (http://opensource.org/licenses/MIT)
+
 0.3.0 - 2014-04-10 Updated for JDK 1.7
    [dev]    Updated all java language to fit JDK 1.7.  Breaks JDK 1.4-1.6
    	    compatibility due to syntax changes -- mostly <> for typing.

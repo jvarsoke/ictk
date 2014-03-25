@@ -1,9 +1,24 @@
-# -=[ ictk ]=- Internet Chess Toolkit 
+# -=[ ictk ]=- Internet Chess Toolkit
 
 Internet Chess ToolKit is a java based set of libraries and widgets useful 
 for performing common tasks such as reading PGN, FEN, and generating 
 legal moves. The net libraries convert ICS (Internet Chess Server) output 
 into java POJOs for easy use by a client.
+
+## FEATURES
+* Object oriented Chess game model (MVC based)
+* Legal move generation
+* Game history with variation support (alternative move suggestions)
+* Move comment support in text and Numeric Annotation Glyphs (NAG)
+* Standard Algebraic Notation (SAN) read/write support (internationalized
+  for presentation in 16 languages)
+* Portable Game Notation (PGN) read/write support (including move variations,
+  and FEN)
+* Forsyth-Edwards Notation (FEN) read/write support
+* True MVC structure with board displays driven by game model events
+* Command-line Board display
+* Well documented. Sample code also provided.
+* FICS support [(freechess.org)](http://www.freechess.org)
 
 ## SPECIFICATIONS & DESIGN
 
@@ -26,21 +41,11 @@ The approach may seem overly complex to you, but saves a lot of time.
 
    Finally, this is not a graphics library, it is a game modeling library.
 It provides for reading and writing standard game notations as well.
-   
-## FEATURES
-* Object oriented Chess game model (MVC based)
-* Legal move generation
-* Game history with variation support (alternative move suggestions)
-* Move comment support in text and Numeric Annotation Glyphs (NAG)
-* Standard Algebraic Notation (SAN) read/write support (internationalized
-  for presentation in 16 languages)
-* Portable Game Notation (PGN) read/write support (including move variations,
-  and FEN)
-* Forsyth-Edwards Notation (FEN) read/write support
-* True MVC structure with board displays driven by game model events
-* Command-line Board display
-* Well documented. Sample code also provided.
-* FICS support [(freechess.org)](http://www.freechess.org)
+
+## LICENSE
+
+   ictk is distributed under the MIT License.  Go forth and do good things ...
+   or evil, your choice.
 
 ## REQUIREMENTS
 
@@ -49,19 +54,11 @@ It provides for reading and writing standard game notations as well.
   you would like to use JDK 1.4 - 1.6  the ictk v0.2 tag should work.
   Otherwise get the jar from [sf.net](http://ictk.sourceforge.net).
 
-* [Ant 1.5](http://ant.apache.org) or better - Only required to generate the       source through XSLT and compile the code, of course.
+* [Ant 1.5](http://ant.apache.org) or better - Only required to generate the
+  source through XSLT and compile the code.
 
 * [JUnit 3.8.0](http://junit.org) or better - Only necessary if you wish 
    to run the regression testing suite.
-
-## LICENSE
-
-   ictk is distributed under the GNU Public License version 2.  A copy of
-this license is available in the file named COPYING, which should have
-been included with this distribution.
-
-   If you wish to use this library for propriety purposes you must contact
-the author.
 
 ## INSTALLATION
 

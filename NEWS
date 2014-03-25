@@ -6,6 +6,9 @@ These are general features, improvements and changes made to
 the suite of classes in ictk.  If you want a more specific
 account of what was changed look at the ChangeLog file.
 
+1.0.0 - 2014-04-25 stable
+   o now released under MIT License
+
 0.3.0 - 2014-04-10 update code JDK 1.7
    o FICS - added board events
      examine, mex, forward, backward, revert, forward at end of game,
