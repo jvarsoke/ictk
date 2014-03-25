@@ -44,8 +44,8 @@ It provides for reading and writing standard game notations as well.
 
 ## LICENSE
 
-   ictk is distributed under the MIT License.  Go forth and do good things ...
-   or evil, your choice.
+   ictk is distributed under the [MIT License](http://opensource.org/licenses/MIT).
+   Go forth and do good things ...  or evil, your choice.
 
 ## REQUIREMENTS
 
