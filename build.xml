@@ -35,11 +35,11 @@
 	on the command line -->
    <property name="docs.access"       value="public"/>
 
-   <property name="source.dir"        value="src"/>
-   <property name="test.dir"          value="test"/>
-   <property name="build.dir"         value="build"/>
-   <property name="docs.dir"          value="docs"/>
-   <property name="samples.dir"       value="samples"/>
+   <property name="source.dir"        value="src/main/java"/>
+   <property name="test.dir"          value="src/test/java"/>
+   <property name="build.dir"         value="target/classes"/>
+   <property name="docs.dir"          value="target/docs"/>
+   <property name="samples.dir"       value="src/samples"/>
    <property name="release.file"      value="ictk-${version}"/>
    <property name="output.jar"        value="${release.file}.jar"/>
    <property name="nonet.jar"         value="${release.file}-nonet.jar"/>
@@ -58,7 +58,7 @@
 
    <!-- libs -->
    <!-- these are jar files distributed with ictk -->
-   <property name="lib.dir"           value="lib"/>
+   <property name="lib.dir"           value="src/main/resources"/>
 
 
    <!-- source files to compile for distro -->
@@ -282,11 +282,11 @@
 
 	 <sysproperty 
 	    key="ictk.boardgame.chess.io.dataDir" 
-	    value="test/ictk/boardgame/chess/io/"
+	    value="${test.dir}/ictk/boardgame/chess/io/"
 	 />
 	 <sysproperty 
 	    key="ictk.boardgame.chess.net.ics.fics.event.dataDir" 
-	    value="test/ictk/boardgame/chess/net/ics/fics/event/data"
+	    value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event/data"
 	 />
 
 
