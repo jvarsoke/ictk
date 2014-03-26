@@ -17,7 +17,7 @@ into java POJOs for easy use by a client.
 * Forsyth-Edwards Notation (FEN) read/write support
 * True MVC structure with board displays driven by game model events
 * Command-line Board display
-* Well documented. Sample code also provided.
+* Well [documented](http://jvarsoke.github.io/docs/). Sample code also provided.
 * FICS support [(freechess.org)](http://www.freechess.org)
 
 ## SPECIFICATIONS & DESIGN
