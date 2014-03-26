@@ -19,6 +19,7 @@ Legend:
    [xslt]   applies to xslt code generation library functions / files
 
 *IN PROGRESS*
+   [dev]    restructured directories to fit Maven convention
 
 1.0.0 - 2014-04-25 Promotion to stable release
    [all]    Stable - now using Semantic Versioning (http://semver.org/)
