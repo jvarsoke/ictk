@@ -37,6 +37,7 @@
 
    <property name="source.dir"        value="src/main/java"/>
    <property name="test.dir"          value="src/test/java"/>
+   <property name="test.resources.dir" value="src/test/resources"/>
    <property name="build.dir"         value="target/classes"/>
    <property name="docs.dir"          value="target/docs"/>
    <property name="samples.dir"       value="src/samples"/>
@@ -282,11 +283,11 @@
 
 	 <sysproperty 
 	    key="ictk.boardgame.chess.io.dataDir" 
-	    value="${test.dir}/ictk/boardgame/chess/io/"
+	    value="${test.resources.dir}/ictk/boardgame/chess/io/"
 	 />
 	 <sysproperty 
 	    key="ictk.boardgame.chess.net.ics.fics.event.dataDir" 
-	    value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event/data"
+	    value="${test.resources.dir}/ictk/boardgame/chess/net/ics/fics/event"
 	 />
 
 
