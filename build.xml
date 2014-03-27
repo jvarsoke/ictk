@@ -58,7 +58,7 @@
 
    <!-- libs -->
    <!-- these are jar files distributed with ictk -->
-   <property name="lib.dir"           value="src/main/resources"/>
+   <property name="lib.dir"           value="repo"/>
 
 
    <!-- source files to compile for distro -->
