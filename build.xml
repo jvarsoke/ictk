@@ -265,6 +265,13 @@
       </javac>
    </target>
 
+   <target name="test-verbose"
+	   description="performs the JUnit test battery with verbose output">
+
+      <property name="test.verbose" value="true"/>
+      <antcall target="test"/>
+   </target>
+
    <!-- junit test battery -->
    <target name="test" depends="compile_test"
            description="performs the JUnit test battery">
@@ -293,9 +300,9 @@
 	    value="${test.resources.dir}/ictk/boardgame/chess/net/ics/fics/event"
 	 />
 
-
 	 <formatter type="plain"
 	            usefile="false"
+		    if="test.verbose"
 		    />
 
 	 <batchtest fork="no"
@@ -306,8 +313,6 @@
 	       <exclude name="**/AllTests.java"/>
 	       <exclude name="**/junk/**"/>
 	       <exclude name="**/ParserTest.java"/>
-	      <!-- <exclude name="**/net/**"/>
-	      -->
             </fileset>
 	 </batchtest>
       </junit>

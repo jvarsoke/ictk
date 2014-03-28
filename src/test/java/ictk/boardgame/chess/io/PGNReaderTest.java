@@ -74,6 +74,10 @@ public class PGNReaderTest extends TestCase {
       Log.removeMask(ChessBoard.DEBUG);
    }
 
+   //UTILITY//////////////////////////////////////////////////////////////////
+   /** load the local test resource file by leveraging the classpath.
+    *  This should grab the file from where the tests are being run.
+    */
    public File getTestFile (String filename) throws URISyntaxException {
       File file = null;
 

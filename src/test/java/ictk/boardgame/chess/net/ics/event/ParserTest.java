@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.regex.*;
 import java.io.*;
 import java.net.URL;
+import java.net.URISyntaxException;
 
 import junit.framework.*;
 
@@ -40,34 +41,22 @@ public class ParserTest extends TestCase {
    public String[] mesg;
    String filename;
    public ICSEventParser parser;
-   //String dataDir = "./data";
-   String dataDir = "./";
 
-   public ParserTest (String packageName) throws IOException {
-
-      URL location = Test.class.getProtectionDomain().getCodeSource().getLocation();
-
-      //TODO: remove after we find the file
-	 System.out.println("PWD: " + location.getFile());
-
-	 File currentDirectory = new File(new File(".").getAbsolutePath());
-	 System.out.println("Can:" + currentDirectory.getCanonicalPath());
-	 System.out.println("Abs: " + currentDirectory.getAbsolutePath());
-
-	 assertNotNull("Test file missing: FICSFingerParser.data", 
-		getClass().getResource("/FICSFingerParser.data"));
-
-      String sysprop = packageName + ".dataDir";
+   public ParserTest (String packageName) throws IOException, URISyntaxException {
       filename = this.getClass().getName();
-
-      if (System.getProperty(sysprop) != null)
-         dataDir = System.getProperty(sysprop);
-
 
       filename = filename.substring(filename.lastIndexOf('.') +1, 
                                     filename.length()) + ".data";
-      filename = dataDir + "/" + filename;
-      mesg = processFile(new File(filename));
+
+      //grab the file from the classpath
+      URL r = this.getClass().getResource(filename);
+      assertNotNull("Couldn't find '" + filename + "' on classpath", r);
+      File file = new File(r.toURI());
+
+      assertNotNull("Null resource file: '" + filename + "'", file);
+      assertTrue("Couldn't read resource: '" + filename + "'", file.exists());
+
+      mesg = processFile(file);
    }
 
    public void setUp () {

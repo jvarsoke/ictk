@@ -33,6 +33,8 @@ import ictk.boardgame.chess.*;
 
 import java.io.*;
 import java.util.List;
+import java.net.URL;
+import java.net.URISyntaxException;
 
 public class PGNWriterTest extends TestCase {
    public String dataDir = "./";
@@ -84,6 +86,28 @@ public class PGNWriterTest extends TestCase {
       Log.removeMask(PGNWriter.DEBUG);
    }
 
+
+   //UTILITY//////////////////////////////////////////////////////////////////
+   /** load the local test resource file by leveraging the classpath.
+    *  This should grab the file from where the tests are being run.
+    */
+   public File getTestFile (String filename) throws URISyntaxException {
+      File file = null;
+
+      if (file == null || !file.exists()) {
+	 URL r = this.getClass().getResource(filename);
+         assertNotNull("Couldn't find '" + filename + "' on classpath", r);
+	 file = new File(r.toURI());
+      }
+
+      assertNotNull("Null resource file: '" + filename + "'", file);
+      assertTrue("Couldn't read resource: '" + filename + "'", file.exists());
+
+      return file;
+   }
+
+   //DEBUG SECTION////////////////////////////////////////////////////////////
+
    ///////////////////////////////////////////////////////////////////////////
    /** bug: 784950 - wrong disambiguation on pawn capture.
     *  This is a tricky bug, and specific to the PGN used for testing it.
@@ -102,7 +126,7 @@ public class PGNWriterTest extends TestCase {
       //Log.addMask(PGNReader.DEBUG);
       //Log.addMask(ChessGameInfo.DEBUG);
       try {
-         list = PGNReaderTest.loadGames(dataDir + pgn_variation, false, 9);
+         list = PGNReaderTest.loadGames(getTestFile(pgn_variation), false, 9);
 	 game = (ChessGame) list.get(9);
 
 	 writer = new PGNWriter(sw = new StringWriter());
