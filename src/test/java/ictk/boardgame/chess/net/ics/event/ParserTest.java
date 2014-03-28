@@ -42,7 +42,7 @@ public class ParserTest extends TestCase {
    String filename;
    public ICSEventParser parser;
 
-   public ParserTest (String packageName) throws IOException, URISyntaxException {
+   public ParserTest (String packageName) throws IOException {
       filename = this.getClass().getName();
 
       filename = filename.substring(filename.lastIndexOf('.') +1, 
@@ -51,12 +51,17 @@ public class ParserTest extends TestCase {
       //grab the file from the classpath
       URL r = this.getClass().getResource(filename);
       assertNotNull("Couldn't find '" + filename + "' on classpath", r);
-      File file = new File(r.toURI());
+      File file = null;
+      try  {
+         file = new File(r.toURI());
+         assertNotNull("Null resource file: '" + filename + "'", file);
+         assertTrue("Couldn't read resource: '" + filename + "'", file.exists());
 
-      assertNotNull("Null resource file: '" + filename + "'", file);
-      assertTrue("Couldn't read resource: '" + filename + "'", file.exists());
+         mesg = processFile(file);
+      } catch (URISyntaxException e) {
+	fail(e.getMessage());
+      }
 
-      mesg = processFile(file);
    }
 
    public void setUp () {
