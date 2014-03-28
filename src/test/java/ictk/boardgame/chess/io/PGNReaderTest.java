@@ -31,8 +31,10 @@ import ictk.boardgame.io.*;
 import ictk.boardgame.chess.*;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.LinkedList;
+import java.net.URL;
 
 public class PGNReaderTest extends TestCase {
    public String dataDir = "./";
@@ -53,10 +55,6 @@ public class PGNReaderTest extends TestCase {
    //constructor
    public PGNReaderTest (String name) {
       super(name);
-
-      //so we can call the test from other directories.
-      if (System.getProperty("ictk.boardgame.chess.io.dataDir") != null)
-         dataDir = System.getProperty("ictk.boardgame.chess.io.dataDir");
    }
 
    public void setUp () {
@@ -76,6 +74,21 @@ public class PGNReaderTest extends TestCase {
       Log.removeMask(ChessBoard.DEBUG);
    }
 
+   public File getTestFile (String filename) throws URISyntaxException {
+      File file = null;
+
+      if (file == null || !file.exists()) {
+	 URL r = this.getClass().getResource(filename);
+         assertNotNull("Couldn't find '" + filename + "' on classpath", r);
+	 file = new File(r.toURI());
+      }
+
+      assertNotNull("Null resource file: '" + filename + "'", file);
+      assertTrue("Couldn't read resource: '" + filename + "'", file.exists());
+
+      return file;
+   }
+
    //DEBUG SECTION////////////////////////////////////////////////////////////
 
    ///////////////////////////////////////////////////////////////////////////
@@ -91,7 +104,8 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_debug, false, -1);
+
+      games = loadGames(getTestFile(pgn_debug), false, -1);
       //assertTrue(games.size() > 0);
    }
 
@@ -108,7 +122,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_nonvariation, false, -1);
+      games = loadGames(getTestFile(pgn_nonvariation), false, -1);
       assertTrue(games.size() > 0);
       
    }
@@ -123,7 +137,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_variation, false, -1);
+      games = loadGames(getTestFile(pgn_variation), false, -1);
       assertTrue(games.size() > 0);
    }
 
@@ -139,7 +153,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_variation, false, 7);
+      games = loadGames(getTestFile(pgn_variation), false, 7);
       assertTrue(games.size() > 0);
       game = (ChessGame) games.get(7);
       game.getHistory().fastforward(50);
@@ -159,7 +173,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_variation, false, 8);
+      games = loadGames(getTestFile(pgn_variation), false, 8);
       assertTrue(games.size() > 0);
       game = (ChessGame) games.get(8);
 
@@ -183,7 +197,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, -1);
+      games = loadGames(getTestFile(pgn_annotation), false, -1);
       assertTrue(games.size() > 0);
    }
 
@@ -196,7 +210,7 @@ public class PGNReaderTest extends TestCase {
 		 AmbiguousMoveException,
 		 Exception {
 
-      games = loadGames(dataDir + pgn_annotation, false, 0);
+      games = loadGames(getTestFile(pgn_annotation), false, 0);
 
 	 game = (Game) games.get(0);
 	 History history = game.getHistory();
@@ -216,7 +230,7 @@ public class PGNReaderTest extends TestCase {
 		 AmbiguousMoveException,
 		 Exception {
 
-      games = loadGames(dataDir + pgn_nonvariation, false, 4);
+      games = loadGames(getTestFile(pgn_nonvariation), false, 4);
       game = (ChessGame) games.get(4);
 
       game.getHistory().rewind();
@@ -235,7 +249,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 1);
+      games = loadGames(getTestFile(pgn_annotation), false, 1);
 
 	 game = (Game) games.get(1);
 	 History history = game.getHistory();
@@ -255,7 +269,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 2);
+      games = loadGames(getTestFile(pgn_annotation), false, 2);
 
 	 game = (Game) games.get(2);
 	 assertTrue(game != null);
@@ -280,7 +294,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 3);
+      games = loadGames(getTestFile(pgn_annotation), false, 3);
 
 	 game = (Game) games.get(3);
 	 assertTrue(game != null);
@@ -320,7 +334,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 4);
+      games = loadGames(getTestFile(pgn_annotation), false, 4);
 
 	 game = (Game) games.get(4);
 	 assertTrue(game != null);
@@ -360,7 +374,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 6);
+      games = loadGames(getTestFile(pgn_annotation), false, 6);
 
 	 game = (Game) games.get(6);
 	 assertTrue(game != null);
@@ -385,7 +399,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 7);
+      games = loadGames(getTestFile(pgn_annotation), false, 7);
 
 	 game = (Game) games.get(7);
 	 assertTrue(game != null);
@@ -410,7 +424,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 8);
+      games = loadGames(getTestFile(pgn_annotation), false, 8);
 
 	 game = (Game) games.get(8);
 	 assertTrue(game != null);
@@ -436,7 +450,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 9);
+      games = loadGames(getTestFile(pgn_annotation), false, 9);
 
 	 game = (Game) games.get(9);
 	 assertTrue(game != null);
@@ -462,7 +476,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 10);
+      games = loadGames(getTestFile(pgn_annotation), false, 10);
 
 	 game = (Game) games.get(10);
 	 assertTrue(game != null);
@@ -489,7 +503,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 11);
+      games = loadGames(getTestFile(pgn_annotation), false, 11);
 
 	 game = (Game) games.get(11);
 	 assertTrue(game != null);
@@ -516,7 +530,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 12);
+      games = loadGames(getTestFile(pgn_annotation), false, 12);
 
 	 game = (Game) games.get(12);
 	 assertTrue(game != null);
@@ -543,7 +557,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 13);
+      games = loadGames(getTestFile(pgn_annotation), false, 13);
 
 	 game = (Game) games.get(13);
 	 assertTrue(game != null);
@@ -570,7 +584,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 14);
+      games = loadGames(getTestFile(pgn_annotation), false, 14);
 
 	 game = (Game) games.get(14);
 	 assertTrue(game != null);
@@ -595,7 +609,7 @@ public class PGNReaderTest extends TestCase {
 		 IllegalMoveException,
 		 AmbiguousMoveException,
 		 Exception {
-      games = loadGames(dataDir + pgn_annotation, false, 15);
+      games = loadGames(getTestFile(pgn_annotation), false, 15);
 
 	 game = (Game) games.get(15);
 	 assertTrue(game != null);
@@ -625,7 +639,7 @@ public class PGNReaderTest extends TestCase {
 
 	 in = new PGNReader(
 		 new FileReader(
-		    new File(dataDir + pgn_bad)));
+		    getTestFile(pgn_bad)));
 
          try {
 	    game = in.readGame();
@@ -650,7 +664,7 @@ public class PGNReaderTest extends TestCase {
    //Helper///////////////////////////////////////////////////////////////////
 
    /** loads the games into a list so aspects of the games can be tested */
-   protected static List loadGames (String file, boolean debug, int gameToDebug)
+   protected static List loadGames (File file, boolean debug, int gameToDebug)
           throws FileNotFoundException,
 	  	 IOException, 
 	         InvalidGameFormatException,
@@ -669,10 +683,9 @@ public class PGNReaderTest extends TestCase {
       try {
 	 int count = 0;
 
-	    Log.debug(PGNReader.DEBUG, "Reading file: " + file);
+	    Log.debug(PGNReader.DEBUG, "Reading file: " + file.getName());
 	    in = new PGNReader(
-		    new FileReader(
-		       new File(file)));
+	   	    new FileReader(file));
 
 	    //turn on single game debugging for next read
 	    if (debug && gameToDebug == count) {

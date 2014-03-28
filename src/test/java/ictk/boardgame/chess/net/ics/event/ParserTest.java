@@ -30,6 +30,7 @@ import ictk.util.Log;
 import java.util.*;
 import java.util.regex.*;
 import java.io.*;
+import java.net.URL;
 
 import junit.framework.*;
 
@@ -39,9 +40,22 @@ public class ParserTest extends TestCase {
    public String[] mesg;
    String filename;
    public ICSEventParser parser;
-   String dataDir = "./data";
+   //String dataDir = "./data";
+   String dataDir = "./";
 
    public ParserTest (String packageName) throws IOException {
+
+      URL location = Test.class.getProtectionDomain().getCodeSource().getLocation();
+
+      //TODO: remove after we find the file
+	 System.out.println("PWD: " + location.getFile());
+
+	 File currentDirectory = new File(new File(".").getAbsolutePath());
+	 System.out.println("Can:" + currentDirectory.getCanonicalPath());
+	 System.out.println("Abs: " + currentDirectory.getAbsolutePath());
+
+	 assertNotNull("Test file missing: FICSFingerParser.data", 
+		getClass().getResource("/FICSFingerParser.data"));
 
       String sysprop = packageName + ".dataDir";
       filename = this.getClass().getName();

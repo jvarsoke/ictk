@@ -76,6 +76,7 @@
       <patternset id="test.sources">
          <include name="**/*.java"/>
 	 <exclude name="**/junk/**"/>
+	 <exclude name="**/_*.java"/>
       </patternset>
    </fileset>
 
@@ -98,18 +99,20 @@
       </fileset>
       <dirset dir="${build.dir}">
       </dirset>
+      <dirset dir="${test.resources.dir}">
+      </dirset>
    </path>
 
    <!-- tasks -->
    <!-- display version information -->
    <target name="version"
            description="display version information">
-      <echo message="-=[ ictk ]=- Internet Chess ToolKit"/>
-      <echo message="             http://jvarsoke.github.io/ictk"/>
-      <echo message=""/>
-      <echo message="       ictk: ictk-${version}"/>
-      <echo message="        ant: ${ant.version}"/>
-      <echo message="        jdk: ${ant.java.version}"/>
+<echo> -=[ ictk ]=- Internet Chess ToolKit
+      http://jvarsoke.github.io/ictk
+
+      ictk: ictk-${version}
+       ant: ${ant.version}
+       jdk: ${ant.java.version}</echo>
    </target>
 
    <!-- initialization and error checking .................................-->
@@ -291,11 +294,9 @@
 	 />
 
 
-<!--
 	 <formatter type="plain"
 	            usefile="false"
 		    />
--->
 
 	 <batchtest fork="no"
 	            todir="${junit.results.dir}"
