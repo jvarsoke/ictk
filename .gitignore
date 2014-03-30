@@ -25,6 +25,8 @@ pat*
 *foo
 *.1
 */**/*txt
+**/ictk/boardgame/chess/net/ics/event/*.log
+**/ictk/boardgame/chess/net/ics/fics/event/*.log
 **/ictk/boardgame/chess/net/ics/fics/event/FICSExamineCommitParser*.java
 **/ictk/boardgame/chess/net/ics/fics/event/FICSExamineNavigationBeginParser*.java
 **/ictk/boardgame/chess/net/ics/fics/event/FICSExamineNavigationEndParser*.java
