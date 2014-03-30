@@ -37,7 +37,6 @@ import java.net.URL;
 import java.net.URISyntaxException;
 
 public class PGNWriterTest extends TestCase {
-   public String dataDir = "./";
    String pgn_nonvariation = "test_nonvariation.pgn",
           pgn_variation    = "test_variation.pgn",
           pgn_annotation   = "test_annotation.pgn",
@@ -58,9 +57,6 @@ public class PGNWriterTest extends TestCase {
 
    public PGNWriterTest (String name) {
       super(name);
-
-      if (System.getProperty("ictk.boardgame.chess.io.dataDir") != null)
-         dataDir = System.getProperty("ictk.boardgame.chess.io.dataDir");
    }
 
    public void setUp () {
@@ -232,8 +228,7 @@ public class PGNWriterTest extends TestCase {
 	 int count = 0;
 
 	    in = new PGNReader(
-		    new FileReader(
-		       new File(dataDir + pgn_nonvariation)));
+		    new FileReader(getTestFile(pgn_nonvariation)));
 
 	    while ((game = in.readGame()) != null) {
 	       writer = new PGNWriter(sw = new StringWriter()); 
@@ -271,8 +266,7 @@ public class PGNWriterTest extends TestCase {
       try {
 
 	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + pgn_variation)));
+		 new FileReader(getTestFile(pgn_variation)));
 
 	 while ((game = in.readGame()) != null) {
 	    writer = new PGNWriter(sw = new StringWriter()); 
