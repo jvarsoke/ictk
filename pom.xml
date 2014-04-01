@@ -23,175 +23,175 @@
  * THE SOFTWARE.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-   <groupId>ictk</groupId>
-   <artifactId>ictk</artifactId>
-   <url>http://jvarsoke.github.io/ictk</url>
+    <groupId>ictk</groupId>
+    <artifactId>ictk</artifactId>
+    <url>http://jvarsoke.github.io/ictk</url>
 
-   <name>ictk</name>
-   <version>1.0-SNAPSHOT</version>
+    <name>ictk</name>
+    <version>1.0-SNAPSHOT</version>
 
-   <packaging>jar</packaging>
+    <packaging>jar</packaging>
 
-   <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <project.ics.event.path>ictk/boardgame/chess/net/ics/event</project.ics.event.path>
-      <project.fics.event.path>ictk/boardgame/chess/net/ics/fics/event</project.fics.event.path>
-   </properties>
+    <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<project.ics.event.path>ictk/boardgame/chess/net/ics/event</project.ics.event.path>
+	<project.fics.event.path>ictk/boardgame/chess/net/ics/fics/event</project.fics.event.path>
+    </properties>
 
-   <build>
-      <plugins>
-	 <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-compiler-plugin</artifactId>
-	    <version>3.1</version>
-	    <configuration>
-	       <source>1.7</source>
-	       <target>1.7</target>
-	       <excludes>
-		  <exclude>**/_*.java</exclude>
-		  <exclude>**/junk/*.java</exclude>
-	       </excludes>
-	    </configuration>
-	 </plugin>
+    <build>
+	<plugins>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-compiler-plugin</artifactId>
+		<version>3.1</version>
+		<configuration>
+		    <source>1.7</source>
+		    <target>1.7</target>
+		    <excludes>
+			<exclude>**/_*.java</exclude>
+			<exclude>**/junk/*.java</exclude>
+		    </excludes>
+		</configuration>
+	    </plugin>
 
-	 <!-- add the generated sources to the compile path -->
-	 <plugin>
-	    <groupId>org.codehaus.mojo</groupId>
-	    <artifactId>build-helper-maven-plugin</artifactId>
-	    <version>1.8</version>
-	    <executions>
-	       <execution>
-		  <id>add-source</id>
-		  <phase>generate-sources</phase>
-		  <goals>
-		     <goal>add-source</goal>
-		  </goals>
-		  <configuration>
-		     <sources>
-			<source>${project.build.directory}/generated-sources/xml/xslt/java/main</source>
-		     </sources>
-		  </configuration>
-	       </execution>
+	    <!-- add the generated sources to the compile path -->
+	    <plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>build-helper-maven-plugin</artifactId>
+		<version>1.8</version>
+		<executions>
+		    <execution>
+			<id>add-source</id>
+			<phase>generate-sources</phase>
+			<goals>
+			    <goal>add-source</goal>
+			</goals>
+			<configuration>
+			    <sources>
+                                <source>${project.build.directory}/generated-sources/xml/xslt/main/java</source>
+			    </sources>
+			</configuration>
+		    </execution>
 
-	       <!-- add the generated test sources to the compile path -->
-	       <execution>
-		  <id>add-test-source</id>
-		  <phase>generate-test-sources</phase>
-		  <goals>
-		     <goal>add-test-source</goal>
-		  </goals>
-		  <configuration>
-		     <sources>
-			<source>${project.build.directory}/generated-sources/xml/xslt/java/test</source>
-		     </sources>
-		  </configuration>
-	       </execution>
-	    </executions>
-	 </plugin>
+		    <!-- add the generated test sources to the compile path -->
+		    <execution>
+			<id>add-test-source</id>
+			<phase>generate-test-sources</phase>
+			<goals>
+			    <goal>add-test-source</goal>
+			</goals>
+			<configuration>
+			    <sources>
+                                <source>${project.build.directory}/generated-sources/xml/xslt/test/java</source>
+			    </sources>
+			</configuration>
+		    </execution>
+		</executions>
+	    </plugin>
 
 
-	 <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-surefire-plugin</artifactId>
-	    <version>2.17</version>
-	    <configuration>
-	       <excludes>
-		  <exclude>**/ParserTest.java</exclude>
-	       </excludes>
-	    </configuration>
-	 </plugin>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-surefire-plugin</artifactId>
+		<version>2.17</version>
+		<configuration>
+		    <excludes>
+			<exclude>**/ParserTest.java</exclude>
+		    </excludes>
+		</configuration>
+	    </plugin>
 
-	 <!-- XSLT processing ...................... -->
-	 <plugin>
-	    <groupId>org.codehaus.mojo</groupId>
-	    <artifactId>xml-maven-plugin</artifactId>
-	    <version>1.0</version>
-	    <executions>
-	       <execution>
-		  <goals>
-		     <goal>transform</goal>
-		  </goals>
-	       </execution>
-	    </executions>
-	    <configuration>
-	       <transformationSets>
-		  <!-- events and parsers-->
-		  <transformationSet>
-		     <stylesheet>src/main/java/${project.ics.event.path}/event.xsl</stylesheet>
-		     <dir>src/main/java/${project.ics.event.path}</dir>
-		     <includes>
-			<include>*.xml</include>
-		     </includes>
-		     <excludes>
-			<exclude>parserCommon.xml</exclude>
-		     </excludes>
-		     <!-- <outputDir>src/test/java/ictk/boardgame/chess/net/ics/event</outputDir> -->
-		     <fileMappers>
-			<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
-			   <targetExtension>tmp.log</targetExtension>
-			</fileMapper>
-		     </fileMappers>
-		     <parameters>
-			<parameter>
-			   <name>destpath</name>
-			   <value>${project.build.directory}/generated-sources/xml/xslt/java/main/${project.ics.event.path}</value>
-			</parameter>
-		     </parameters>
-		  </transformationSet>
+	    <!-- XSLT processing ...................... -->
+	    <plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>xml-maven-plugin</artifactId>
+		<version>1.0</version>
+		<executions>
+		    <execution>
+			<goals>
+			    <goal>transform</goal>
+			</goals>
+		    </execution>
+		</executions>
+		<configuration>
+		    <transformationSets>
+			<!-- events and parsers-->
+			<transformationSet>
+			    <stylesheet>src/main/java/${project.ics.event.path}/event.xsl</stylesheet>
+			    <dir>src/main/java/${project.ics.event.path}</dir>
+			    <includes>
+				<include>*.xml</include>
+			    </includes>
+			    <excludes>
+				<exclude>parserCommon.xml</exclude>
+			    </excludes>
+			    <!-- <outputDir>src/test/java/ictk/boardgame/chess/net/ics/event</outputDir> -->
+			    <fileMappers>
+				<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+				    <targetExtension>tmp.log</targetExtension>
+				</fileMapper>
+			    </fileMappers>
+			    <parameters>
+				<parameter>
+				    <name>destpath</name>
+                                    <value>${project.build.directory}/generated-sources/xml/xslt/main/java/${project.ics.event.path}</value>
+				</parameter>
+			    </parameters>
+			</transformationSet>
 
-		  <!-- parser tests -->
-		  <transformationSet>
-		     <stylesheet>src/test/java/${project.fics.event.path}/templateParser.xsl</stylesheet>
-		     <dir>src/test/java/${project.fics.event.path}</dir>
-		     <includes>
-			<include>parserTests.xml</include>
-		     </includes>
-		     <!-- <outputDir>src/test/java/ictk/boardgame/chess/net/ics/fics/event</outputDir> -->
-		     <fileMappers>
-			<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
-			   <targetExtension>tmp.log</targetExtension>
-			</fileMapper>
-		     </fileMappers>
-		     <parameters>
-			<parameter>
-			   <name>destpath</name>
-			   <value>${project.build.directory}/generated-sources/xml/xslt/java/test/${project.fics.event.path}</value>
-			</parameter>
-		     </parameters>
-		  </transformationSet>
-	       </transformationSets>
-	    </configuration>
-	 </plugin>
-      </plugins>
-   </build>
+			<!-- parser tests -->
+			<transformationSet>
+			    <stylesheet>src/test/java/${project.fics.event.path}/templateParser.xsl</stylesheet>
+			    <dir>src/test/java/${project.fics.event.path}</dir>
+			    <includes>
+				<include>parserTests.xml</include>
+			    </includes>
+			    <!-- <outputDir>src/test/java/ictk/boardgame/chess/net/ics/fics/event</outputDir> -->
+			    <fileMappers>
+				<fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+				    <targetExtension>tmp.log</targetExtension>
+				</fileMapper>
+			    </fileMappers>
+			    <parameters>
+				<parameter>
+				    <name>destpath</name>
+                                    <value>${project.build.directory}/generated-sources/xml/xslt/test/java/${project.fics.event.path}</value>
+				</parameter>
+			    </parameters>
+			</transformationSet>
+		    </transformationSets>
+		</configuration>
+	    </plugin>
+	</plugins>
+    </build>
 
-   <!-- repos ........................................-->
-   <repositories>
-      <repository>
-	 <id>project</id>
-	 <url>file://${project.basedir}/repo</url>
-      </repository>
-   </repositories>
+    <!-- repos ........................................-->
+    <repositories>
+	<repository>
+	    <id>project</id>
+	    <url>file://${project.basedir}/repo</url>
+	</repository>
+    </repositories>
 
-   <!-- deps .........................................-->
-   <dependencies>
+    <!-- deps .........................................-->
+    <dependencies>
 
-      <dependency>
-	 <groupId>junit</groupId>
-	 <artifactId>junit</artifactId>
-	 <version>3.8.1</version>
-	 <scope>test</scope>
-      </dependency>
+	<dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>3.8.1</version>
+	    <scope>test</scope>
+	</dependency>
 
-      <dependency>
-	 <groupId>free.freechess</groupId>
-	 <artifactId>timesealing</artifactId>
-	 <version>1.0.0</version>
-      </dependency>
+	<dependency>
+	    <groupId>free.freechess</groupId>
+	    <artifactId>timesealing</artifactId>
+	    <version>1.0.0</version>
+	</dependency>
 
-   </dependencies>
+    </dependencies>
 
 </project>

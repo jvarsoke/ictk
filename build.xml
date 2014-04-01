@@ -22,6 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
 -->
+<!-- vim:shiftwidth=3 -->
 <project name="ictk" default="compile">
    <description>
       -=[ ictk ]=- Internet Chess ToolKit (http://jvarsoke.github.io/ictk)
@@ -30,62 +31,57 @@
    <property environment="env"/> 
 
    <!-- global properties -->
-   <property name="version"           value="1.0.0"/>
+   <property name="version"                     value="1.0.0"/>
+
+   <property name="release.file"                value="ictk-${version}"/>
+   <property name="output.jar"                  value="${release.file}.jar"/>
+   <property name="nonet.jar"                   value="${release.file}-nonet.jar"/>
+
    <!-- if you want 'protected' docs, you should set this variable 
-	on the command line -->
-   <property name="docs.access"       value="public"/>
+        on the command line -->
+   <property name="docs.access"                 value="public"/>
 
-   <property name="source.dir"        value="src/main/java"/>
-   <property name="test.dir"          value="src/test/java"/>
-   <property name="test.resources.dir" value="src/test/resources"/>
-   <property name="build.dir"         value="target/classes"/>
-   <property name="docs.dir"          value="target/docs"/>
-   <property name="samples.dir"       value="src/samples"/>
-   <property name="release.file"      value="ictk-${version}"/>
-   <property name="output.jar"        value="${release.file}.jar"/>
-   <property name="nonet.jar"         value="${release.file}-nonet.jar"/>
+   <property name="project.source.directory"    value="src"/>
+   <property name="project.build.directory"     value="target"/>
 
-   <!--JUnit -->
-   <!-- might need to change this if your platform isn't supported by Ant -->
-   <property name="junit.home"          value="${env.JUNIT_HOME}"/>
-   <property name="junit.print.results" value="yes"/>
-   <property name="junit.results.dir"   value="results"/>
+   <property name="source.dir"                  value="${project.source.directory}/main/java"/>
+   <property name="test.dir"                    value="${project.source.directory}/test/java"/>
+   <property name="test.resources.dir"          value="${project.source.directory}/test/resources"/>
+   <property name="classes.dir"                 value="${project.build.directory}/classes"/>
+   <property name="docs.dir"                    value="${project.build.directory}/docs"/>
+   <property name="samples.dir"                 value="${project.source.directory}/samples"/>
+   <property name="gen.source.dir"              value="${project.build.directory}/generated-sources/xml/xslt/java/main/java"/>
+   <property name="gen.test.dir"                value="${project.build.directory}/generated-sources/xml/xslt/java/test/java"/>
 
-   <!-- XSLT -->
-   <property name="xslt.ics.event.dir" 
-             value="${source.dir}/ictk/boardgame/chess/net/ics/event"/>
-   <property name="xslt.ics.event.parser.test.dir" 
-             value="${test.dir}/ictk/boardgame/chess/net/ics/fics/event"/>
+   <!-- XSLT generated source files -->
+   <property name="project.ics.event.dir"       value="ictk/boardgame/chess/net/ics/event"/>
+   <property name="project.fics.event.dir"      value="ictk/boardgame/chess/net/ics/fics/event"/>
+
 
    <!-- libs -->
    <!-- these are jar files distributed with ictk -->
-   <property name="lib.dir"           value="repo"/>
+   <property name="lib.dir"                     value="repo"/>
 
+   <!--JUnit -->
+   <!-- might need to change this if your platform isn't supported by Ant -->
+   <property name="junit.home"                  value="${env.JUNIT_HOME}"/>
+   <property name="junit.print.results"         value="yes"/>
+   <property name="junit.results.dir"           value="results"/>
 
-   <!-- source files to compile for distro -->
-   <fileset dir="${source.dir}" casesensitive="yes">
-      <patternset id="non.test.sources">
-         <include name="**/*.java"/>
-	 <exclude name="**/junk/**"/>
-	 <exclude name="**/_*.java"/>
-      </patternset>
-   </fileset>
-
-   <!-- source files to compile for testing -->
-   <fileset dir="${test.dir}" casesensitive="yes">
-      <patternset id="test.sources">
-         <include name="**/*.java"/>
-	 <exclude name="**/junk/**"/>
-	 <exclude name="**/_*.java"/>
+   <fileset dir="." casesensitive="yes">
+      <!-- source files to compile for distro -->
+      <patternset id="not.sources">
+         <exclude name="**/junk/**"/>
+         <exclude name="**/_*.java"/>
       </patternset>
    </fileset>
 
    <!-- compile path for library -->
    <path id="compile.class.path">
       <fileset dir="${lib.dir}">
-	 <include name="**/*.jar"/>
+         <include name="**/*.jar"/>
       </fileset>
-      <dirset dir="${build.dir}">
+      <dirset dir="${classes.dir}">
       </dirset>
    </path>
 
@@ -97,7 +93,7 @@
       <fileset dir="${lib.dir}">
          <include name="*.jar"/>
       </fileset>
-      <dirset dir="${build.dir}">
+      <dirset dir="${classes.dir}">
       </dirset>
       <dirset dir="${test.resources.dir}">
       </dirset>
@@ -106,13 +102,13 @@
    <!-- tasks -->
    <!-- display version information -->
    <target name="version"
-           description="display version information">
-<echo> -=[ ictk ]=- Internet Chess ToolKit
-      http://jvarsoke.github.io/ictk
+      description="display version information">
+      <echo> -=[ ictk ]=- Internet Chess ToolKit
+         http://jvarsoke.github.io/ictk
 
-      ictk: ictk-${version}
-       ant: ${ant.version}
-       jdk: ${ant.java.version}</echo>
+         ictk: ictk-${version}
+         ant: ${ant.version}
+         jdk: ${ant.java.version}</echo>
    </target>
 
    <!-- initialization and error checking .................................-->
@@ -124,122 +120,76 @@
    <!-- ..................................................................-->
    <!-- run multiple targets -->
    <target name="build"
-           description="Generates source from XSLT, compiles, creats Docs and makes jar"
-	   depends="generate,compile,docs,jar"
-	   >
+      description="Generates source from XSLT, compiles, creats Docs and makes jar"
+      depends="generate,compile,docs,jar"
+      >
    </target>
 
    <!-- ..................................................................-->
    <!-- code generation targets -->
    <target name="generate"
-           description="generates source code from XML files">
+      description="generates source code from XML files">
       <!-- event and parsers -->
       <xslt 
-         basedir="${xslt.ics.event.dir}"
-	 destdir="${xslt.ics.event.dir}"
-	 style="${xslt.ics.event.dir}/event.xsl"
-	 includes="*.xml"
-	 excludes="*Common.xml"
-	 extension=".tmp.log"
-	 force="yes"
-	 >
-	 <param name="destpath" expression="${xslt.ics.event.dir}" />
+         basedir="${source.dir}/${project.ics.event.dir}"
+         destdir="${gen.source.dir}/${project.ics.event.dir}"
+         style="${source.dir}/${project.ics.event.dir}/event.xsl"
+         includes="*.xml"
+         excludes="*Common.xml"
+         extension=".tmp.log"
+         force="yes"
+         >
+         <param name="destpath" expression="${gen.source.dir}/${project.ics.event.dir}" />
       </xslt>
-
-      <!-- genfiles.log can be used to later delete the generated files -->
-      <concat destfile="${xslt.ics.event.dir}/genfiles.log">
-         <fileset dir="${xslt.ics.event.dir}"
-	          includes="*.tmp.log"
-	 />
-      </concat>
 
       <!-- parser tests -->
       <xslt 
-         basedir="${xslt.ics.event.parser.test.dir}"
-	 destdir="${xslt.ics.event.parser.test.dir}"
-	 style="${xslt.ics.event.parser.test.dir}/templateParser.xsl"
-	 includes="parserTests.xml"
-	 extension=".tmp.log"
-	 force="yes"
-	 >
-	 <param name="destpath" expression="${xslt.ics.event.parser.test.dir}" />
+         basedir="${test.dir}/${project.fics.event.dir}"
+         destdir="${gen.test.dir}/${project.fics.event.dir}"
+         style="${test.dir}/${project.fics.event.dir}/templateParser.xsl"
+         includes="parserTests.xml"
+         extension=".tmp.log"
+         force="yes"
+         >
+         <param name="destpath" expression="${gen.test.dir}/${project.fics.event.dir}" />
       </xslt>
-      <concat destfile="${xslt.ics.event.parser.test.dir}/genfiles.log">
-         <fileset dir="${xslt.ics.event.parser.test.dir}"
-	          includes="*.tmp.log"
-	 />
-      </concat>
-      <!-- get rid of the useless log files -->
-      <delete>
-         <fileset dir="${xslt.ics.event.dir}" 
-                  includes="*.tmp.log"
-	 />
-         <fileset dir="${xslt.ics.event.parser.test.dir}" 
-                  includes="*.tmp.log"
-	 />
-      </delete>
-
-      <!-- generate AllTests.java -->
-      <xslt 
-         basedir="${xslt.ics.event.parser.test.dir}"
-	 destdir="${xslt.ics.event.parser.test.dir}"
-	 style="${xslt.ics.event.parser.test.dir}/allTests.xsl"
-	 in="${xslt.ics.event.parser.test.dir}/parserTests.xml"
-	 out="${xslt.ics.event.parser.test.dir}/AllTests.java"
-	 force="yes"
-	 >
-      </xslt>
-      <concat append="true"
-              destfile="${xslt.ics.event.parser.test.dir}/genfiles.log"
-          >AllTests.java</concat>
-
-      <!-- report all files -->
-      <echo>Generated Files: ${xslt.ics.event.dir}</echo>
-      <concat>
-         <fileset dir="${xslt.ics.event.dir}"
-	          includes="genfiles.log"
-	 />
-      </concat>
-
-      <echo>Generated Files: ${xslt.ics.event.parser.test.dir}</echo>
-      <concat>
-         <fileset dir="${xslt.ics.event.parser.test.dir}"
-	          includes="genfiles.log"
-	 />
-      </concat>
 
    </target>
 
+   <!-- ..................................................................-->
    <!-- compile targets -->
-   <target name="compile" depends="init"
-           description="compiles the source (w/ debug info)">
-      <mkdir dir="${build.dir}"/>
+   <target name="compile" depends="generate,init"
+      description="compiles the source (w/ debug info)">
+      <mkdir dir="${classes.dir}"/>
       <javac 
-         srcdir="${source.dir}"
-         destdir="${build.dir}"
-	 debug="yes"
-	 optimize="no"
-	 excludes="**/_*.java"
-	 includeantruntime="false"
-	 classpathref="compile.class.path">
-	 <patternset refid="non.test.sources"/>
+         destdir="${classes.dir}"
+         debug="yes"
+         optimize="no"
+         includeantruntime="false"
+         classpathref="compile.class.path"
+         >
+         <src path="${source.dir}"/>
+         <src path="${gen.source.dir}"/>
+         <patternset refid="not.sources"/>
          <compilerarg value="-Xlint"/>
       </javac>
    </target>
 
    <!-- compile targets -->
-   <target name="optimize" depends="init"
-           description="compiles the optimized source (w/o debug info)">
-      <mkdir dir="${build.dir}"/>
+   <target name="optimize" depends="generate,init"
+      description="compiles the source (w/o debug info)">
+      <mkdir dir="${classes.dir}"/>
       <javac 
-         includeantruntime="false"
-         srcdir="${source.dir}"
-         destdir="${build.dir}"
+         destdir="${classes.dir}"
          debug="no"
          optimize="yes"
-         excludes="**/_*.java"
-         classpathref="compile.class.path">
-	      <patternset refid="non.test.sources"/>
+         includeantruntime="false"
+         classpathref="compile.class.path"
+         >
+         <src path="${source.dir}"/>
+         <src path="${gen.source.dir}"/>
+         <patternset refid="not.sources"/>
+         <compilerarg value="-Xlint"/>
       </javac>
    </target>
 
@@ -248,25 +198,26 @@
    <!--test targets -->
 
    <target name="compile_test" 
-           depends="check_junit,error_junit,compile" 
-	   if="junit_is_good"
-           description="compiles the regression testing source">
-      <mkdir dir="${build.dir}"/>
+      depends="check_junit,error_junit,compile" 
+      if="junit_is_good"
+      description="compiles the regression testing source">
+      <mkdir dir="${classes.dir}"/>
       <javac 
          includeantruntime="false"
-         srcdir="${test.dir}"
-         destdir="${build.dir}"
-	 debug="yes"
-	 optimize="no"
-	 verbose="no"
-	 classpathref="compile_test.class.path"
-	 excludes="**/_*.java">
-	 <patternset refid="test.sources"/>
+         destdir="${classes.dir}"
+         debug="yes"
+         optimize="no"
+         verbose="no"
+         classpathref="compile_test.class.path"
+         excludes="**/_*.java">
+         <src path="${test.dir}"/>
+         <src path="${gen.test.dir}"/>
+         <patternset refid="not.sources"/>
       </javac>
    </target>
 
    <target name="test-verbose"
-	   description="performs the JUnit test battery with verbose output">
+      description="performs the JUnit test battery with verbose output">
 
       <property name="test.verbose" value="true"/>
       <antcall target="test"/>
@@ -274,7 +225,7 @@
 
    <!-- junit test battery -->
    <target name="test" depends="compile_test"
-           description="performs the JUnit test battery">
+      description="performs the JUnit test battery">
 
 <!-- only used for the formatter
       <mkdir dir="${junit.results.dir}"/>
@@ -284,37 +235,37 @@
            CLASSPATH (which is required for Ant to use the JUnit task
       -->
       <junit fork="no"
-             haltonerror="yes"
-	     haltonfailure="yes"
-	     printsummary="${junit.print.results}"
-	     >
+         haltonerror="yes"
+         haltonfailure="yes"
+         printsummary="${junit.print.results}"
+         >
 
          <classpath refid="compile_test.class.path"/>
 
-	 <sysproperty 
-	    key="ictk.boardgame.chess.io.dataDir" 
-	    value="${test.resources.dir}/ictk/boardgame/chess/io/"
-	 />
-	 <sysproperty 
-	    key="ictk.boardgame.chess.net.ics.fics.event.dataDir" 
-	    value="${test.resources.dir}/ictk/boardgame/chess/net/ics/fics/event"
-	 />
+         <sysproperty 
+            key="ictk.boardgame.chess.io.dataDir" 
+            value="${test.resources.dir}/ictk/boardgame/chess/io/"
+            />
+         <sysproperty 
+            key="ictk.boardgame.chess.net.ics.fics.event.dataDir" 
+            value="${test.resources.dir}/ictk/boardgame/chess/net/ics/fics/event"
+            />
 
-	 <formatter type="plain"
-	            usefile="false"
-		    if="test.verbose"
-		    />
+         <formatter type="plain"
+            usefile="false"
+            if="test.verbose"
+            />
 
-	 <batchtest fork="no"
-	            todir="${junit.results.dir}"
-	            >
-	    <fileset dir="${test.dir}">
-	       <include name="**/*Test.java"/>
-	       <exclude name="**/AllTests.java"/>
-	       <exclude name="**/junk/**"/>
-	       <exclude name="**/ParserTest.java"/>
+         <batchtest fork="no"
+            todir="${junit.results.dir}"
+            >
+            <fileset dir="${test.dir}">
+               <include name="**/*Test.java"/>
+               <exclude name="**/AllTests.java"/>
+               <exclude name="**/junk/**"/>
+               <exclude name="**/ParserTest.java"/>
             </fileset>
-	 </batchtest>
+         </batchtest>
       </junit>
    </target>
 
@@ -322,70 +273,70 @@
 
    <!-- jar targets -->
    <target name="jar" depends="compile"
-           description="builds the jar file">
+      description="builds the jar file">
       <jar 
          jarfile="${output.jar}"
-         basedir="${build.dir}"
-	 compress="no"
-      />
-	<!-- manifest="manifest.txt" -->
+         basedir="${classes.dir}"
+         compress="no"
+         />
+      <!-- manifest="manifest.txt" -->
    </target>
 
    <target name="optimized-jar" depends="clean, optimize"
-           description="builds the optimized jar file">
+      description="builds the optimized jar file">
       <jar 
          jarfile="${output.jar}"
-         basedir="${build.dir}"
-	 compress="no"
-      />
-	<!-- manifest="manifest.txt" -->
+         basedir="${classes.dir}"
+         compress="no"
+         />
+      <!-- manifest="manifest.txt" -->
    </target>
 
    <target name="jar-nonet" depends="compile"
-           description="builds a jar file w/o the Net libraries">
+      description="builds a jar file w/o the Net libraries">
       <jar
          jarfile="${nonet.jar}"
-	 basedir="${build.dir}"
-	 compress="no"
-	 excludes="**/net/**"
-      />
+         basedir="${classes.dir}"
+         compress="no"
+         excludes="**/net/**"
+         />
    </target>
 
    <!-- ..................................................................-->
 
    <!-- documentation -->
    <target name="docs" depends="compile"
-           description="builds the javadoc documentation">
+      description="builds the javadoc documentation">
       <mkdir dir="${docs.dir}"/>
 
       <javadoc 
          access="${docs.access}"
-	 packagenames="ictk.*"
-	 author="false"
-	 destdir="${docs.dir}"
-	 windowtitle="-=[ ictk ]=- API Documentation"
-	 doctitle="-=[ ictk ]=- API Documentation"
-	 header="&lt;b&gt;Internet Chess ToolKit&lt;/b&gt;
-	         &lt;br&gt;
-		 &lt;font size='-1'&gt;v${version}&lt;/font&gt;
-		 "
-	 footer="&lt;font size='-1'&gt;
-		Visit the &lt;a href='http://jvarsoke.github.io/ictk'&gt;
-		    Website
-	         &lt;/a&gt;
-		 &lt;br&gt;
-		 Internet Chess ToolKit is licensed under the 
-		 &lt;a href='http://opensource.org/licenses/MIT'&gt;
-		 MIT License
-	         &lt;/a&gt;.
-		 &lt;/font&gt;
-		 "
-	 overview="${source.dir}/ictk/overview.html"
-	 classpathref="compile.class.path"
-	 >
-	 <fileset dir="${source.dir}" casesensitive="yes">
-	    <patternset refid="non.test.sources"/>
-	 </fileset>
+         packagenames="ictk.*"
+         author="false"
+         destdir="${docs.dir}"
+         windowtitle="-=[ ictk ]=- API Documentation"
+         doctitle="-=[ ictk ]=- API Documentation"
+         header="&lt;b&gt;Internet Chess ToolKit&lt;/b&gt;
+         &lt;br&gt;
+         &lt;font size='-1'&gt;v${version}&lt;/font&gt;
+         "
+         footer="&lt;font size='-1'&gt;
+         Visit the &lt;a href='http://jvarsoke.github.io/ictk'&gt;
+         Website
+         &lt;/a&gt;
+         &lt;br&gt;
+         Internet Chess ToolKit is licensed under the 
+         &lt;a href='http://opensource.org/licenses/MIT'&gt;
+         MIT License
+         &lt;/a&gt;.
+         &lt;/font&gt;
+         "
+         overview="${source.dir}/ictk/overview.html"
+         classpathref="compile.class.path"
+         >
+         <fileset dir="${source.dir}" casesensitive="yes">
+            <patternset refid="non.test.sources"/>
+         </fileset>
       </javadoc>
    </target>
 
@@ -393,67 +344,67 @@
 
    <!-- distro -->
    <target name="dist" depends="bin,src"
-           description="create both the binary and source release files">
+      description="create both the binary and source release files">
 
    </target>
 
    <!-- binary distribution files -->
    <target name="bin" depends="clean,generate,jar,jar-nonet,docs"
-           description="create the binary release file">
+      description="create the binary release file">
       <property name="bin.include"
-           value="
-	   AUTHORS LICENSE ChangeLog NEWS README TODO 
-	   ${docs.dir}/**
-	   ${output.jar}
-	   ${samples.dir}/**
-	   ${lib.dir}/**
-	   "
-	   />
+         value="
+         AUTHORS LICENSE ChangeLog NEWS README TODO 
+         ${docs.dir}/**
+         ${output.jar}
+         ${samples.dir}/**
+         ${lib.dir}/**
+         "
+         />
 
       <zip destfile="${release.file}.zip">
          <zipfileset prefix="${release.file}/"
-	             dir="."
-		     includes="${bin.include}"
-	    />
+            dir="."
+            includes="${bin.include}"
+            />
       </zip>
 
       <tar destfile="${release.file}.tar.gz"
-	   compression="gzip" >
+         compression="gzip" >
          <tarfileset prefix="${release.file}/"
-	             dir="."
-		     includes="${bin.include}"
-	    />
+            dir="."
+            includes="${bin.include}"
+            />
       </tar>
    </target>
 
    <!-- source distribution files -->
    <target name="src" depends="compile_test"
-           description="create the source release file">
+      description="create the source release file">
 
       <property name="src.include"
-           value="
-	   AUTHORS COPYING ChangeLog NEWS README TODO
-	   build.xml
-	   ${source.dir}/**
-	   ${test.dir}/**
-	   ${lib.dir}/**
-	   ${samples.dir}/**
-	   "
-	   />
+         value="
+         AUTHORS COPYING ChangeLog NEWS README TODO
+         build.xml
+         ${source.dir}/**
+         ${test.dir}/**
+         ${lib.dir}/**
+         ${samples.dir}/**
+         "
+         />
 
       <zip destfile="${release.file}-src.zip">
          <zipfileset prefix="${release.file}/"
-	             dir="."
-		     includes="${src.include}"
-	    />
+            dir="."
+            includes="${src.include}"
+            />
       </zip>
 
       <tar destfile="${release.file}-src.tar.gz"
-	   compression="gzip" >
+         compression="gzip" >
          <tarfileset prefix="${release.file}/"
-	             dir="."
-		     includes="${src.include}"
-	    />
+            dir="."
+            includes="${src.include}"
+            />
       </tar>
    </target>
 
@@ -461,23 +412,18 @@
 
    <!-- clean -->
    <target name="clean"
-           description="delete all built files and documentation">
-      <delete dir="${build.dir}" />
-      <delete dir="${docs.dir}" />
-      <delete file="${output.jar}" />
-      <echo message="To delete generated code use (unix):"/>
-      <echo message="   $ (cd ${xslt.ics.event.dir} &amp;&amp; cat genfiles.log | xargs rm)"/>
-      <echo message="   $ (cd ${xslt.ics.event.parser.test.dir} &amp;&amp; cat genfiles.log | xargs rm)"/>
+      description="delete all built files and documentation">
+      <delete dir="${project.build.directory}" />
    </target>
 
    <!-- ..................................................................-->
    <!-- Utility targets -->
-   
+
    <!-- check to make sure the environment variable could be read -->
    <target name="check_junit">
       <condition property="junit_is_good">
          <and>
-		<isset property="env.JUNIT_HOME"/>
+            <isset property="env.JUNIT_HOME"/>
          </and>
       </condition>
    </target>
@@ -490,7 +436,5 @@
       <echo message="from you'll need to set it manually.  Check in "/>
       <echo message="the environment properties section of this build file."/>
    </target>
-
-
 
 </project>
