@@ -315,8 +315,8 @@
          packagenames="ictk.*"
          author="false"
          destdir="${docs.dir}"
-         windowtitle="-=[ ictk ]=- API Documentation"
-         doctitle="-=[ ictk ]=- API Documentation"
+         windowtitle="ictk ${version} API"
+         doctitle="ictk ${version} API"
          header="&lt;b&gt;Internet Chess ToolKit&lt;/b&gt;
          &lt;br&gt;
          &lt;font size='-1'&gt;v${version}&lt;/font&gt;
@@ -332,7 +332,7 @@
          &lt;/a&gt;.
          &lt;/font&gt;
          "
-         overview="${source.dir}/ictk/overview.html"
+         overview="${project.source.directory}/main/javadoc/overview.html"
          classpathref="compile.class.path"
          >
          <fileset dir="${source.dir}" casesensitive="yes">

@@ -53,6 +53,7 @@
 		    <excludes>
 			<exclude>**/_*.java</exclude>
 			<exclude>**/junk/*.java</exclude>
+			<exclude>**/notes/*.java</exclude>
 		    </excludes>
 		</configuration>
 	    </plugin>
@@ -202,6 +203,27 @@
                 <version>2.9.1</version>
                 <configuration>
                     <show>public</show>
+                    <header>
+                        &lt;b&gt;Internet Chess ToolKit&lt;/b&gt;
+                        &lt;br&gt;
+                        &lt;font size='-1'&gt;v${version}&lt;/font&gt;
+                    </header>
+                    <footer>
+                        &lt;font size='-1'&gt;
+                        Visit the &lt;a href='http://jvarsoke.github.io/ictk'&gt;
+                        Website
+                        &lt;/a&gt;
+                        &lt;br&gt;
+                        Internet Chess ToolKit is licensed under the 
+                        &lt;a href='http://opensource.org/licenses/MIT'&gt;
+                        MIT License
+                        &lt;/a&gt;.
+                        &lt;/font&gt;
+                    </footer>
+                    <excludes>
+                        <exclude>**/notes/*</exclude>
+                        <exclude>**/junk/*</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
