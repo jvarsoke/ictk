@@ -31,9 +31,12 @@
    <property environment="env"/> 
 
    <!-- global properties -->
-   <property name="version"                     value="1.0.0"/>
+   <property name="version"                     value="1.0.1-SNAPSHOT"/>
 
-   <property name="release.file"                value="ictk-${version}"/>
+   <property name="project.source.directory"    value="src"/>
+   <property name="project.build.directory"     value="target"/>
+
+   <property name="release.file"                value="${project.build.directory}/ictk-${version}"/>
    <property name="output.jar"                  value="${release.file}.jar"/>
    <property name="nonet.jar"                   value="${release.file}-nonet.jar"/>
 
@@ -41,8 +44,6 @@
         on the command line -->
    <property name="docs.access"                 value="public"/>
 
-   <property name="project.source.directory"    value="src"/>
-   <property name="project.build.directory"     value="target"/>
 
    <property name="source.dir"                  value="${project.source.directory}/main/java"/>
    <property name="test.dir"                    value="${project.source.directory}/test/java"/>
