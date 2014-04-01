@@ -48,7 +48,7 @@
    <property name="test.dir"                    value="${project.source.directory}/test/java"/>
    <property name="test.resources.dir"          value="${project.source.directory}/test/resources"/>
    <property name="classes.dir"                 value="${project.build.directory}/classes"/>
-   <property name="docs.dir"                    value="${project.build.directory}/docs"/>
+   <property name="docs.dir"                    value="${project.build.directory}/site/apidocs"/>
    <property name="samples.dir"                 value="${project.source.directory}/samples"/>
    <property name="gen.source.dir"              value="${project.build.directory}/generated-sources/xml/xslt/java/main/java"/>
    <property name="gen.test.dir"                value="${project.build.directory}/generated-sources/xml/xslt/java/test/java"/>
@@ -70,7 +70,8 @@
 
    <fileset dir="." casesensitive="yes">
       <!-- source files to compile for distro -->
-      <patternset id="not.sources">
+      <patternset id="sources">
+         <include name="**/*.java"/>
          <exclude name="**/junk/**"/>
          <exclude name="**/_*.java"/>
       </patternset>
@@ -170,7 +171,7 @@
          >
          <src path="${source.dir}"/>
          <src path="${gen.source.dir}"/>
-         <patternset refid="not.sources"/>
+         <patternset refid="sources"/>
          <compilerarg value="-Xlint"/>
       </javac>
    </target>
@@ -188,7 +189,7 @@
          >
          <src path="${source.dir}"/>
          <src path="${gen.source.dir}"/>
-         <patternset refid="not.sources"/>
+         <patternset refid="sources"/>
          <compilerarg value="-Xlint"/>
       </javac>
    </target>
@@ -212,7 +213,7 @@
          excludes="**/_*.java">
          <src path="${test.dir}"/>
          <src path="${gen.test.dir}"/>
-         <patternset refid="not.sources"/>
+         <patternset refid="sources"/>
       </javac>
    </target>
 
@@ -335,7 +336,10 @@
          classpathref="compile.class.path"
          >
          <fileset dir="${source.dir}" casesensitive="yes">
-            <patternset refid="non.test.sources"/>
+            <patternset refid="sources"/>
+         </fileset>
+         <fileset dir="${gen.source.dir}" casesensitive="yes">
+            <patternset refid="sources"/>
          </fileset>
       </javadoc>
    </target>
