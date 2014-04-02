@@ -206,7 +206,7 @@
                     <header>
                         &lt;b&gt;Internet Chess ToolKit&lt;/b&gt;
                         &lt;br&gt;
-                        &lt;font size='-1'&gt;v${version}&lt;/font&gt;
+                        &lt;font size='-1'&gt;v${project.version}&lt;/font&gt;
                     </header>
                     <footer>
                         &lt;font size='-1'&gt;
