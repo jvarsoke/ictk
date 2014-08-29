@@ -299,22 +299,23 @@ public class ChessMove extends Move {
 
       boolean castling = castleQueenside || castleKingside;
       ChessPiece rookForCastling = null;
+      King kingForCastling = null;
       if (castling) {
          orig = board.findKingSquare(board.isBlackMove);
-         dest = findCastlingDestination();
-         King king = (King) orig.piece;
+         kingForCastling = (King) orig.piece;
+         dest = kingForCastling.findCastlingDestination(castleQueenside);
 
          // Find the rook before we move the King (possibly on top of the rook).
-         rookForCastling = king.findMyRook(castleQueenside);
+         rookForCastling = kingForCastling.findMyRook(castleQueenside);
          rookCastleOrig = rookForCastling.getSquare();
 
          // Validate that castling is a legal move.
          if (castleKingside) {
-            if (!king.isCastleableKingside()) {
-               throw new IllegalMoveException(buildExecuteCastleErrorString(king), this);
+            if (!kingForCastling.isCastleableKingside()) {
+               throw new IllegalMoveException(buildExecuteCastleErrorString(kingForCastling), this);
             }
-         } else if (!king.isCastleableQueenside()) {
-            throw new IllegalMoveException(buildExecuteCastleErrorString(king), this);
+         } else if (!kingForCastling.isCastleableQueenside()) {
+            throw new IllegalMoveException(buildExecuteCastleErrorString(kingForCastling), this);
          }
       }
 
@@ -396,7 +397,7 @@ public class ChessMove extends Move {
 
       // Move the rook if we're castling.
       if (castling) {
-         Square rookDest = findRookCastlingDestination();
+         Square rookDest = kingForCastling.findRookCastlingDestination(castleQueenside);
          rookDest.piece = rookForCastling;
          boolean rookMoved = !rookDest.equals(rookCastleOrig);
          boolean kingTookRooksPlace = dest.equals(rookCastleOrig);
@@ -453,28 +454,6 @@ public class ChessMove extends Move {
             + board;
    }
 
-   private Square findRookCastlingDestination() {
-      int offset = castleKingside ? -1 : 1;
-      return board.getSquare(dest.getX() + offset, dest.getY());
-   }
-
-   private Square findCastlingDestination() {
-      if (castleQueenside) {
-         if (board.isBlackMove()) {
-            return board.getSquare('c', '8');
-         }
-
-         return board.getSquare('c', '1');
-      } else if (castleKingside) {
-         if (board.isBlackMove()) {
-            return board.getSquare('g', '8');
-         }
-
-         return board.getSquare('g', '1');
-      }
-      throw new RuntimeException("Not a castling move.");
-   }
-
    /* unexecute() *****************************************************/
    /** undo the this move
     */
@@ -499,9 +478,9 @@ public class ChessMove extends Move {
          dest.piece = null;
       } else 
       {
-         Square rook_dest = findRookCastlingDestination();
+         King kingPiece = (King) dest.piece;
+         Square rook_dest = kingPiece.findRookCastlingDestination(castleQueenside);
          ChessPiece rookPiece = rook_dest.piece;
-         ChessPiece kingPiece = dest.piece;
          orig.piece = kingPiece;
          kingPiece.orig = orig;
          rookCastleOrig.piece = rookPiece;

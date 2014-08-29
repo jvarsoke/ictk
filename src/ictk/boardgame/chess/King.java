@@ -25,8 +25,8 @@
 package ictk.boardgame.chess;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /* King *******************************************************************/
 public class King extends ChessPiece {
@@ -81,8 +81,6 @@ public class King extends ChessPiece {
       Square dest;
       Iterator<Square> perlimMoves;
       List<Square> tmpLegalDests;
-      ChessPiece rook;
-      boolean blocked = false;
 
       tmpLegalDests = legalDests;
       perlimMoves = tmpLegalDests.iterator();
@@ -98,57 +96,103 @@ public class King extends ChessPiece {
       }
 
       // castling//////////
-      // make sure they haven't moved yet
-      // needs to check if anyone is blocking the castle
-      // by checking if squares are occupied between the two pieces
-      // make sure no one is threatening the king or a sq he walks through
-
-      if (moveCount == 0) {
-
-         // Castle Far (Queenside)
-         rook = findMyRook(true);
-         if (rook != null && rook.moveCount == 0) {
-            blocked = false;
-
-            for (byte f = (byte) (rook.orig.file + 1); f <= orig.file && !blocked; f++) {
-               // is someone in the way
-               if (f < orig.file)
-                  blocked = board.getSquare(f, orig.rank).isOccupied();
-
-               // is king walking in an assassin's sights
-               if (!blocked && f >= orig.file - 2)
-                  blocked = board.isThreatened(board.getSquare(f, orig.rank), !isBlack);
-            }
-
-            if (!blocked)
-               addLegalDestNoCheckOfDest(getQueensideCastleSquare());
-         }
-
-         // Castle Near (Kingside)
-         rook = findMyRook(false);
-         if (rook != null && rook.moveCount == 0) {
-            blocked = false;
-
-            // TODO To properly support Chess960, it's needed to check that the
-            // rook destination square is free for castling since castling could
-            // mean that only the rook is moved.
-            // is someone in the way
-            for (byte f = (byte) (rook.orig.file - 1); f >= orig.file && !blocked; f--) {
-               if (f > orig.file)
-                  blocked = board.getSquare(f, orig.rank).isOccupied();
-               // is king walking in an assassin's sights
-               if (!blocked)
-                  blocked = board.isThreatened(board.getSquare(f, orig.rank), !isBlack);
-            }
-
-            if (!blocked)
-               addLegalDestNoCheckOfDest(getKingsideCastleSquare());
-         }
+      // TODO It would be good with an enum for king-side and queen-side castling.
+      if (isCastlingAllowed(true)) {
+         addLegalDestNoCheckOfDest(getQueensideCastleSquare());
+      }
+      if (isCastlingAllowed(false)) {
+         addLegalDestNoCheckOfDest(getKingsideCastleSquare());
       }
 
       return legalDests.size();
    }
 
+   /**
+    * Return true if castling is allowed, false otherwise.
+    * Make sure they haven't moved yet.
+    * Needs to check if anyone is blocking the castle
+    * by checking if squares are occupied between the two pieces.
+    * Make sure no one is threatening the king or a sq he walks through.
+    * @param castleQueenside true if this is queen-side castling, false otherwise.
+    */
+   private boolean isCastlingAllowed(boolean castleQueenside) {
+      if (moveCount != 0) {
+         return false;
+      }
+      
+      
+      Rook rook = findMyRook(castleQueenside);
+      if (rook == null || rook.moveCount > 0) {
+         return false;
+      }
+         
+      boolean castlingNotAllowed = false;
+      Square rookDest = findRookCastlingDestination(castleQueenside);
+      Square rookOrig = rook.getSquare();
+      Square kingDest = findCastlingDestination(castleQueenside);
+      Square kingOrig = orig;
+
+      // The direction variables contain the int that should be added to each
+      // piece's file to move it to its destination.
+      int kingDirection = Integer.signum(kingDest.file - kingOrig.file);
+      int rookDirection = Integer.signum(rookDest.file - rookOrig.file);
+
+      if (!rookDest.equals(rookOrig)) {
+         // Verify that the rook has a free path to its destination.
+         // Need to allow rook to walk past where the king stands.
+         for (byte f = (byte) (rookOrig.file + rookDirection); f != rookDest.file && !castlingNotAllowed; f += rookDirection) {
+            castlingNotAllowed = occupiedByOtherThan(board.getSquare(f, orig.rank), this);
+         }
+         // Verify that the rook destination is also empty.
+         if (!castlingNotAllowed) {
+            castlingNotAllowed = occupiedByOtherThan(board.getSquare(rookDest.file, orig.rank), this);
+         }
+      }
+
+      if (!kingDest.equals(kingOrig)) {
+         // Verify that the king has a free path to its destination.
+         // Need to allow king to walk past where the rook stands.
+         for (byte f = (byte) (kingOrig.file + kingDirection); f != kingDest.file && !castlingNotAllowed; f += kingDirection) {
+            castlingNotAllowed = occupiedByOtherThan(board.getSquare(f, orig.rank), rook);
+
+            // is king walking in an assassin's sights
+            if (!castlingNotAllowed)
+               castlingNotAllowed = board.isThreatened(board.getSquare(f, orig.rank), !isBlack);
+         }
+         // Verify that the king destination is also empty and non-threatened.
+         if (!castlingNotAllowed) {
+            castlingNotAllowed = occupiedByOtherThan(board.getSquare(kingDest.file, orig.rank), rook);
+
+            // is king walking in an assassin's sights
+            if (!castlingNotAllowed)
+               castlingNotAllowed = board.isThreatened(board.getSquare(kingDest.file, orig.rank), !isBlack);
+         }
+      }
+      return !castlingNotAllowed;
+   }
+
+   /**
+    * Returns true if square is occupied by a piece other than 'piece'.
+    */
+   private boolean occupiedByOtherThan(Square square, ChessPiece piece) {
+      return square.isOccupied() && !square.getPiece().equals(piece);
+   }
+
+   Square findRookCastlingDestination(boolean castleQueenside) {
+      int offset = castleQueenside ? 1 : -1;
+      
+      Square kingDest = findCastlingDestination(castleQueenside);
+      return board.getSquare(kingDest.getX() + offset, kingDest.getY());
+   }
+
+   Square findCastlingDestination(boolean castleQueenside) {
+      if (castleQueenside) {
+         return getQueensideCastleSquare();
+      } else {
+         return getKingsideCastleSquare();
+      }
+   }
+   
    /** these functions are used so variants can override them */
    public Square getQueensideCastleSquare () {
       return board.getSquare('c', ((isBlack) ? '8' : '1'));

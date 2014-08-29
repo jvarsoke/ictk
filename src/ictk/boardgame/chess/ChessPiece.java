@@ -211,6 +211,10 @@ public abstract class ChessPiece extends Piece {
     * In chess960 it can be legal to take the place of a like-colored piece when castling.
     */
    protected void addLegalDestNoCheckOfDest (Square dest) {
+      // For chess 960 the king could have the possibility to move to a square
+      // both by moving a single step (without castling) and by castling. Hence
+      // we need to check that we're not adding a duplicate square.
+      if (!legalDests.contains(dest))
         legalDests.add(dest);
    }
 
