@@ -206,6 +206,14 @@ public abstract class ChessPiece extends Piece {
          return valid;
    }
 
+   /**
+    * Same as {@link #addLegalDest(Square)}, but doesn't validate that dest is free from like-colored pieces.
+    * In chess960 it can be legal to take the place of a like-colored piece when castling.
+    */
+   protected void addLegalDestNoCheckOfDest (Square dest) {
+        legalDests.add(dest);
+   }
+
    /* setPinned **********************************************************/
    /**sets the pinnedBy piece and modifies the legal moves for this piece
     * to the Union of lineOfSight and current Legal Moves

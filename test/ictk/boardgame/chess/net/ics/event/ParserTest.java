@@ -24,16 +24,14 @@
 
 package ictk.boardgame.chess.net.ics.event;
 
-import ictk.boardgame.chess.net.ics.*;
 import ictk.util.Log;
 
 import java.util.*;
-import java.util.regex.*;
 import java.io.*;
 
 import junit.framework.*;
 
-public class ParserTest extends TestCase {
+public abstract class ParserTest extends TestCase {
       /** for seeing the native i/o */
    public boolean debug;
    public String[] mesg;
@@ -42,20 +40,23 @@ public class ParserTest extends TestCase {
    String dataDir = "./data";
 
    public ParserTest (String packageName) throws IOException {
-
-      String sysprop = packageName + ".dataDir";
-      filename = this.getClass().getName();
-
-      if (System.getProperty(sysprop) != null)
-         dataDir = System.getProperty(sysprop);
-
-
-      filename = filename.substring(filename.lastIndexOf('.') +1, 
-                                    filename.length()) + ".data";
-      filename = dataDir + "/" + filename;
-      mesg = processFile(new File(filename));
+      mesg = processResource();
    }
 
+   protected BufferedReader getReaderFromResource(String file) {
+      BufferedReader reader;
+      file = "data/" + file;
+      try {
+         System.out.println("class: " + this.getClass());
+         reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(file)));
+      }
+      catch (RuntimeException e) {
+         System.out.println("Failed to load + '" + file + "'.");
+         throw new RuntimeException("Failed to load + '" + file + "'.", e);
+      }
+      return reader;
+   }
+   
    public void setUp () {
    }
 
@@ -64,13 +65,18 @@ public class ParserTest extends TestCase {
    }
 
 
-   public static String[] processFile (File file) throws IOException {
+   private String[] processResource () throws IOException {
       String[] mesg;
-      List list = new LinkedList();
+      List<String> list = new LinkedList<>();
 
       StringBuffer sb = new StringBuffer(80);
       String line = null;
-      BufferedReader in = new BufferedReader(new FileReader(file));
+      
+      filename = this.getClass().getName();
+      filename = filename.substring(filename.lastIndexOf('.') +1, 
+                                    filename.length()) + ".data";
+
+      BufferedReader in = getReaderFromResource(filename);
 
       int lines = 0;
       while ((line = in.readLine()) != null) {
@@ -150,7 +156,7 @@ public class ParserTest extends TestCase {
 		System.out.println("origin[" +i + "]: <<|" + mesg[i] + "|>>");
 		System.out.println("native[" +i + "]: <<|" + nativeStr + "|>>");
 	     }
-	     assertTrue(nativeStr.equals(mesg[i]));
+	     assertEquals(mesg[i], nativeStr);
 	 }
       }
       finally {

@@ -53,8 +53,6 @@ public class King extends ChessPiece {
    /* genLegalDests ******************************************************/
    protected int genLegalDests () {
       super.genLegalDests();
-      Square dest;
-      int dir;
 
          //we generate all the possible moves for a king
          //then later we'll trim out all the which are illegal
@@ -80,85 +78,75 @@ public class King extends ChessPiece {
     *  the attack lines of opposing piece on the board.
     */
    protected int genLegalDestsFinal () {
-      Square      dest;
-      int         dir;
-      Iterator<Square>    perlimMoves;
-      List<Square>        tmpLegalDests;
-      ChessPiece  rook;
-      boolean     blocked = false;
- 
-         tmpLegalDests = legalDests;
-         perlimMoves = tmpLegalDests.iterator();
+      Square dest;
+      Iterator<Square> perlimMoves;
+      List<Square> tmpLegalDests;
+      ChessPiece rook;
+      boolean blocked = false;
 
-         legalDests = new ArrayList<> (8);
+      tmpLegalDests = legalDests;
+      perlimMoves = tmpLegalDests.iterator();
 
-         //make sure the King doesn't move into a kill
-         while (perlimMoves.hasNext()) {
-            dest = perlimMoves.next();
+      legalDests = new ArrayList<>(8);
 
-            if (!board.isThreatened(dest, !isBlack)
-                && !board.isGuarded(dest, !isBlack))
-               addLegalDest(dest);
-         }
+      // make sure the King doesn't move into a kill
+      while (perlimMoves.hasNext()) {
+         dest = perlimMoves.next();
 
-         //castling//////////
-         //make sure they haven't moved yet
-         //needs to check if anyone is blocking the castle
-         //by checking if squares are occupied between the two pieces
-         //make sure no one is threatening the king or a sq he walks through
+         if (!board.isThreatened(dest, !isBlack) && !board.isGuarded(dest, !isBlack))
+            addLegalDest(dest);
+      }
 
-         if (moveCount == 0) {
+      // castling//////////
+      // make sure they haven't moved yet
+      // needs to check if anyone is blocking the castle
+      // by checking if squares are occupied between the two pieces
+      // make sure no one is threatening the king or a sq he walks through
 
-            //Castle Far (Queenside)
-            rook = board.getSquare(1, orig.rank).piece;
-            if (rook != null
-                && rook.moveCount == 0) {
-                blocked = false;
+      if (moveCount == 0) {
 
-                for (byte f=(byte) (rook.orig.file +1); 
-		     f <= orig.file && !blocked; f++) {
-		  
-		   //is someone in the way
-                   if (f < orig.file) 
-                      blocked = board.getSquare(f, orig.rank)
-                                   .isOccupied(); 
+         // Castle Far (Queenside)
+         rook = findMyRook(true);
+         if (rook != null && rook.moveCount == 0) {
+            blocked = false;
 
-                   //is king walking in an assassin's sights
-                   if (!blocked && f >= orig.file -2) 
-                      blocked = board.isThreatened(
-                                   board.getSquare(f, orig.rank)
-                                   , !isBlack);
-                }
+            for (byte f = (byte) (rook.orig.file + 1); f <= orig.file && !blocked; f++) {
+               // is someone in the way
+               if (f < orig.file)
+                  blocked = board.getSquare(f, orig.rank).isOccupied();
 
-                if (!blocked)
-                   addLegalDest(getQueensideCastleSquare());
+               // is king walking in an assassin's sights
+               if (!blocked && f >= orig.file - 2)
+                  blocked = board.isThreatened(board.getSquare(f, orig.rank), !isBlack);
             }
 
-            //Castle Near (Kingside)
-            rook = board.getSquare(board.getMaxFile(), orig.rank).piece;
-            if (rook != null
-                && rook.moveCount == 0) {
-                blocked = false;
-
-		   //is someone in the way
-                for (byte f=(byte)(rook.orig.file-1); 
-		     f >= orig.file && !blocked; f--) {
-                   if (f > orig.file) 
-                      blocked = board.getSquare(f, orig.rank)
-                                   .isOccupied(); 
-                   //is king walking in an assassin's sights
-                   if (!blocked) 
-                      blocked = board.isThreatened(
-                                   board.getSquare(f, orig.rank)
-                                   , !isBlack);
-                }
-
-                if (!blocked)
-                   addLegalDest(getKingsideCastleSquare());
-            }
+            if (!blocked)
+               addLegalDestNoCheckOfDest(getQueensideCastleSquare());
          }
 
-         return legalDests.size();
+         // Castle Near (Kingside)
+         rook = findMyRook(false);
+         if (rook != null && rook.moveCount == 0) {
+            blocked = false;
+
+            // TODO To properly support Chess960, it's needed to check that the
+            // rook destination square is free for castling since castling could
+            // mean that only the rook is moved.
+            // is someone in the way
+            for (byte f = (byte) (rook.orig.file - 1); f >= orig.file && !blocked; f--) {
+               if (f > orig.file)
+                  blocked = board.getSquare(f, orig.rank).isOccupied();
+               // is king walking in an assassin's sights
+               if (!blocked)
+                  blocked = board.isThreatened(board.getSquare(f, orig.rank), !isBlack);
+            }
+
+            if (!blocked)
+               addLegalDestNoCheckOfDest(getKingsideCastleSquare());
+         }
+      }
+
+      return legalDests.size();
    }
 
    /** these functions are used so variants can override them */

@@ -227,8 +227,8 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 	       if (!compact && f != ((flipped) ? 1 : ChessBoard.MAX_FILE))
 	          out.print(" ");
 	    }
-	    out.println();
-	    out.println();
+	    out.print("\n");
+	    out.print("\n");
 	 }
         
 	 //setup bottom coordinate line
@@ -327,9 +327,9 @@ public class TxChessBoardDisplay implements CLIChessBoardDisplay,
 	    else
 	       f=1;
 
-            out.println();
+            out.print("\n");
          }
          if (bottom) 
-	    out.println(last_line.toString());
+	    out.print(last_line.toString() + "\n");
    }
 }

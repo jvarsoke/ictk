@@ -1,0 +1,18 @@
+[Result "1-0"]
+[SetUp "1"]
+[FEN "qbrnbnkr/pppppppp/8/8/8/8/PPPPPPPP/QBRNBNKR w KQkq - 0 1"]
+
+1. e4 c6 2. d4 Bf4 3. Bd2 Qb8 4. g3 Bxd2 5. Nxd2 Nfe6 6. b3 Nf4 7. gxf4
+Qxf4 8. Qc3 Qg4+ 9. Qg3 Qe2 10. Qe3 Qb5 11. c4 Qa5 12. Nc3 c5 13. d5 d6 14.
+O-O-O f6 15. Rdg1 Bg6 16. h4 Qa3+ 17. Kd1 Bh5+ 18. Kc2 Nf7 19. Qh3 O-O 20.
+Qf5 g6 21. Qxh5 Ng5 22. Qh6 Nf7 23. Rxg6+ hxg6 24. Qxg6+ Kh8 25. Qh5+ Kg7
+26. Rg1+ Ng5 27. hxg5 fxg5 28. Rxg5+ Kf6 29. Qg6# 1-0
+
+[Result "1-0"]
+[SetUp "1"]
+[FEN "qbrnbnkr/pppppppp/8/8/8/8/PPPPPPPP/QBRNBNKR w KQkq - 0 1"]
+
+1. e4 c6 2. d4 Bf4 3. Bd2 Qb8 4. g3 Bxd2 5. Nxd2 f6 6. Ne3 Bg6 7. c3 e5 8.
+dxe5 fxe5 9. Bc2 Nf7 10. Kg2 Ne6 11. h4 Nh6 12. Nf5 O-O-O 13. Nc4 Rdf8 14.
+Nfd6+ Kc7 15. h5 Ng4 16. f3 Rxf3 17. Kxf3 1-0
+
