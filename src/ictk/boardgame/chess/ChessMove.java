@@ -871,20 +871,20 @@ public class ChessMove extends Move {
 	 }
       }
 
-      String colourToMove = "";
+      String colorToMove = "";
       if (piece != null) {
           if (piece.isBlack) {
-        	  colourToMove = "black";
+        	  colorToMove = "black";
           }
           else {
-        	  colourToMove = "white";
+        	  colorToMove = "white";
           }
           if (!verified) {
-        	  colourToMove += " (unverified)";
+        	  colorToMove += " (unverified)";
           }
-          colourToMove = " (" + colourToMove + ")";
+          colorToMove = " (" + colorToMove + ")";
       }
-      return s + colourToMove;
+      return s + colorToMove;
    }
 
    /* equals ************************************************************/
