@@ -322,7 +322,7 @@ public class ChessMove extends Move {
       piece = orig.piece;
 
       if (piece == null)
-         throw new IllegalMoveException("No piece to move: " + this + "\n" + board, this);
+         throw new IllegalMoveException("No piece to move.", this);
 
       if (Log.debug) {
          Log.debug(DEBUG, "executing move: " + this);
@@ -339,7 +339,7 @@ public class ChessMove extends Move {
             Log.debug2(DEBUG, "piece is: " + piece.dump());
             Log.debug2(DEBUG, "dest is: " + dest);
          }
-         throw new IllegalMoveException("Illegal move " + this + "\n" + board, this);
+         throw new IllegalMoveException("Illegal move " + this, this);
       }
 
       if (!castling) {
@@ -450,8 +450,7 @@ public class ChessMove extends Move {
 
    private String buildExecuteCastleErrorString(King king) {
       String pieceThatMovedStr = king.moveCount == 0 ? "rook has moved." : "king has moved.";
-      return "Trying to castle king side when " + pieceThatMovedStr + ". Rook square: " + rookCastleOrig + ".\n" + this + "\n"
-            + board;
+      return "Trying to castle king side when " + pieceThatMovedStr + ". Rook square: " + rookCastleOrig + ".";
    }
 
    /* unexecute() *****************************************************/
