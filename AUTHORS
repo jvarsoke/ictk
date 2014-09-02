@@ -14,6 +14,9 @@ CONTRIBUTORS:
       Timeseal from the Jin library
       FICS: AlexTheGreat
 
+   Björn Mårtensson <bjorn [at] bjornmartensson.com>
+      Chess960 Support
+
 PATCH PEEPS:
 ------------
    Jerome Zago
