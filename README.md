@@ -16,6 +16,7 @@ into java POJOs for easy use by a client.
   and FEN)
 * Forsyth-Edwards Notation (FEN) read/write support
 * True MVC structure with board displays driven by game model events
+* Native Chess960 support
 * Command-line Board display
 * Well [documented](http://jvarsoke.github.io/docs/). Sample code also provided.
 * FICS support [(freechess.org)](http://www.freechess.org)
@@ -54,11 +55,7 @@ It provides for reading and writing standard game notations as well.
   you would like to use JDK 1.4 - 1.6  the ictk v0.2 tag should work.
   Otherwise get the jar from [sf.net](http://ictk.sourceforge.net).
 
-* [Ant 1.5](http://ant.apache.org) or better - Only required to generate the
-  source through XSLT and compile the code.
-
-* [JUnit 3.8.0](http://junit.org) or better - Only necessary if you wish 
-   to run the regression testing suite.
+* [Maven 3.0.5](http://maven.apache.org) or better
 
 ## INSTALLATION
 
@@ -67,7 +64,7 @@ The following commands will retrieve the latest source, generate the source code
 
     $ git clone https://github.com/jvarsoke/ictk
     $ cd ictk
-    $ ant build
+    $ mvn test
 
 ### From Binary (Jar)
 Download the release file jar and add it to your classpath.
@@ -80,26 +77,6 @@ From the command line you can turn the debugging info on by using the
 `java -D options` to set a system property.  For example:
 
     $ java -DDebug.History=1 Foo.java
-
-If you really need a little more speed and you don't ever want to 
-see debugging info (if you really think ictk is that stable) you can
-change the `itck.util.Log.debug` variable to false.  This will make 
-debugging impossible and eliminate all the conditional checks for
-debugging.  Then you need to compile the optimized source (getting rid
-of java internal debugging info).  To do this:
-
-    $ ant clean
-    $ ant optimize
-
-Or if you wish to create an optimized jar file:
-
-    $ ant optimized-jar
-
-##TESTING
-   If you wish to run the test suite, perhaps to see if it's your code that's
-choking on a PGN file or ictk code, you can do so through ant and JUnit:
-
-    $ ant test
 
 ##FEEDBACK
    If you find this library useful, drop me an email just to let me know what
