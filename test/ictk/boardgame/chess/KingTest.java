@@ -27,15 +27,11 @@ package ictk.boardgame.chess;
 import junit.framework.*;
 import java.util.List;
 
-import ictk.util.Log;
-import ictk.boardgame.*;
-import ictk.boardgame.io.*;
-
 public class KingTest extends TestCase {
    boolean DEBUG = false;
    ChessBoard board;
    ChessMove   move;
-   List list;
+   List<Square> list;
    King king;
 
    public KingTest (String name) {
@@ -461,5 +457,100 @@ public class KingTest extends TestCase {
       board.setEnPassantFile('b');
       Pawn pawn = (Pawn) board.getSquare(3,5).getOccupant();
       assertTrue(pawn.isLegalDest(board.getSquare(2,6)));
+   }
+   
+   //////////////////////////////////////////////////////////////////////
+   public void testChess960CastleRookBlocked () {
+      //Log.addMask(ChessBoard.DEBUG);
+      char[][] position={{' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ','.'},
+                         {' ',' ',' ','.',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {'N','P',' ',' ',' ',' ',' ',' '},
+                         {'K','P',' ',' ',' ',' ',' ','k'},
+                         {'R','P',' ',' ',' ',' ',' ','.'}};
+
+      board.setPosition(position);
+      king = (King) board.getSquare(7,1).getOccupant();
+      king.setCastleableKingside(true);
+
+      list = king.getLegalDests();
+      assertEquals(0, list.size());
+   }
+   
+   public void testChess960CastleKingWalkingThroughRook () {
+      //Log.addMask(ChessBoard.DEBUG);
+      char[][] position={{' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ',' '},
+                         {' ',' ',' ',' ',' ',' ',' ','.'},
+                         {' ',' ',' ','.',' ',' ',' ',' '},
+                         {'R',' ',' ',' ',' ',' ',' ',' '},
+                         {'.','P',' ',' ',' ',' ',' ',' '},
+                         {'K','P',' ',' ',' ',' ',' ','k'},
+                         {'R','P',' ',' ',' ',' ',' ','.'}};
+
+      board.setPosition(position);
+      king = (King) board.getSquare(7,1).getOccupant();
+      king.setCastleableQueenside(true);
+      king.setCastleableKingside(true);
+
+      list = king.getLegalDests();
+      assertEquals("Unexpected dests: " + list, 3, list.size());
+      
+      list.remove(board.getSquare('f','1'));
+      list.remove(board.getSquare('c','1'));
+      list.remove(board.getSquare('g','1'));
+      assertEquals(0, list.size());
+   }
+   
+   public void testChess960CastleRookWalkingThroughKing () {
+      //Log.addMask(ChessBoard.DEBUG);
+      char[][] position={{'R','P',' ',' ',' ',' ',' ',' '},
+                         {'.','P',' ',' ',' ',' ',' ',' '},
+                         {'K','P',' ',' ',' ',' ',' ','.'},
+                         {' ','P',' ','.',' ',' ',' ',' '},
+                         {'R',' ',' ',' ',' ',' ',' ',' '},
+                         {'.','.',' ',' ',' ',' ',' ',' '},
+                         {'.','.',' ',' ',' ',' ',' ','k'},
+                         {'.','.',' ',' ',' ',' ',' ','.'}};
+
+      board.setPosition(position);
+      king = (King) board.getSquare(3,1).getOccupant();
+      king.setCastleableKingside(true);
+      king.setCastleableQueenside(true);
+
+      list = king.getLegalDests();
+      assertEquals("Unexpected dests: " + list, 4, list.size());
+      
+      list.remove(board.getSquare('b','1'));
+      list.remove(board.getSquare('c','1'));
+      list.remove(board.getSquare('d','1'));
+      list.remove(board.getSquare('g','1'));
+      assertEquals(0, list.size());
+   }
+   
+   public void testChess960CastleKingTwoWaysToC1 () {
+      //Log.addMask(ChessBoard.DEBUG);
+      char[][] position={{'R','P',' ',' ',' ',' ',' ',' '},
+                         {'K','P',' ',' ',' ',' ',' ',' '},
+                         {'.','P',' ',' ',' ',' ',' ','.'},
+                         {' ','.',' ','.',' ',' ',' ',' '},
+                         {'R',' ',' ',' ',' ',' ',' ',' '},
+                         {'.','.',' ',' ',' ',' ',' ',' '},
+                         {'.','.',' ',' ',' ',' ',' ','k'},
+                         {'.','.',' ',' ',' ',' ',' ','.'}};
+
+      board.setPosition(position);
+      king = (King) board.getSquare(2,1).getOccupant();
+      king.setCastleableKingside(true);
+      king.setCastleableQueenside(true);
+
+      list = king.getLegalDests();
+      assertEquals("Unexpected dests: " + list, 2, list.size());
+      
+      list.remove(board.getSquare('c','1'));
+      list.remove(board.getSquare('g','1'));
+      assertEquals(0, list.size());
    }
 }

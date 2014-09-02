@@ -39,8 +39,8 @@ public class TxChessBoardDisplayTest extends TestCase {
    ChessBoard          board;
    ChessMove           move;
    StringWriter        swriter;
-   String              str,
-                       str2;
+   String              actual,
+                       expected;
 
    public TxChessBoardDisplayTest (String name) {
       super(name);
@@ -55,8 +55,8 @@ public class TxChessBoardDisplayTest extends TestCase {
       board = null;
       move = null;
       swriter = null;
-      str = null;
-      str2 = null;
+      actual = null;
+      expected = null;
       display = null;
       Log.removeMask(ChessBoard.DEBUG);
    }
@@ -65,7 +65,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testDefaultInitialPosition () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "8   r n b q k b n r\n"
+	 expected = "8   r n b q k b n r\n"
 	      + "7   p p p p p p p p\n"
 	      + "6   #   #   #   #  \n"
 	      + "5     #   #   #   #\n"
@@ -79,8 +79,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
 
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -91,7 +91,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testDefaultInitialPositionFlipped () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "1   R N B K Q B N R\n"
+	 expected = "1   R N B K Q B N R\n"
 	      + "2   P P P P P P P P\n"
 	      + "3   #   #   #   #  \n"
 	      + "4     #   #   #   #\n"
@@ -106,8 +106,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setWhiteOnBottom(false);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -118,7 +118,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testNoCoordinates () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "r n b q k b n r\n"
+	 expected = "r n b q k b n r\n"
 	      + "p p p p p p p p\n"
 	      + "#   #   #   #  \n"
 	      + "  #   #   #   #\n"
@@ -130,8 +130,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setVisibleCoordinates(display.NO_COORDINATES);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertTrue (actual.equals(expected));
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -142,7 +142,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testTopCoordinates () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "A B C D E F G H\n"
+	 expected = "A B C D E F G H\n"
 	      + "\n"
 	      + "r n b q k b n r\n"
 	      + "p p p p p p p p\n"
@@ -156,8 +156,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setVisibleCoordinates(display.TOP_COORDINATES);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -168,7 +168,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testRightCoordinates () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "r n b q k b n r  8\n"
+	 expected = "r n b q k b n r  8\n"
 	      + "p p p p p p p p  7\n"
 	      + "#   #   #   #    6\n"
 	      + "  #   #   #   #  5\n"
@@ -180,8 +180,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setVisibleCoordinates(display.RIGHT_COORDINATES);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertTrue (actual.equals(expected));
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -192,7 +192,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testBottomCoordinates () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "r n b q k b n r\n"
+	 expected = "r n b q k b n r\n"
 	      + "p p p p p p p p\n"
 	      + "#   #   #   #  \n"
 	      + "  #   #   #   #\n"
@@ -206,8 +206,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setVisibleCoordinates(display.BOTTOM_COORDINATES);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -218,7 +218,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testLeftCoordinates () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "8  r n b q k b n r\n"
+	 expected = "8  r n b q k b n r\n"
 	      + "7  p p p p p p p p\n"
 	      + "6  #   #   #   #  \n"
 	      + "5    #   #   #   #\n"
@@ -230,8 +230,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setVisibleCoordinates(display.LEFT_COORDINATES);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertTrue (actual.equals(expected));
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -242,7 +242,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testAllCoordinates () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 =
+	 expected =
 	        "    A B C D E F G H\n"
 	      + "\n"
 	      + "8   r n b q k b n r   8\n"
@@ -263,8 +263,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 				       | display.BOTTOM_COORDINATES
 				       | display.LEFT_COORDINATES);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -275,7 +275,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testCompact () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "8 rnbqkbnr\n"
+	 expected = "8 rnbqkbnr\n"
 	      + "7 pppppppp\n"
 	      + "6 # # # # \n"
 	      + "5  # # # #\n"
@@ -289,8 +289,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setCompact(true);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -300,7 +300,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testCompactAllCoordinates () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 =
+	 expected =
 	        "  ABCDEFGH\n"
 	      + "\n"
 	      + "8 rnbqkbnr 8\n"
@@ -321,8 +321,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 				       | display.LEFT_COORDINATES);
          display.setCompact(true);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -333,7 +333,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testLowerCaseCoords () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "8   r n b q k b n r\n"
+	 expected = "8   r n b q k b n r\n"
 	      + "7   p p p p p p p p\n"
 	      + "6   #   #   #   #  \n"
 	      + "5     #   #   #   #\n"
@@ -348,8 +348,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setLowerCaseCoordinates(true);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);
@@ -360,7 +360,7 @@ public class TxChessBoardDisplayTest extends TestCase {
    public void testInverse () {
       //Log.addMask(ChessBoard.DEBUG);
       try {
-	 str2 = "8   r n b q k b n r\n"
+	 expected = "8   r n b q k b n r\n"
 	      + "7   p p p p p p p p\n"
 	      + "6     #   #   #   #\n"
 	      + "5   #   #   #   #  \n"
@@ -375,8 +375,8 @@ public class TxChessBoardDisplayTest extends TestCase {
 
          display.setInverse(true);
 	 display.print();
-	 str = swriter.toString();
-	 assertTrue (str.equals(str2));
+	 actual = swriter.toString();
+	 assertEquals(expected, actual);
       }
       finally {
          Log.removeMask(ChessBoard.DEBUG);

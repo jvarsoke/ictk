@@ -66,5 +66,7 @@ pat*
 */ictk/boardgame/chess/net/ics/fics/event/FICSTellParser*.java
 test/ictk/boardgame/chess/net/ics/fics/event/FICSBoardUpdateStyle12ParserTest.java
 test/ictk/boardgame/chess/net/ics/fics/event/FICSMoveListParserTest.java
-
-
+/bin
+/.settings
+/.classpath
+/.project

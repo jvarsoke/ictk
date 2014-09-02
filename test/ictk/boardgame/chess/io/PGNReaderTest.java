@@ -24,7 +24,6 @@
 
 package ictk.boardgame.chess.io;
 
-import junit.framework.*;
 import ictk.util.Log;
 import ictk.boardgame.*;
 import ictk.boardgame.io.*;
@@ -34,29 +33,25 @@ import java.io.*;
 import java.util.List;
 import java.util.LinkedList;
 
-public class PGNReaderTest extends TestCase {
-   public String dataDir = "./";
+public class PGNReaderTest extends AbstractPGNTest {
    String pgn_nonvariation = "test_nonvariation.pgn",
           pgn_variation    = "test_variation.pgn",
           pgn_annotation   = "test_annotation.pgn",
-	  pgn_bad          = "test_bad.pgn",
-	  pgn_debug        = "test_debug.pgn";
+          pgn_bad          = "test_bad.pgn",
+          pgn_debug        = "test_debug.pgn",
+          pgn_chess960     = "test_chess960.pgn";
    SAN         san;
    ChessBoard  board;
    ChessResult res;
    ChessMove   move;
    ChessReader in;
    Game        game;
-   List        games;
+   List<ChessGame> games;
    ChessAnnotation anno;
 
    //constructor
    public PGNReaderTest (String name) {
       super(name);
-
-      //so we can call the test from other directories.
-      if (System.getProperty("ictk.boardgame.chess.io.dataDir") != null)
-         dataDir = System.getProperty("ictk.boardgame.chess.io.dataDir");
    }
 
    public void setUp () {
@@ -72,7 +67,7 @@ public class PGNReaderTest extends TestCase {
       in = null;
       games = null;
       anno = null;
-      Log.removeMask(san.DEBUG);
+      Log.removeMask(SAN.DEBUG);
       Log.removeMask(ChessBoard.DEBUG);
    }
 
@@ -612,6 +607,30 @@ public class PGNReaderTest extends TestCase {
 	 assertTrue(anno.getNAG(0) == 145 );
    }
 
+   public void testChess960()
+         throws FileNotFoundException,
+                IOException,
+                InvalidGameFormatException,
+                IllegalMoveException,
+                AmbiguousMoveException,
+                Exception {
+     games = loadGames(dataDir + pgn_chess960, false, 15);
+
+     assertTrue(games.size() > 0);
+
+     // Makes sure that all the logic around making a move works for chess 960.
+     for (ChessGame game : games) {
+        History history = game.getHistory();
+        while (history.hasNext()) {
+           Move move = (ChessMove) history.next();
+           history.prev();
+           Move move2 = history.next();
+           assertEquals(move, move2);
+        }
+     }
+   }
+
+   
    //BAD PGNs SECTION/////////////////////////////////////////////////////////
 
    ///////////////////////////////////////////////////////////////////////////
@@ -621,11 +640,8 @@ public class PGNReaderTest extends TestCase {
 		 Exception {
       //Log.addMask(SAN.DEBUG);
       //Log.addMask(PGNReader.DEBUG);
-      int count = 0;
 
-	 in = new PGNReader(
-		 new FileReader(
-		    new File(dataDir + pgn_bad)));
+      in = new PGNReader(getReaderFromResource(dataDir + pgn_bad));
 
          try {
 	    game = in.readGame();
@@ -650,65 +666,54 @@ public class PGNReaderTest extends TestCase {
    //Helper///////////////////////////////////////////////////////////////////
 
    /** loads the games into a list so aspects of the games can be tested */
-   protected static List loadGames (String file, boolean debug, int gameToDebug)
-          throws FileNotFoundException,
-	  	 IOException, 
-	         InvalidGameFormatException,
-		 IllegalMoveException,
-		 AmbiguousMoveException,
-		 Exception {
+   protected static List<ChessGame> loadGames(String file, boolean debug, int gameToDebug) throws FileNotFoundException,
+         IOException, InvalidGameFormatException, IllegalMoveException, AmbiguousMoveException, Exception {
       Game game = null;
-      PGNReader in = null;
-      List list = new LinkedList();
+      List<ChessGame> list = new LinkedList<>();
 
       if (debug && gameToDebug < 0) {
-        Log.addMask(SAN.DEBUG);
-        Log.addMask(PGNReader.DEBUG);
+         Log.addMask(SAN.DEBUG);
+         Log.addMask(PGNReader.DEBUG);
       }
 
-      try {
-	 int count = 0;
+      try (PGNReader in = new PGNReader(getReaderFromResource(file))) {
+         int count = 0;
 
-	    Log.debug(PGNReader.DEBUG, "Reading file: " + file);
-	    in = new PGNReader(
-		    new FileReader(
-		       new File(file)));
+         Log.debug(PGNReader.DEBUG, "Reading file: " + file);
 
-	    //turn on single game debugging for next read
-	    if (debug && gameToDebug == count) {
-	       System.out.println("turing logs on");
-	       Log.addMask(SAN.DEBUG);
-	       Log.addMask(PGNReader.DEBUG);
-	    }
+         // turn on single game debugging for next read
+         if (debug && gameToDebug == count) {
+            System.out.println("turing logs on");
+            Log.addMask(SAN.DEBUG);
+            Log.addMask(PGNReader.DEBUG);
+         }
 
-	    while ((game = in.readGame()) != null) {
-	       list.add(game);
+         while ((game = in.readGame()) != null) {
+            list.add((ChessGame) game);
 
-               //turn off single game debugging
-	       if (debug && gameToDebug == count) {
-		  Log.removeMask(SAN.DEBUG);
-		  Log.removeMask(PGNReader.DEBUG);
-	       }
+            // turn off single game debugging
+            if (debug && gameToDebug == count) {
+               Log.removeMask(SAN.DEBUG);
+               Log.removeMask(PGNReader.DEBUG);
+            }
 
-	       count++;
+            count++;
 
-               //turn on single game debugging for next read
-	       if (debug && gameToDebug == count) {
-	          System.out.println("turing logs on");
-		  Log.addMask(SAN.DEBUG);
-		  Log.addMask(PGNReader.DEBUG);
-	       }
-	       game = null;
-	    }
-      }
-      catch (Exception e) {
+            // turn on single game debugging for next read
+            if (debug && gameToDebug == count) {
+               System.out.println("turing logs on");
+               Log.addMask(SAN.DEBUG);
+               Log.addMask(PGNReader.DEBUG);
+            }
+            game = null;
+         }
+      } catch (Exception e) {
          throw e;
-      }
-      finally {
-	 if (debug) {
-	    Log.removeMask(SAN.DEBUG);
-	    Log.removeMask(PGNReader.DEBUG);
-	 }
+      } finally {
+         if (debug) {
+            Log.removeMask(SAN.DEBUG);
+            Log.removeMask(PGNReader.DEBUG);
+         }
       }
       return list;
    }
