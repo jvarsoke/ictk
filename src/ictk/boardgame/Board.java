@@ -66,7 +66,7 @@ public interface Board {
    /** returns the number of legal moves possible on the current board.
     */
    public int    getLegalMoveCount ();
-   public boolean isLegalMove (Move m);
+   public void verifyIsLegalMove (Move m) throws OutOfTurnException, IllegalMoveException;
 
    //game state////////////////////////////////////////////////////////////
    public int    getPlayerToMove();

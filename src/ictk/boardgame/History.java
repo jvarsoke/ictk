@@ -652,11 +652,17 @@ public class History {
    /** deletes a IllegalMove that was added to the history list in an
     *  add() attempt.
     */
-   protected void _delBadAdd (Move gonner) {
-      if (currMove != null)  //tried to add a Nth move (where not 1)
-	 currMove.getContinuationList().remove(gonner);
-      else 
-	 head.remove(gonner);
+   private void _delBadAdd (Move gonner) {
+      // Handle exceptions so that the "original" exception is not blown away.
+      try {
+         if (currMove != null)  //tried to add a Nth move (where not 1)
+            currMove.getContinuationList().remove(gonner);
+         else 
+            head.remove(gonner);
+      }
+      catch (RuntimeException e) {
+         // Probably no need to even log this. We're already throwing an exception that something went wrong.
+      }
    }
 
    /* size ***************************************************************/

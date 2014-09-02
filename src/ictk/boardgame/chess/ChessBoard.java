@@ -29,7 +29,6 @@ import ictk.boardgame.*;
 import ictk.boardgame.chess.io.SAN;
 import ictk.boardgame.chess.io.FEN;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -330,22 +329,23 @@ public class ChessBoard implements Board {
 
    }
 
-   /* isLegalMove ***********************************************************/
+   /* verifyIsLegalMove ***********************************************************/
    /** Checks to see if the move is legal on the current board.  This will not
     *  affect the History of this game in any way.
-    *
-    *  @return false if the move is null
     */
-   public boolean isLegalMove (Move m) {
-      if (m == null) return false;
-      try {
-         ((ChessMove)m).execute();
-	 ((ChessMove)m).unexecute();
+   @Override
+   public void verifyIsLegalMove(Move m) throws OutOfTurnException, IllegalMoveException {
+      if (m == null)
+         throw new IllegalArgumentException("Passing null move.");
+      String before = m.getBoard().toString();
+      ((ChessMove) m).execute();
+      String afterExecute = m.getBoard().toString();
+      ((ChessMove) m).unexecute();
+      String afterUnexecute = m.getBoard().toString();
+      if (!before.equals(afterUnexecute)) {
+         throw new RuntimeException("Unexecute didn't work as expected.\nMove: " + m + "\nBefore:\n" + before
+               + "\nAfter execute:\n" + afterExecute + "\nAfter un-execute:\n" + afterUnexecute);
       }
-      catch (Exception e) {
-         return false;
-      }
-      return true;
    }
 
    //Assessment/////////////////////////////////////////////////////////////
@@ -639,7 +639,6 @@ public class ChessBoard implements Board {
            orig_r = (byte) rank;
 
       List<ChessPiece> movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
-      List<Square> dests = null;
       List<ChessPiece> dupes = new ArrayList<>(1);
       ChessPiece   piece = null;
       ChessPiece   mover = null;  //piece to move
@@ -1617,5 +1616,17 @@ public class ChessBoard implements Board {
         .append(dumpOpposingMoves());
 
       return sb.toString();
+   }
+   
+   public Square findKingSquare(boolean black) {
+      for (int y = 1; y <= 8; y++) {
+         for (int x = 1; x <= 8; x++) {
+            Square s = getSquare(x, y);
+            if ((s.piece instanceof King) && (s.piece.isBlack() == black)) {
+               return s;
+            }
+         }
+      }
+      throw new RuntimeException("King not found.");
    }
 }

@@ -362,7 +362,7 @@ public class ContinuationArrayList implements ContinuationList {
          if (branches != null && sizeOfVariations() > 0) {
 	    for (int i = 1; i < branches.length; i++) {
 	       if (branches[i] != null) {
-		  //must rewind first to not but board in bad state
+		  //must rewind first to not put board in bad state
 		  if (branches[i].isExecuted())
 		     departureMove.getHistory().goTo(departureMove);
 

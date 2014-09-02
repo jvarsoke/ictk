@@ -27,7 +27,6 @@ package ictk.boardgame.chess;
 import ictk.util.Log;
 
 import ictk.boardgame.*;
-import ictk.boardgame.io.Annotation;
 
 
 /* ChessMove ****************************************************************/
@@ -99,6 +98,12 @@ public class ChessMove extends Move {
    protected Square orig,
       /** the destination square */
           dest;         
+   /**
+    * The original square of the rook if a castling was performed.
+    * This is needed to support Chess960 when reverting a move, since the rook starting
+    * position is not always the same.
+    */
+   private Square rookCastleOrig;
 
       /** the piece making the move */
    protected ChessPiece piece,         
@@ -147,8 +152,7 @@ public class ChessMove extends Move {
 	       "illegal parameter sent to ChessMove Castle Constructor;"
 	       + " check docs");
       }
-      if (!board.isLegalMove(this))
-         throw new IllegalMoveException();
+      board.verifyIsLegalMove(this);
    }
 
    /** international coordinate based constructor
@@ -184,8 +188,7 @@ public class ChessMove extends Move {
              && (promotion.isKing() || promotion.isPawn()))
          throw new IllegalMoveException("Can't promote a pawn to King or Pawn");
 
-      if (!board.isLegalMove(this))
-         throw new IllegalMoveException();
+      board.verifyIsLegalMove(this);
    }
 
    /** This constructor take Square objects.  The Square objects
@@ -223,8 +226,7 @@ public class ChessMove extends Move {
              && (promotion.isKing() || promotion.isPawn()))
          throw new IllegalMoveException("Can't promote a pawn to King or Pawn");
 
-      if (!board.isLegalMove(this))
-         throw new IllegalMoveException();
+      board.verifyIsLegalMove(this);
    }
 
 
@@ -279,37 +281,6 @@ public class ChessMove extends Move {
 	 //coord = null;
    }
 
-   /* locateCastlingSquares ***********************************************/
-   /** locates the castling squares for castling moves.
-    */
-   protected void locateCastlingSquares () {
-   //FIXME: this needs to be FischerRandom friendly
-      
-      if (castleQueenside) {
-         if (board.isBlackMove()) {
-	    orig = board.getSquare('e', '8');
-	    dest = board.getSquare('c', '8');
-	 }
-	 else {
-	    orig = board.getSquare('e', '1');
-	    dest = board.getSquare('c', '1');
-	 }
-      }
-      else if (castleKingside) {
-         if (board.isBlackMove()) {
-	    orig = board.getSquare('e', '8');
-	    dest = board.getSquare('g', '8');
-	 }
-	 else {
-	    orig = board.getSquare('e', '1');
-	    dest = board.getSquare('g', '1');
-	 }
-      }
-      else {
-         assert false : "locateCastlingSquares() called for non-castle move";
-      }
-   }
-   
    /* execute **********************************************************/
    /** affects the change on the board.
     *  special handling of enpassant and castling.
@@ -320,42 +291,63 @@ public class ChessMove extends Move {
           throws IllegalMoveException, 
 	         OutOfTurnException {
 
-         //if the move isn't verified then we need to locate
-	 //the origin and destination on the board
-	 //locateSquares();
+      // if the move isn't verified then we need to locate
+      // the origin and destination on the board
+      // locateSquares();
 
-	 prevEnPassantFile = board.enpassantFile;
+      prevEnPassantFile = board.enpassantFile;
 
-	 if (castleQueenside || castleKingside)
-	    locateCastlingSquares();
+      boolean castling = castleQueenside || castleKingside;
+      ChessPiece rookForCastling = null;
+      King kingForCastling = null;
+      if (castling) {
+         orig = board.findKingSquare(board.isBlackMove);
+         kingForCastling = (King) orig.piece;
+         dest = kingForCastling.findCastlingDestination(castleQueenside);
 
-         piece = orig.piece;
-	 
-	 if (Log.debug) {
-	    Log.debug(DEBUG, "executing move: " + this);
-	    Log.debug2(DEBUG, piece.dump());
-	    Log.debug2(DEBUG, board);
-	 }
+         // Find the rook before we move the King (possibly on top of the rook).
+         rookForCastling = kingForCastling.findMyRook(castleQueenside);
+         rookCastleOrig = rookForCastling.getSquare();
 
-         if (piece == null)
-            throw new IllegalMoveException ("No piece to move.", this);
+         // Validate that castling is a legal move.
+         if (castleKingside) {
+            if (!kingForCastling.isCastleableKingside()) {
+               throw new IllegalMoveException(buildExecuteCastleErrorString(kingForCastling), this);
+            }
+         } else if (!kingForCastling.isCastleableQueenside()) {
+            throw new IllegalMoveException(buildExecuteCastleErrorString(kingForCastling), this);
+         }
+      }
 
-	 if (piece.isBlack() != board.isBlackMove)
-	    throw new OutOfTurnException (
-	        "It is " + ((board.isBlackMove) 
-	           ? "Black" : "White") + "'s move");
+      piece = orig.piece;
 
-         if (!verified && !piece.isLegalDest(dest)) {
-	    if (Log.debug) {
-	       Log.debug(DEBUG, "tried to execute move with illegal destination");
-	       Log.debug2(DEBUG, "piece is: " + piece.dump());
-	       Log.debug2(DEBUG, "dest is: " + dest);
-	    }
-	    throw new IllegalMoveException("Illegal move " + this , this);
-	 }
+      if (piece == null)
+         throw new IllegalMoveException("No piece to move.", this);
 
+      if (Log.debug) {
+         Log.debug(DEBUG, "executing move: " + this);
+         Log.debug2(DEBUG, piece.dump());
+         Log.debug2(DEBUG, board);
+      }
 
+      if (piece.isBlack() != board.isBlackMove)
+         throw new OutOfTurnException("It is " + ((board.isBlackMove) ? "Black" : "White") + "'s move");
+
+      if (!verified && !piece.isLegalDest(dest)) {
+         if (Log.debug) {
+            Log.debug(DEBUG, "tried to execute move with illegal destination");
+            Log.debug2(DEBUG, "piece is: " + piece.dump());
+            Log.debug2(DEBUG, "dest is: " + dest);
+         }
+         throw new IllegalMoveException("Illegal move " + this, this);
+      }
+
+      if (!castling) {
+         // In Chess960, the king or rook can take the other piece's place,
+         // hence the need to ensure this wasn't a castle.
          casualty = dest.piece;
+      }
+
 	 //special enpassant rules
 	 if (piece.isPawn()
 	     && casualty == null
@@ -389,47 +381,34 @@ public class ChessMove extends Move {
 	    //casualty.orig = null;  //don't do or hard to undo enpassant
 	 }
 
-         //mark enpassant on board
-	 if (piece.isPawn()
-	     && (orig.rank - dest.rank == 2 || orig.rank - dest.rank == -2))
-	    board.setEnPassantFile(orig.file);
+      // mark enpassant on board
+      if (piece.isPawn() && (orig.rank - dest.rank == 2 || orig.rank - dest.rank == -2))
+         board.setEnPassantFile(orig.file);
 
-
-	 //castling
-	 if (piece.isKing() && piece.moveCount == 0) {
-
-//NEED: castling might be different for Fischer rules
-            Square rook_orig, rook_dest;
-	    //long
-	    if (dest.file == 3) { //c-file
-	       rook_orig = board.getSquare(1,orig.rank); //a-file
-	       rook_dest = board.getSquare(4,orig.rank); //d-file
-	       rook_dest.piece = rook_orig.piece;
-	       rook_orig.piece = null;
-	       rook_dest.piece.orig = rook_dest;
-	       rook_dest.piece.moveCount++;
-	       castleQueenside = true;
-	    }
-	    //short
-	    else if (dest.file == 7) {  //g-file
-	       rook_orig = board.getSquare(8,orig.rank); //h-file
-	       rook_dest = board.getSquare(6,orig.rank); //f-file
-	       rook_dest.piece = rook_orig.piece;
-	       rook_orig.piece = null;
-	       rook_dest.piece.orig = rook_dest;
-	       rook_dest.piece.moveCount++;
-	       castleKingside = true;
-	    }
-	 }
-
-         //check how unique this move is (for short form Algebraic)
-	 unique = board.isDestUniqueForClass(dest, piece);
+      // check how unique this move is (for short form Algebraic)
+      unique = board.isDestUniqueForClass(dest, piece);
 
          //actually move piece
-         dest.piece = piece;
-	 piece.orig = dest;
+      dest.piece = piece;
+      piece.orig = dest;
+      if (!orig.equals(dest)) // Can happen in chess960 castling.
          orig.piece = null;
-	 piece.moveCount++;
+      piece.moveCount++;
+
+      // Move the rook if we're castling.
+      if (castling) {
+         Square rookDest = kingForCastling.findRookCastlingDestination(castleQueenside);
+         rookDest.piece = rookForCastling;
+         boolean rookMoved = !rookDest.equals(rookCastleOrig);
+         boolean kingTookRooksPlace = dest.equals(rookCastleOrig);
+         if (rookMoved && !kingTookRooksPlace) {
+            // Make sure we don't overwrite the king in case of Chess960 where
+            // the king ends up on the rook's square.
+            rookCastleOrig.piece = null;
+         }
+         rookForCastling.orig = rookDest;
+         rookForCastling.moveCount++;
+      }
 
 	 //pawn promotion
 	 if (piece.isPawn() && Pawn.isPromotionSquare(dest, piece.isBlack)) {
@@ -469,6 +448,11 @@ public class ChessMove extends Move {
 	 }
    }
 
+   private String buildExecuteCastleErrorString(King king) {
+      String pieceThatMovedStr = king.moveCount == 0 ? "rook has moved." : "king has moved.";
+      return "Trying to castle king side when " + pieceThatMovedStr + ". Rook square: " + rookCastleOrig + ".";
+   }
+
    /* unexecute() *****************************************************/
    /** undo the this move
     */
@@ -480,40 +464,40 @@ public class ChessMove extends Move {
 
          board.setEnPassantFile(prevEnPassantFile);
 
-	 //castling
-	 if (piece.isKing()
-	     && piece.moveCount == 1) {
-
-            Square rook_orig, rook_dest;
-	    //long
-	    if (dest.file == 3) { //c-file
-	       rook_orig = board.getSquare(1,orig.rank); //a-file
-	       rook_dest = board.getSquare(4,orig.rank); //d-file
-	       rook_orig.piece = rook_dest.piece;
-	       rook_dest.piece = null;
-	       rook_orig.piece.orig = rook_orig;
-	       rook_orig.piece.moveCount--;
-	    }
-	    //short
-	    else if (dest.file == 7) { //g-file
-	       rook_orig = board.getSquare(8,orig.rank); //h-file
-	       rook_dest = board.getSquare(6,orig.rank); //f-file
-	       rook_orig.piece = rook_dest.piece;
-	       rook_dest.piece = null;
-	       rook_orig.piece.orig = rook_orig;
-	       rook_orig.piece.moveCount--;
-	    }
-	 }
-
 	 //pawn promotion (use same function to reverse the promotion)
 	 if (piece.isPawn() && Pawn.isPromotionSquare(dest, piece.isBlack)) {
 	    board.promote(promotion, piece);
 	 }
 
-         dest.piece.moveCount--;
+      dest.piece.moveCount--;
+      boolean castling = castleQueenside || castleKingside;
+      if (!castling) {
          orig.piece = dest.piece;
-	 piece.orig = orig;
-	 dest.piece = null;
+         piece.orig = orig;
+         dest.piece = null;
+      } else 
+      {
+         King kingPiece = (King) dest.piece;
+         Square rook_dest = kingPiece.findRookCastlingDestination(castleQueenside);
+         ChessPiece rookPiece = rook_dest.piece;
+         orig.piece = kingPiece;
+         kingPiece.orig = orig;
+         rookCastleOrig.piece = rookPiece;
+         rookPiece.orig = rookCastleOrig;
+
+         boolean kingMoved = !dest.equals(orig);
+         if (kingMoved && !dest.equals(rookCastleOrig)) {
+            // Make the square empty again.
+            dest.piece = null;
+         }
+
+         rookPiece.moveCount--;
+
+         boolean rookMoved = !rookCastleOrig.equals(rook_dest);
+         if (rookMoved && !rook_dest.equals(orig)) {
+            rook_dest.piece = null;
+         }
+      }
 
          if (casualty != null) {
             casualty.setCaptured(false);
@@ -887,7 +871,20 @@ public class ChessMove extends Move {
 	 }
       }
 
-      return s;
+      String colorToMove = "";
+      if (piece != null) {
+          if (piece.isBlack) {
+        	  colorToMove = "black";
+          }
+          else {
+        	  colorToMove = "white";
+          }
+          if (!verified) {
+        	  colorToMove += " (unverified)";
+          }
+          colorToMove = " (" + colorToMove + ")";
+      }
+      return s + colorToMove;
    }
 
    /* equals ************************************************************/
