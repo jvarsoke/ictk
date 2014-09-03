@@ -41,7 +41,7 @@ public class TestChunker {
 
    public static String[] processFile (File file) throws IOException {
       String[] mesg;
-      List list = new LinkedList();
+      List<String> list = new LinkedList<>();
 
       StringBuffer sb = new StringBuffer(80);
       String line = null;

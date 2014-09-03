@@ -670,7 +670,7 @@ public class PGNReaderTest extends AbstractPGNTest {
    //Helper///////////////////////////////////////////////////////////////////
 
    /** loads the games into a list so aspects of the games can be tested */
-   protected static List loadGames (File file, boolean debug, int gameToDebug)
+   protected static List<ChessGame> loadGames (File file, boolean debug, int gameToDebug)
           throws FileNotFoundException,
 	  	 IOException, 
 	         InvalidGameFormatException,
