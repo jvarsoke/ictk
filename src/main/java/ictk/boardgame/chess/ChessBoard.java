@@ -329,7 +329,24 @@ public class ChessBoard implements Board {
 
    }
 
-   /* verifyIsLegalMove ***********************************************************/
+
+   /* isMoveLegal(Move m) ****************************************************/
+   /** Checks to see if the is a legal move
+    *
+    * @deprecated use {@link #verifyIsLegalMove()} instead.  
+    */
+    @Deprecated
+    public boolean isLegalMove(Move m) {
+        try {
+            verifyIsLegalMove(m);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+
+   /* verifyIsLegalMove ******************************************************/
    /** Checks to see if the move is legal on the current board.  This will not
     *  affect the History of this game in any way.
     */

@@ -142,8 +142,11 @@ public class ICS<xsl:apply-templates select="@class"/>Event extends <xsl:apply-t
 	 }
       return str;
          </xsl:when>
-	 <xsl:otherwise>
+         <xsl:when test="count(parser) = 1">
 	    <xsl:apply-templates select="parser" mode="readable"/>
+         </xsl:when>
+	 <xsl:otherwise>
+      return null; //no parser associated with this attribute -- possible XML error
 	 </xsl:otherwise>
       </xsl:choose>
    }

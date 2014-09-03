@@ -26,6 +26,7 @@ Legend:
    [dev]    restructured directories to fit Maven convention
    [dev]    Added Maven build system
    [dev]    Deprecated - Ant, build system still works for now
+   [dev]    Deprecated - isMoveLegal(Move), use verifyIsMoveLegal(Move)
 
 1.0.0 - 2014-04-25 Promotion to stable release
    [all]    Stable - now using Semantic Versioning (http://semver.org/)
