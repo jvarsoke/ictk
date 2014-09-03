@@ -333,7 +333,7 @@ public class ChessBoard implements Board {
    /* isMoveLegal(Move m) ****************************************************/
    /** Checks to see if the is a legal move
     *
-    * @deprecated use {@link #verifyIsLegalMove()} instead.  
+    * @deprecated use {@link #verifyIsLegalMove(Move m)} instead.  
     */
     @Deprecated
     public boolean isLegalMove(Move m) {

@@ -375,7 +375,8 @@
       </zip>
 
       <tar destfile="${release.file}.tar.gz"
-         compression="gzip" >
+         compression="gzip"
+         longfile="gnu">
          <tarfileset prefix="${release.file}/"
             dir="."
             includes="${bin.include}"
