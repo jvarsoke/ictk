@@ -26,7 +26,7 @@
 /**
  * This is a simple ICS Chess Server client.  It logs in and color codes
  * the text.  There is no Board associated with it yet, so playing a 
- * game is not practical.  But it should give the simpist idea of how
+ * game is not practical.  But it should give the simplist idea of how
  * to write an interface with the ICTK library.
  *
  * @author  jvarsoke
