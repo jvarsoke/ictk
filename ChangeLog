@@ -21,7 +21,7 @@ Legend:
 *IN PROGRESS*
 
 1.1.0 - 2014-09-02 Chess960 Support
-   [chess]  Added Chess960 support (Björn Mårtensson)
+   [chess]  Added Chess960 (FischerRandom)support (Björn Mårtensson)
    [dev]    build should be friendlier to non-Linux systems (Björn Mårtensson)
    [dev]    restructured directories to fit Maven convention
    [dev]    Added Maven build system
