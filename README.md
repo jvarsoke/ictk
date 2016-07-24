@@ -18,7 +18,7 @@ into java POJOs for easy use by a client.
 * True MVC structure with board displays driven by game model events
 * Native Chess960 (FischerRandom) support
 * Command-line Board display
-* Well [documented](http://jvarsoke.github.io/docs/). Sample code also provided.
+* Well [documented](http://jvarsoke.github.io/ictk/docs/). Sample code also provided.
 * FICS support [(freechess.org)](http://www.freechess.org)
 
 ## SPECIFICATIONS & DESIGN
