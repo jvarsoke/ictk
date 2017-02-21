@@ -2,17 +2,17 @@
  * ictk - Internet Chess ToolKit
  * More information is available at http://jvarsoke.github.io/ictk
  * Copyright (c) 1997-2014 J. Varsoke <ictk.jvarsoke [at] neverbox.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -52,7 +52,7 @@ public class ChessBoard implements Board {
                             NO_ENPASSANT = NULL_FILE;
 
       /** the default setup of pieces in a traditional chess board */
-   public final static char[][] 
+   public final static char[][]
       DEFAULT_POSITION={{'R','P',' ',' ',' ',' ','p','r'},
 			{'N','P',' ',' ',' ',' ','p','n'},
 			{'B','P',' ',' ',' ',' ','p','b'},
@@ -76,11 +76,11 @@ public class ChessBoard implements Board {
       /** technically this is the actual board */
    protected Square    squares[][]; //file,rank
       /** the team of white Pieces */
-   protected List<ChessPiece> whiteTeam, 
+   protected List<ChessPiece> whiteTeam,
       /** the team of black Pieces */
                        blackTeam;
       /** the King for the white side */
-   protected King      whiteKing, 
+   protected King      whiteKing,
       /** the King for the black side */
                        blackKing;
 
@@ -91,7 +91,7 @@ public class ChessBoard implements Board {
       /** if the last move was a double pawn move this flag is set */
    protected byte enpassantFile = NO_ENPASSANT;
 
-      /** is the initial position of this board the default chess 
+      /** is the initial position of this board the default chess
        *  position?
        */
    protected boolean isInitialPositionDefault = true;
@@ -112,7 +112,7 @@ public class ChessBoard implements Board {
       this(true);
    }
 
-   /** 
+   /**
     * @param defaultBoard if true the default chess position will be used.
     *                     if false the board will be cleared and w/o pieces.
     */
@@ -121,17 +121,17 @@ public class ChessBoard implements Board {
 
          whiteTeam = new ArrayList<>(16);
          blackTeam = new ArrayList<>(16);
- 
-         for (byte f=0, r=0; f < MAX_FILE; f++) 
-            for (r=0;r < MAX_RANK; r++) 
-               squares[f][r] = new Square((byte)(f+1),(byte)(r+1)); 
+
+         for (byte f=0, r=0; f < MAX_FILE; f++)
+            for (r=0;r < MAX_RANK; r++)
+               squares[f][r] = new Square((byte)(f+1),(byte)(r+1));
          if (defaultBoard)
 	    setPositionDefault();
 	 else
 	    setPositionClear();
    }
 
-   /** 
+   /**
     * @param matrix the position using English SAN notation
     *               for the pieces, (PNBRQK) where uppercase is
     *               used for White pieces and lowercase for Black.
@@ -141,7 +141,7 @@ public class ChessBoard implements Board {
       setPosition(matrix);
    }
 
-   /** 
+   /**
     * @param matrix the position using English SAN notation
     *               for the pieces, (PNBRQK) where uppercase is
     *               used for White pieces and lowercase for Black.
@@ -154,7 +154,7 @@ public class ChessBoard implements Board {
     * @param plyCount the ply count for the 50 move rule.
     * @param moveNum which move number are we on?
     */
-   public ChessBoard (char[][] matrix, 
+   public ChessBoard (char[][] matrix,
    		 boolean isBlackMove,
                  boolean castleWK,
                  boolean castleWQ,
@@ -203,10 +203,10 @@ public class ChessBoard implements Board {
    /** playMove() ********************************************************/
    /** plays the move on the board.  Note: if a move is played on the
     *  board this way it is NOT added to the History.  This could
-    *  seriously FUBAR the state of the board if you use the two 
+    *  seriously FUBAR the state of the board if you use the two
     *  methods on the same board.
     */
-   public void playMove (Move move) 
+   public void playMove (Move move)
           throws IllegalMoveException, OutOfTurnException {
       ChessMove m = (ChessMove) move;
          m.execute();
@@ -252,20 +252,20 @@ public class ChessBoard implements Board {
             }
          }
 
-	 movingKing = (isBlackMove) ? blackKing : whiteKing; 
+	 movingKing = (isBlackMove) ? blackKing : whiteKing;
 	 movingTeam = (isBlackMove) ? blackTeam : whiteTeam;
 	 otherKing  = (isBlackMove) ? whiteKing : blackKing;
 	 otherTeam  = (isBlackMove) ? whiteTeam : blackTeam;
-	 
+
          movingKing.genLegalDestsFinal();
          otherKing.genLegalDestsFinal();
 
 	 //now have to check to see if any of the present moves are
 	 //illegal because the move puts the king in check (a pin)
 	 //check queens, bishops and rooks
-	 for (byte i=0; i < otherTeam.size(); i++) 
+	 for (byte i=0; i < otherTeam.size(); i++)
 	     otherTeam.get(i).adjustPinsLegalDests(movingKing, movingTeam);
-	 
+
 
          //if King is in check then need to modify
 	 //legalMove lists to deal with the check
@@ -275,7 +275,7 @@ public class ChessBoard implements Board {
 	    threats = getThreats(movingKing);
 
 	    if (Log.debug) {
-	       Log.debug(DEBUG, "THREATS TO MOVING KING! (" 
+	       Log.debug(DEBUG, "THREATS TO MOVING KING! ("
 	          + threats.length + ")");
 	       Log.debug2(DEBUG, "Threat: " + threats[0]);
 	    }
@@ -302,8 +302,8 @@ public class ChessBoard implements Board {
 
 	       default:
 	          //can't have more that 2 checks on a king
-	          assert false 
-		      : "King reports in check with " + threats.length 
+	          assert false
+		      : "King reports in check with " + threats.length
 		        + " threats.";
 	    }
 	 }
@@ -311,7 +311,7 @@ public class ChessBoard implements Board {
 	 //if king has no moves and is being threatened
 	 //then should throw Checkmate exception.
 	 //if no moves and no threats then stalemate.
-	 if (getLegalMoveCount() == 0) 
+	 if (getLegalMoveCount() == 0)
 	    if (movingKing.isInCheck()) {
 	       if (lastMove != null)
 		  lastMove.setCheckmate(true);
@@ -323,7 +323,7 @@ public class ChessBoard implements Board {
 
 //FIXME: not removing moves to keep threats available
 	 //can now remove non-to-move teams' legalDests
-	 //for (byte i=0; i < otherTeam.size(); i++) 
+	 //for (byte i=0; i < otherTeam.size(); i++)
 	 //   ((ChessPiece) otherTeam.get(i))
 	 //      .removeLegalDests();
 
@@ -333,7 +333,7 @@ public class ChessBoard implements Board {
    /* isMoveLegal(Move m) ****************************************************/
    /** Checks to see if the is a legal move
     *
-    * @deprecated use {@link #verifyIsLegalMove(Move m)} instead.  
+    * @deprecated use {@link #verifyIsLegalMove(Move m)} instead.
     */
     @Deprecated
     public boolean isLegalMove(Move m) {
@@ -393,8 +393,8 @@ public class ChessBoard implements Board {
 
          attackers = new LinkedList<>();
          team = (isBlack) ? blackTeam.iterator() : whiteTeam.iterator();
-	 
-	 if (Log.debug) 
+
+	 if (Log.debug)
 	    Log.debug(DEBUG, "Finding "
 	       + ((isBlack) ? "Black" : "White")
 	       + " attackers on " + sq);
@@ -404,11 +404,11 @@ public class ChessBoard implements Board {
             if (piece.isLegalAttack(sq)) {
                attackers.add(piece);
 	       if (Log.debug)
-	          Log.debug2(DEBUG, 
+	          Log.debug2(DEBUG,
 		     "attacker: " + piece + "(" + piece.getSquare() + ")");
 	    }
          }
-         
+
          if (attackers.size() > 0) {
 	    threats = new ChessPiece[attackers.size()];
 	    threats = attackers.toArray(threats);
@@ -478,7 +478,7 @@ public class ChessBoard implements Board {
       List<ChessPiece>     attackers = null;
       ChessPiece           piece = null;
       ChessPiece[]         guards = null;
- 
+
          if (sq == null)
             throw new NullPointerException(
 	       "cannot assess guards of null square");
@@ -488,20 +488,20 @@ public class ChessBoard implements Board {
 
          attackers = new LinkedList<>();
          team = (isBlack) ? blackTeam.iterator() : whiteTeam.iterator();
- 
+
          while (team.hasNext()) {
             piece = team.next();
             if (piece.isGuarding(sq))
                attackers.add(piece);
          }
- 
+
          if (attackers.size() > 0) {
 	    guards = new ChessPiece[attackers.size()];
             guards = attackers.toArray(guards);
 	 }
 	 return guards;
    }
- 
+
    /* getGuards **********************************************************/
    /**returns an array of the pieces of the team specified who can
     * guard the square (a friendly piece) specified.
@@ -518,17 +518,17 @@ public class ChessBoard implements Board {
         if (piece == null)
            throw new NullPointerException(
 	      "cannot assess threats to null piece");
- 
+
         return getThreats(piece.orig, !piece.isBlack);
    }
- 
+
    /* isGuarded ************************************************************/
    /** does a fellow team member recapture this square if the piece is taken
     */
    public boolean isGuarded (Square sq, boolean isBlack) {
         return (getGuards(sq, isBlack) != null);
    }
- 
+
    /* isGuarded ************************************************************/
    /** does a fellow team member recapture this square if the piece is taken
     */
@@ -536,7 +536,7 @@ public class ChessBoard implements Board {
         if (piece == null)
            throw new NullPointerException(
 	      "cannot assess threats to null piece");
- 
+
         return isGuarded(piece.orig, !piece.isBlack);
    }
 
@@ -553,9 +553,9 @@ public class ChessBoard implements Board {
 	 if (staleLegalDests)
 	    genLegalDests();
 
-	 for (int i=0; i < movingTeam.size(); i++) 
+	 for (int i=0; i < movingTeam.size(); i++)
 	     count += movingTeam.get(i).getLegalDests().size();
-      
+
       return count;
    }
 
@@ -583,12 +583,12 @@ public class ChessBoard implements Board {
 	       //ane expected casualty.  but this allows for the
 	       //communication of a possible caputure. (a hack)
 	       //FIXME: check to see if the above really works as intended
-	       list.add(new ChessMove(orig, dest, dest.piece, this));  
+	       list.add(new ChessMove(orig, dest, dest.piece, this));
 	    }
 	 }
-      
+
       return list;
-      
+
    }
 
    /* isDestUniqueForClass ************************************************/
@@ -609,20 +609,20 @@ public class ChessBoard implements Board {
       for (int i=0; i < movingTeam.size(); i++) {
          piece = movingTeam.get(i);
 
-	 if (piece != p 
-	     && !piece.isCaptured() 
+	 if (piece != p
+	     && !piece.isCaptured()
 	     && piece.getIndex() == p.getIndex()) {
 	    dests = piece.getLegalDests();
 
 	    if (dests.contains(dest)) {
 	       if (p.orig.file == piece.orig.file)
 	          unique[0] = false;  //file is not unique
-	       if (p.orig.rank == piece.orig.rank) 
+	       if (p.orig.rank == piece.orig.rank)
 	          unique[1] = false; //rank is not unique
 
 	       //special case for knights on e5 and f6 with dest d7
 	       //or rooks on h1 & d2 moving to d1 etc.
-	       if (unique[0] == true && unique[1] == true) 
+	       if (unique[0] == true && unique[1] == true)
 		  unique[1] = false;
 	    }
 	 }
@@ -645,8 +645,8 @@ public class ChessBoard implements Board {
    /** determines where the origin of the move that goes to this destination
     *  is.  This is the recipercal method for what  isDestUniqueForClass allows
     */
-   public Square getOrigin (byte piece_index, int file, int rank, 
-                            Square dest) 
+   public Square getOrigin (byte piece_index, int file, int rank,
+                            Square dest)
           throws AmbiguousChessMoveException,
 	         IllegalMoveException {
       if (file > MAX_FILE || rank > MAX_RANK)
@@ -665,7 +665,7 @@ public class ChessBoard implements Board {
       for (int i=0; i < movingTeam.size(); i++) {
          piece = movingTeam.get(i);
 
-	 if (((piece.getIndex() % ChessPiece.BLACK_OFFSET) == piece_index) 
+	 if (((piece.getIndex() % ChessPiece.BLACK_OFFSET) == piece_index)
 	     && piece.isLegalDest(dest))
 
 	    if ((orig_f < 1 && orig_r < 1)
@@ -685,9 +685,9 @@ public class ChessBoard implements Board {
 
       if (!found) {
          if (Log.debug) {
-	    Log.debug(DEBUG, 
-	       "Illegal Move " 
-               + "piece: " + piece_index + " file: " + orig_f 
+	    Log.debug(DEBUG,
+	       "Illegal Move "
+               + "piece: " + piece_index + " file: " + orig_f
                + " rank: " + orig_r + " dest: " + dest);
 	    Log.debug2(DEBUG, this);
 	    Log.debug2(DEBUG, dumpLegalMoves());
@@ -704,8 +704,8 @@ public class ChessBoard implements Board {
 	    Log.debug2(DEBUG, dumpLegalMoves());
 	    Log.debug2(DEBUG, dumpLegalMoves(!isBlackMove));
 	 }
-         throw new AmbiguousChessMoveException("Ambiguous Move", 
-	    piece_index, 
+         throw new AmbiguousChessMoveException("Ambiguous Move",
+	    piece_index,
 	    orig_f,
 	    orig_r,
 	    dest.file,
@@ -750,7 +750,7 @@ public class ChessBoard implements Board {
 
       if (getLegalMoveCount() == 0 && isCheck())
 	 return true;
-      else 
+      else
 	 return false;
    }
 
@@ -777,7 +777,7 @@ public class ChessBoard implements Board {
    }
 
    /* isDoubleCheck *****************************************************/
-   /** returns true if the King on the side to move is threatened by 
+   /** returns true if the King on the side to move is threatened by
     *  two pieces.
     */
    public boolean isDoubleCheck () {
@@ -795,7 +795,7 @@ public class ChessBoard implements Board {
    }
 
    /* isStalemate ***********************************************************/
-   /** returns true if there are no legal moves and the King is not in check 
+   /** returns true if there are no legal moves and the King is not in check
     */
    public boolean isStalemate () {
       if (lastMove != null)
@@ -806,7 +806,7 @@ public class ChessBoard implements Board {
 
       if (getLegalMoveCount() == 0 && !isCheck())
 	 return true;
-      else 
+      else
 	 return false;
    }
 
@@ -819,10 +819,10 @@ public class ChessBoard implements Board {
     */
    public char[][] toCharArray () {
       char[][] board = new char[MAX_RANK+1][MAX_FILE+1];
-      for (byte r=0; r < MAX_RANK; r++) 
-         for (byte f=0; f < MAX_FILE; f++) 
+      for (byte r=0; r < MAX_RANK; r++)
+         for (byte f=0; f < MAX_FILE; f++)
             if (squares[f][r].isOccupied()) {
-	       switch (squares[f][r].piece.getIndex() 
+	       switch (squares[f][r].piece.getIndex()
 	               % ChessPiece.BLACK_OFFSET) {
 	          case Pawn.INDEX:   board[f][r] = 'P'; break;
 	          case Knight.INDEX: board[f][r] = 'N'; break;
@@ -832,7 +832,7 @@ public class ChessBoard implements Board {
 	          case King.INDEX:   board[f][r] = 'K'; break;
 		  default:
 	       }
-	       if (squares[f][r].piece.getIndex() >= ChessPiece.BLACK_OFFSET) 
+	       if (squares[f][r].piece.getIndex() >= ChessPiece.BLACK_OFFSET)
 	          board[f][r] = Character.toLowerCase(board[f][r]);
 	    }
       return board;
@@ -878,7 +878,7 @@ public class ChessBoard implements Board {
 	       piece = team.get(i);
 	       if (piece.isCaptured() == isCaptured)
 	          pows[count++] = piece;
-	          
+
 	    }
 	 }
       return pows;
@@ -887,7 +887,7 @@ public class ChessBoard implements Board {
    /* getMaterialCount *******************************************************/
    /** gets the material count evaluation for the side specified.
     *  The evaluation is based the following values.
-    *  Pawn   = 1, 
+    *  Pawn   = 1,
     *  Knight = 3,
     *  Bishop = 3,
     *  Rook   = 5,
@@ -897,7 +897,7 @@ public class ChessBoard implements Board {
     *  @param isBlack the color of the side you wish to evaluate.
     */
    public int getMaterialCount (boolean isBlack) {
-      int material = 0; 
+      int material = 0;
       List<ChessPiece> team = (isBlack) ? blackTeam : whiteTeam;
       ChessPiece piece = null;
 
@@ -944,13 +944,13 @@ public class ChessBoard implements Board {
 */
 
    /* getSquare *************************************************************/
-   /** cx and cy should subscribe to the default locale of 
+   /** cx and cy should subscribe to the default locale of
     *  boardgame.chess.io.SAN.  That is, [a-h] & [1-8]
     */
    public Square getSquare (char file, char rank) {
       Square sq;
-         sq = squares[san.fileToNum(file)-1][san.rankToNum(rank)-1]; 
-      return sq; 
+         sq = squares[san.fileToNum(file)-1][san.rankToNum(rank)-1];
+      return sq;
    }
 
    /* getSquare *************************************************************/
@@ -977,22 +977,22 @@ public class ChessBoard implements Board {
 
 
             for (f=0; f < MAX_FILE; f++) {
-               if (squares[f][r].isOccupied()) { 
+               if (squares[f][r].isOccupied()) {
 	           c = san.pieceToChar(squares[f][r].piece);
 		   if (squares[f][r].piece.isBlack())
 		      c = Character.toLowerCase(c);
                    s_buffer.append(c + " ");
 	       }
-               else 
+               else
 		  if (squares[f][r].isBlack())
 		     s_buffer.append("  ");
 		  else
 		     s_buffer.append("# ");
-               if (r==MAX_RANK-1) 
+               if (r==MAX_RANK-1)
                   last_line.append(Character.toUpperCase(
 		     san.fileToChar(squares[f][r].file)) + " ");
             }
-            s_buffer.append('\n'); 
+            s_buffer.append('\n');
 
          }
          s_buffer.append(last_line);
@@ -1043,7 +1043,7 @@ public class ChessBoard implements Board {
    /* setPosition () *********************************************************/
    /**set the position from an 8x8 matrix using the FEN characters to
     * represent piece positions.  Lowercase is black.  P=Pawn, N=Knight,
-    * B=Bishop, R= Rook, Q=Queen, K=King.  Better is to 
+    * B=Bishop, R= Rook, Q=Queen, K=King.  Better is to
     * use setPostion(byte[][]).<br>
     *
     * Note: if rooks and kings are placed on traditional chess default
@@ -1084,10 +1084,10 @@ public class ChessBoard implements Board {
 	       case 'R': addRook(file+1, rank+1, false); break;
 	       case 'q': addQueen(file+1, rank+1, true); break;
 	       case 'Q': addQueen(file+1, rank+1, false); break;
-	       case 'k': addKing(file+1, rank+1, true); 
+	       case 'k': addKing(file+1, rank+1, true);
 	          bking = true;
 	          break;
-	       case 'K': addKing(file+1, rank+1, false); 
+	       case 'K': addKing(file+1, rank+1, false);
 	          wking = true;
 	          break;
 	       default:
@@ -1099,8 +1099,8 @@ public class ChessBoard implements Board {
       /*
       if (Log.debug(DEBUG)) {
          Log.debug(DEBUG, "setting this position");
-	 for (byte file=0; file < matrix.length; file++) 
-	    for (byte rank=0; rank < matrix[file].length; rank++) 
+	 for (byte file=0; file < matrix.length; file++)
+	    for (byte rank=0; rank < matrix[file].length; rank++)
 	       Log.debug2(DEBUG, "[" + file + "][" + rank + "] = '"
 	         + matrix[file][rank] + "'");
       }
@@ -1157,7 +1157,7 @@ public class ChessBoard implements Board {
    public void addPawn (int file, int rank, boolean isBlack) {
       ChessPiece p;
       Square orig = getSquare(file, rank);
-         orig.setOccupant(p = new Pawn (isBlack, orig, this)); 
+         orig.setOccupant(p = new Pawn (isBlack, orig, this));
          if (isBlack) blackTeam.add(p);
          else         whiteTeam.add(p);
    }
@@ -1175,7 +1175,7 @@ public class ChessBoard implements Board {
    public void addKnight (int file, int rank, boolean isBlack) {
       ChessPiece p;
       Square orig = getSquare(file, rank);
-         orig.setOccupant(p = new Knight (isBlack, orig, this)); 
+         orig.setOccupant(p = new Knight (isBlack, orig, this));
          if (isBlack) blackTeam.add(p);
          else         whiteTeam.add(p);
    }
@@ -1193,7 +1193,7 @@ public class ChessBoard implements Board {
    public void addBishop (int file, int rank, boolean isBlack) {
       ChessPiece p;
       Square orig = getSquare(file, rank);
-         orig.setOccupant(p = new Bishop (isBlack, orig, this)); 
+         orig.setOccupant(p = new Bishop (isBlack, orig, this));
          if (isBlack) blackTeam.add(p);
          else         whiteTeam.add(p);
    }
@@ -1211,7 +1211,7 @@ public class ChessBoard implements Board {
    public void addRook (int file, int rank, boolean isBlack) {
       ChessPiece p;
       Square orig = getSquare(file, rank);
-         orig.setOccupant(p = new Rook (isBlack, orig, this)); 
+         orig.setOccupant(p = new Rook (isBlack, orig, this));
          if (isBlack) blackTeam.add(p);
          else         whiteTeam.add(p);
    }
@@ -1229,7 +1229,7 @@ public class ChessBoard implements Board {
    public void addQueen (int file, int rank, boolean isBlack) {
       ChessPiece p;
       Square orig = getSquare(file, rank);
-         orig.setOccupant(p = new Queen (isBlack, orig, this)); 
+         orig.setOccupant(p = new Queen (isBlack, orig, this));
          if (isBlack) blackTeam.add(p);
          else         whiteTeam.add(p);
    }
@@ -1248,7 +1248,7 @@ public class ChessBoard implements Board {
    public void addKing (int file, int rank, boolean isBlack) {
       ChessPiece p;
       Square orig = getSquare(file, rank);
-         orig.setOccupant(p = new King (isBlack, orig, this)); 
+         orig.setOccupant(p = new King (isBlack, orig, this));
          if (isBlack) {
 	    if (blackKing != null)
 	       blackTeam.remove(blackKing);
@@ -1308,7 +1308,7 @@ public class ChessBoard implements Board {
     * @param f NO_ENPASSANT if the file is not set
     */
    public void setEnPassantFile (int f) {
-      if (f > MAX_FILE) 
+      if (f > MAX_FILE)
          throw new IllegalArgumentException(
 	    "EnPassant file cannot be larget than MAX_FILE");
       enpassantFile = (byte) f;
@@ -1365,6 +1365,13 @@ public class ChessBoard implements Board {
     */
    public int getCurrentMoveNumber () {
       return moveNumber;
+   }
+
+  /* setCurrentMoveNumber **************************************************/
+  /** set current move number for the last move executed
+    */
+  public int setCurrentMoveNumber (int moveNumber) {
+     this.moveNumber = moveNumber;
    }
 
    /* isInitialPositionDefault *********************************************/
@@ -1447,8 +1454,8 @@ public class ChessBoard implements Board {
    ///////////////////////////////////////////////////////////////////////////
    /* equals() **************************************************/
    /** standard override of the equals(Object) function.
-    *  This tests if the positions of the two board are exactly 
-    *  equal.  
+    *  This tests if the positions of the two board are exactly
+    *  equal.
     *  <p>
     *  Some things checked are:<br>
     *  1) who's move <br>
@@ -1467,7 +1474,7 @@ public class ChessBoard implements Board {
       if ((o == null) || (o.getClass() != this.getClass()))
          return false;
       //FIXME: this could use FEN to do the comparison but wouldn't get the Log
-      
+
       boolean equal = true;
       ChessBoard b = (ChessBoard) o;
 
@@ -1478,53 +1485,53 @@ public class ChessBoard implements Board {
          equal = this.isBlackMove == b.isBlackMove;
 	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "move parity failed");
-	    
-	 if (equal) 
+
+	 if (equal)
 	    equal = this.squares.length == b.squares.length;
 
 	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "board dimension(f) failed");
-	    
-	 if (equal) 
+
+	 if (equal)
 	    equal = this.squares[0].length == b.squares[0].length;
 
 	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "board dimension(r) failed");
-	    
+
 	 if (equal)
 	    equal = this.isWhiteCastleableQueenside()
 	            == b.isWhiteCastleableQueenside();
 
 	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "castling QW failed");
-	    
+
 	 if (equal)
 	    equal = this.isBlackCastleableQueenside()
 	            == b.isBlackCastleableQueenside();
 
 	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "castling QB failed");
-	    
+
 	 if (equal)
 	    equal = this.isWhiteCastleableKingside()
 	            == b.isWhiteCastleableKingside();
 
 	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "castling KW failed");
-	    
+
 	 if (equal)
 	    equal = this.isBlackCastleableKingside()
 	            == b.isBlackCastleableKingside();
 
 	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "castling KB failed");
-	    
+
 	 if (equal)
 	    equal = this.enpassantFile == b.enpassantFile;
 
-	 if (Log.debug && !equal) 
+	 if (Log.debug && !equal)
 	    Log.debug2(DEBUG, "enpassant failed");
-	    
+
 	 if (equal) {
 	    for (byte i=0; i< this.squares.length && equal; i++) {
 	       for (byte j=0; j < this.squares[i].length && equal; j++) {
@@ -1580,7 +1587,7 @@ public class ChessBoard implements Board {
       ChessPiece p;
       List<ChessPiece> team = (blacksMoves) ? blackTeam : whiteTeam;
 
-      if (blacksMoves) 
+      if (blacksMoves)
          sb.append("Black's team moves-----------------------\n");
       else
          sb.append("White's team moves-----------------------\n");
@@ -1588,7 +1595,7 @@ public class ChessBoard implements Board {
       for (int i=0; i < team.size(); i++) {
          p = team.get(i);
 	 sb.append( (!p.captured) ? " " : "x");
-         sb.append(p) 
+         sb.append(p)
 	   .append("(")
 	   .append(p.orig)
 	   .append(") ")
@@ -1634,7 +1641,7 @@ public class ChessBoard implements Board {
 
       return sb.toString();
    }
-   
+
    public Square findKingSquare(boolean black) {
       for (int y = 1; y <= 8; y++) {
          for (int x = 1; x <= 8; x++) {
