@@ -1370,7 +1370,7 @@ public class ChessBoard implements Board {
   /* setCurrentMoveNumber **************************************************/
   /** set current move number for the last move executed
     */
-  public int setCurrentMoveNumber (int moveNumber) {
+  public void setCurrentMoveNumber (int moveNumber) {
      this.moveNumber = moveNumber;
    }
 
