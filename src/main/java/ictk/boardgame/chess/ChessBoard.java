@@ -225,8 +225,8 @@ public class ChessBoard implements Board {
     will be white player.
    */
    public void setPlayerToMove (int player) {
-     if (player > 0) isBlackMove = 1;
-     else isBlackMove = 0;
+     if (player > 0) isBlackMove = true;
+     else isBlackMove = false;
    }
 
    /* genLegalDests *****************************************************/
