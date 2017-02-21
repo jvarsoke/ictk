@@ -219,6 +219,16 @@ public class ChessBoard implements Board {
       return (isBlackMove) ? 1 : 0;
    }
 
+   /* setPlayerToMove *****************************************************/
+   /**
+   @param player - int - a strict positive number for black player, otherwise
+    will be white player.
+   */
+   public void setPlayerToMove (int player) {
+     if (player > 0) isBlackMove = 1;
+     else isBlackMove = 0;
+   }
+
    /* genLegalDests *****************************************************/
    /** generates all legal moves for the side that needs to move.
     *  Steps:<br>
