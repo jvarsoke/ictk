@@ -1274,35 +1274,39 @@ public class ChessBoard implements Board {
    }
 
    public boolean isWhiteCastleableKingside () {
-      return whiteKing.isCastleableKingside();
+      if (whiteKing != null) return whiteKing.isCastleableKingside();
+      return false;
    }
 
    public boolean isWhiteCastleableQueenside () {
-      return whiteKing.isCastleableQueenside();
+      if (whiteKing != null) return whiteKing.isCastleableQueenside();
+      return false;
    }
 
    public boolean isBlackCastleableKingside () {
-      return blackKing.isCastleableKingside();
+      if (blackKing != null) return blackKing.isCastleableKingside();
+      return false;
    }
 
    public boolean isBlackCastleableQueenside () {
-      return blackKing.isCastleableQueenside();
+      if (blackKing != null) return blackKing.isCastleableQueenside();
+      return false;
    }
 
    public void setWhiteCastleableKingside (boolean t) {
-      whiteKing.setCastleableKingside(t);
+      if (whiteKing != null) whiteKing.setCastleableKingside(t);
    }
 
    public void setWhiteCastleableQueenside (boolean t) {
-      whiteKing.setCastleableQueenside(t);
+      if (whiteKing != null) whiteKing.setCastleableQueenside(t);
    }
 
    public void setBlackCastleableKingside (boolean t) {
-      blackKing.setCastleableKingside(t);
+      if (blackKing != null) blackKing.setCastleableKingside(t);
    }
 
    public void setBlackCastleableQueenside (boolean t) {
-      blackKing.setCastleableQueenside(t);
+      if (blackKing != null) blackKing.setCastleableQueenside(t);
    }
 
    /* getEnPassantFile *****************************************************/
